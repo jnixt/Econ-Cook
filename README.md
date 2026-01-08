@@ -1,3 +1,3 @@
-# Economics Cook App
+# ECookie Site 🙃
 
-An application to display recipes and cooking instructions.
+Js a website for my economics project brah
