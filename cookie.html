@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project ECookie</title>
+  <link rel="stylesheet" href="cooker.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="logo">🍪 Project ECookie</div>
+      <ul class="nav-links">
+        <li><a href="#recipes">Recipes</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <h1>Cook with Love</h1>
+      <p>Simple recipes, beautiful results</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="recipes" class="recipes-section">
+      <h2 class="section-title">Featured Recipes</h2>
+      
+      <div class="recipe-grid" id="recipe-grid">
+        <!-- Recipes will be injected by JS -->
+      </div>
+    </section>
+
+    <!-- Recipe Modal -->
+    <div class="modal" id="recipe-modal">
+      <div class="modal-content">
+        <button class="modal-close" id="modal-close">&times;</button>
+        <div class="modal-body" id="modal-body">
+          <!-- Recipe details will be injected here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Made with 🤍 in The Cozy Kitchen</p>
+  </footer>
+
+  <script src="cooked.js"></script>
+</body>
+</html>
