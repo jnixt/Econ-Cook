@@ -1,3 +1,21 @@
 * {
   font-family: "JetBrainsMono NF", monospace;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  min-height: 30vh;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
 }
