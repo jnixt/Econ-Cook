@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!container) return;
 
   const area = window.innerWidth * window.innerHeight;
-  const targetCount = Math.max(30, Math.min(220, Math.floor(area / 50000)));
+  const targetCount = Math.max(30, Math.min(120, Math.floor(area / 50000)));
 
   const cookies = [];
 
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.el.style.top = this.y + "px";
       this.el.style.transform = `rotate(${this.rotation}deg)`;
 
-      const chipCount = 3 + Math.floor(Math.random() * 6);
+      const chipCount = 2 + Math.floor(Math.random() * 6);
 
       const eOffsetY = Math.round(this.size * (0.22 + Math.random() * 0.06));
       const eOffsetX = Math.round(this.size * 0.18);
@@ -76,17 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const leftEye = document.createElement("span");
       leftEye.className = "eye";
-      const leftPupil = document.createElement("span");
-      leftPupil.className = "pupil";
-      leftEye.appendChild(leftPupil);
       leftEye.style.width = leftEye.style.height = eSize + "px";
       leftEye.style.left = leftEyeCenter.x - eSize / 2 + "px";
       leftEye.style.top = leftEyeCenter.y - eSize / 2 + "px";
       const rightEye = document.createElement("span");
       rightEye.className = "eye";
-      const rightPupil = document.createElement("span");
-      rightPupil.className = "pupil";
-      rightEye.appendChild(rightPupil);
       rightEye.style.width = rightEye.style.height = eSize + "px";
       rightEye.style.left = rightEyeCenter.x - eSize / 2 + "px";
       rightEye.style.top = rightEyeCenter.y - eSize / 2 + "px";
