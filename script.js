@@ -174,8 +174,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Clicker functionality
-let points = parseInt(localStorage.getItem('cookiePoints')) || 0;
+// Helper functions for HTTP cookies
+function setCookie(name, value, days) {
+  let expires = "";
+  if (typeof days === "number") {
+    const d = new Date();
+    d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = "; expires=" + d.toUTCString();
+  }
+  document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function eraseCookie(name) {
+  setCookie(name, "", -1);
+}
+
+// Clicker functionality (now using HTTP cookies)
+let points = parseInt(getCookie('cookiePoints')) || 0;
 const pointsDisplay = document.getElementById('points-display');
 const giantCookie = document.querySelector('.giant-cookie');
 
@@ -186,12 +206,39 @@ function updatePointsDisplay() {
 
 updatePointsDisplay();
 
-// Message for 100 clicks milestone
 const MILESTONE_KEY = 'cookieMilestone100Shown';
 
+// Preload milestone sound (replace with your actual file)
+const milestoneAudio = new Audio('message_popup_sound.wav');
+milestoneAudio.preload = 'auto';
+milestoneAudio.volume = 0.9;
+
+// Try to play the milestone sound, with a fallback to play on next user interaction if autoplay is blocked.
+function tryPlayMilestoneSound() {
+  if (!milestoneAudio) return;
+  try {
+    milestoneAudio.currentTime = 0;
+  } catch (e) {
+    // ignore if currentTime can't be set
+  }
+  const playPromise = milestoneAudio.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Autoplay was blocked by the browser — play once on the next user interaction.
+      const onUserInteract = () => {
+        milestoneAudio.play().catch(() => {});
+        window.removeEventListener('click', onUserInteract);
+        window.removeEventListener('keydown', onUserInteract);
+      };
+      window.addEventListener('click', onUserInteract, { once: true });
+      window.addEventListener('keydown', onUserInteract, { once: true });
+    });
+  }
+}
+
 function showMilestoneMessage() {
-  // Don't show again if previously dismissed
-  if (localStorage.getItem(MILESTONE_KEY)) return;
+  // Don't show again if previously dismissed (cookie)
+  if (getCookie(MILESTONE_KEY)) return;
 
   const box = document.createElement('div');
   box.id = 'milestone-message';
@@ -214,25 +261,28 @@ function showMilestoneMessage() {
 
   box.innerHTML = `
     <div style="position:relative;padding-right:34px;">
-      <div>Wow! You’ve reached 100 cookie clicks. You clearly like cookies. Would you like to make your own using our recipe?</div>
+      <div>Wow, you've hit 100 cookie clicks. Looks like you liked cookies, would you like to make some cookies on your own using our recipe?</div>
       <button aria-label="Close milestone" id="milestone-close" style="position:absolute;right:0;top:0;border:none;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 8px;line-height:1">×</button>
     </div>
   `;
 
   document.body.appendChild(box);
 
+  // Play the sound when the milestone pops up (with autoplay fallback)
+  tryPlayMilestoneSound();
+
   const closeBtn = document.getElementById('milestone-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       box.remove();
       // Record that the user dismissed/seen the milestone so it won't reappear after reload
-      localStorage.setItem(MILESTONE_KEY, '1');
+      setCookie(MILESTONE_KEY, '1', 365);
     });
   }
 }
 
 // If user already has >=100 points and hasn't seen the milestone, show it on load
-if (points >= 100 && !localStorage.getItem(MILESTONE_KEY)) {
+if (points >= 100 && !getCookie(MILESTONE_KEY)) {
   // Delay slightly so it doesn't compete with page render
   setTimeout(showMilestoneMessage, 300);
 }
@@ -240,7 +290,8 @@ if (points >= 100 && !localStorage.getItem(MILESTONE_KEY)) {
 if (giantCookie) {
   giantCookie.addEventListener('click', (e) => {
     points++;
-    localStorage.setItem('cookiePoints', points);
+    // persist points in an HTTP cookie for 1 year
+    setCookie('cookiePoints', String(points), 365);
     updatePointsDisplay();
 
     // Create +1 element
@@ -257,7 +308,7 @@ if (giantCookie) {
     }, 1000);
 
     // Show milestone message when hitting 100 (if not shown before)
-    if (points >= 100 && !localStorage.getItem(MILESTONE_KEY)) {
+    if (points >= 100 && !getCookie(MILESTONE_KEY)) {
       showMilestoneMessage();
     }
   });
@@ -338,3 +389,186 @@ function addCookieFeatures() {
 }
 
 addCookieFeatures();
+
+// Add top-left (Achievements, Store) and top-right (Leaderboard) UI buttons + simple panels.
+document.addEventListener('DOMContentLoaded', () => {
+  // Inject styles for the toolbar and panels
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Toolbar containers */
+    .ec-toolbar { position: fixed; top: 12px; left: 12px; right: 12px; pointer-events: none; z-index: 10000; }
+    .ec-left, .ec-right { display: inline-flex; gap: 8px; pointer-events: auto; }
+    .ec-left { float: left; }
+    .ec-right { float: right; }
+
+    /* Buttons */
+    .ec-tool-btn {
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-size: 14px;
+      transition: background .12s;
+    }
+    .ec-tool-btn:hover { background: rgba(0,0,0,0.85); }
+
+    /* Panels */
+    .ec-panel {
+      position: fixed;
+      top: 56px;
+      width: 320px;
+      max-width: calc(100% - 48px);
+      background: rgba(18,18,18,0.96);
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      padding: 12px;
+      z-index: 10001;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .ec-panel h3 { margin: 0 0 8px 0; font-size: 16px; }
+    .ec-panel .ec-panel-close {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* Specific positions */
+    .ec-panel.right { right: 12px; }
+    .ec-panel.left { left: 12px; }
+
+    /* Placeholder content style */
+    .ec-panel .ec-content { max-height: 360px; overflow: auto; padding-top: 6px; }
+    @media (max-width: 420px) {
+      .ec-panel { width: calc(100% - 32px); left: 16px; right: 16px; }
+      .ec-panel.right { right: 16px; left: 16px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Create toolbar root
+  const toolbar = document.createElement('div');
+  toolbar.className = 'ec-toolbar';
+  // left and right containers
+  const left = document.createElement('div');
+  left.className = 'ec-left';
+  const right = document.createElement('div');
+  right.className = 'ec-right';
+
+  // Helper to create a button
+  function createBtn(text, id) {
+    const b = document.createElement('button');
+    b.className = 'ec-tool-btn';
+    b.type = 'button';
+    b.textContent = text;
+    b.dataset.ecId = id;
+    return b;
+  }
+
+  const achievementsBtn = createBtn('Achievements', 'achievements');
+  const storeBtn = createBtn('Store', 'store');
+  const leaderboardBtn = createBtn('Leaderboard', 'leaderboard');
+
+  left.appendChild(achievementsBtn);
+  left.appendChild(storeBtn);
+  right.appendChild(leaderboardBtn);
+  toolbar.appendChild(left);
+  toolbar.appendChild(right);
+  document.body.appendChild(toolbar);
+
+  // Panel management
+  function openPanel(name, opts = {}) {
+    // if already open, bring to front
+    const existing = document.getElementById('ec-panel-' + name);
+    if (existing) {
+      existing.style.display = 'block';
+      return existing;
+    }
+
+    const panel = document.createElement('div');
+    panel.className = 'ec-panel ' + (opts.position === 'right' ? 'right' : 'left');
+    panel.id = 'ec-panel-' + name;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'ec-panel-close';
+    closeBtn.setAttribute('aria-label', 'Close ' + name);
+    closeBtn.innerHTML = '×';
+    closeBtn.addEventListener('click', () => panel.remove());
+    panel.appendChild(closeBtn);
+
+    const title = document.createElement('h3');
+    title.textContent = opts.title || name;
+    panel.appendChild(title);
+
+    const content = document.createElement('div');
+    content.className = 'ec-content';
+    content.innerHTML = opts.html || `<div style="opacity:.9">No content yet.</div>`;
+    panel.appendChild(content);
+
+    document.body.appendChild(panel);
+    return panel;
+  }
+
+  // Click handlers to open modest placeholder panels (you can later populate via API)
+  achievementsBtn.addEventListener('click', () => {
+    openPanel('achievements', {
+      position: 'left',
+      title: 'Achievements',
+      html: `
+        <div>
+          <p style="margin:0 0 8px 0">Your achievements will appear here.</p>
+          <ul style="margin:0 0 8px 16px">
+            <li>dalam perbaikan...</li>
+          </ul>
+        </div>
+      `
+    });
+  });
+
+  storeBtn.addEventListener('click', () => {
+    openPanel('store', {
+      position: 'left',
+      title: 'Store',
+      html: `
+        <div>
+          <p style="margin:0 0 8px 0">Buy upgrades from here.</p>
+          <button class="ec-tool-btn" style="margin-top:6px">dalam perbaikan...</button>
+        </div>
+      `
+    });
+  });
+
+  leaderboardBtn.addEventListener('click', () => {
+    openPanel('leaderboard', {
+      position: 'right',
+      title: 'Leaderboard',
+      html: `
+        <div>
+          <p style="margin:0 0 8px 0">Top players (placeholder).</p>
+          <ol style="margin:0 0 8px 18px">
+            <li>dalam perbaikan...</li>
+          </ol>
+          <div style="opacity:.85;font-size:12px">Connect to your server/DB to populate live leaderboard.</div>
+        </div>
+      `
+    });
+  });
+
+  // Optional: close panels when clicking outside
+  document.addEventListener('click', (ev) => {
+    // ignore clicks on toolbar buttons or panels
+    if (ev.target.closest('.ec-toolbar') || ev.target.closest('.ec-panel')) return;
+    // close all panels
+    const panels = document.querySelectorAll('.ec-panel');
+    panels.forEach(p => p.remove());
+  });
+});
