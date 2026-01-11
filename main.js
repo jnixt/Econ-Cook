@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chip.style.width = chip.style.height = cSize + "px";
         chip.style.left = cLeft + "px";
         chip.style.top = cTop + "px";
-        chip.style.opacity = 0.95;
+        chip.style.opacity = 1;
         this.el.appendChild(chip);
       }
 

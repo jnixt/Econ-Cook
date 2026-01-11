@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #24273a;
+  background-color: rgba(36, 39, 58, 0.8);
   min-height: 100vh;
   color: #c6d0f5;
 }
@@ -18,7 +18,7 @@ header {
 h1 {
   background-clip: text;
   color: transparent;
-  background-image: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+  background-image: linear-gradient(90deg, #f5c900 0%, #f89b29 100%);
   letter-spacing: 2px;
   position: relative;
   -webkit-background-clip: text;
@@ -26,7 +26,7 @@ h1 {
   font-family: 'Font Awesome 5 Free', 'GeistMono Nerd Font', monospace;
   text-align: center;
   font-size: 3rem;
-  text-shadow: 0 0 12px rgba(246, 211, 101, 0.6);
+  text-shadow: 4px 4px 20px rgba(255, 255, 0, 0.3);
 }
 
 h3 {
@@ -47,10 +47,10 @@ h3 {
     rgba(0, 0, 0, 0.06) 6%,
     transparent 8%
   );
-  opacity: 0.6;
+  opacity: 1;
   transform-origin: center;
   overflow: hidden;
-  z-index: 0;
+  z-index: -1;
 }
 
 .cookie .chip {
@@ -61,7 +61,13 @@ h3 {
 }
 
 .fa-cookie-bite {
+  background-clip: text;
+  color: transparent;
   margin-right: 10px;
+  text-shadow: 0px 0px 20px rgba(255, 255, 0, 1);
+  background-image: linear-gradient(67deg, #f4e900 100%, #f5c900 0%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .cookie .eye {
