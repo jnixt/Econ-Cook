@@ -180,29 +180,88 @@ const pointsDisplay = document.getElementById('points-display');
 const giantCookie = document.querySelector('.giant-cookie');
 
 function updatePointsDisplay() {
+  if (!pointsDisplay) return;
   pointsDisplay.innerHTML = `<i class="fa-solid fa-hand-pointer" style="margin-right: 4px; color: #ffffff;"></i>${points}`;
 }
 
 updatePointsDisplay();
 
-giantCookie.addEventListener('click', (e) => {
-  points++;
-  localStorage.setItem('cookiePoints', points);
-  updatePointsDisplay();
+// Message for 100 clicks milestone
+const MILESTONE_KEY = 'cookieMilestone100Shown';
 
-  // Create +1 element
-  const plusOne = document.createElement('div');
-  plusOne.className = 'plus-one';
-  plusOne.textContent = '+1';
-  plusOne.style.left = `${e.clientX}px`;
-  plusOne.style.top = `${e.clientY}px`;
-  document.body.appendChild(plusOne);
+function showMilestoneMessage() {
+  // Don't show again if previously dismissed
+  if (localStorage.getItem(MILESTONE_KEY)) return;
 
-  // Remove after animation
-  setTimeout(() => {
-    plusOne.remove();
-  }, 1000);
-});
+  const box = document.createElement('div');
+  box.id = 'milestone-message';
+  // Inline styles so this works without changing CSS files
+  box.style.position = 'fixed';
+  box.style.left = '50%';
+  box.style.top = '20%';
+  box.style.transform = 'translateX(-50%)';
+  box.style.background = 'rgba(0,0,0,0.88)';
+  box.style.color = '#fff';
+  box.style.padding = '18px 20px';
+  box.style.borderRadius = '8px';
+  box.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
+  box.style.zIndex = 9999;
+  box.style.maxWidth = '90%';
+  box.style.width = '480px';
+  box.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+  box.style.fontSize = '15px';
+  box.style.lineHeight = '1.35';
+
+  box.innerHTML = `
+    <div style="position:relative;padding-right:34px;">
+      <div>Wow! You’ve reached 100 cookie clicks. You clearly like cookies. Would you like to make your own using our recipe?</div>
+      <button aria-label="Close milestone" id="milestone-close" style="position:absolute;right:0;top:0;border:none;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 8px;line-height:1">×</button>
+    </div>
+  `;
+
+  document.body.appendChild(box);
+
+  const closeBtn = document.getElementById('milestone-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      box.remove();
+      // Record that the user dismissed/seen the milestone so it won't reappear after reload
+      localStorage.setItem(MILESTONE_KEY, '1');
+    });
+  }
+}
+
+// If user already has >=100 points and hasn't seen the milestone, show it on load
+if (points >= 100 && !localStorage.getItem(MILESTONE_KEY)) {
+  // Delay slightly so it doesn't compete with page render
+  setTimeout(showMilestoneMessage, 300);
+}
+
+if (giantCookie) {
+  giantCookie.addEventListener('click', (e) => {
+    points++;
+    localStorage.setItem('cookiePoints', points);
+    updatePointsDisplay();
+
+    // Create +1 element
+    const plusOne = document.createElement('div');
+    plusOne.className = 'plus-one';
+    plusOne.textContent = '+1';
+    plusOne.style.left = `${e.clientX}px`;
+    plusOne.style.top = `${e.clientY}px`;
+    document.body.appendChild(plusOne);
+
+    // Remove after animation
+    setTimeout(() => {
+      plusOne.remove();
+    }, 1000);
+
+    // Show milestone message when hitting 100 (if not shown before)
+    if (points >= 100 && !localStorage.getItem(MILESTONE_KEY)) {
+      showMilestoneMessage();
+    }
+  });
+}
 
 // Add features to giant cookie
 function addCookieFeatures() {
@@ -213,17 +272,17 @@ function addCookieFeatures() {
   leftEye.className = 'eye';
   leftEye.style.left = '20%';
   leftEye.style.top = '25%';
-  giantCookie.appendChild(leftEye);
+  giantCookie && giantCookie.appendChild(leftEye);
 
   const rightEye = document.createElement('div');
   rightEye.className = 'eye';
   rightEye.style.left = '65%';
   rightEye.style.top = '25%';
-  giantCookie.appendChild(rightEye);
+  giantCookie && giantCookie.appendChild(rightEye);
 
   const mouth = document.createElement('div');
   mouth.className = 'mouth';
-  giantCookie.appendChild(mouth);
+  giantCookie && giantCookie.appendChild(mouth);
 
   const chipCount = 3 + Math.floor(Math.random() * 8);
   const placedChips = [];
@@ -273,7 +332,7 @@ function addCookieFeatures() {
       chip.style.width = chip.style.height = cSize + 'px';
       chip.style.left = cLeft + 'px';
       chip.style.top = cTop + 'px';
-      giantCookie.appendChild(chip);
+      giantCookie && giantCookie.appendChild(chip);
     }
   }
 }
