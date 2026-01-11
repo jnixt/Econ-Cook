@@ -2,6 +2,7 @@
   font-family: "JetBrainsMono Nerd Font", monospace;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -10,15 +11,15 @@ body {
   color: #c6d0f5;
 }
 
-header {
-  height: 30vh;
+.title-container {
+  height: 13vh;
   align-content: center;
 }
 
 h1 {
   background-clip: text;
   color: transparent;
-  background-image: linear-gradient(90deg, #f5c900 0%, #f89b29 100%);
+  background-image: linear-gradient(67deg, #f4762d 50%, #f4e900 80%);
   letter-spacing: 2px;
   position: relative;
   -webkit-background-clip: text;
@@ -47,7 +48,7 @@ h3 {
     rgba(0, 0, 0, 0.06) 6%,
     transparent 8%
   );
-  opacity: 0.6;
+  opacity: 0.3;
   transform-origin: center;
   overflow: hidden;
   z-index: 0;
@@ -64,7 +65,7 @@ h3 {
   background-clip: text;
   color: transparent;
   margin-right: 10px;
-  text-shadow: 0px 0px 20px rgba(255, 255, 0, 1);
+  text-shadow: 0px 0px 14px rgba(255, 255, 0, 1);
   background-image: linear-gradient(67deg, #f4e900 100%, #f5c900 0%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -89,4 +90,72 @@ h3 {
   height: 100%;
   z-index: 0;
   overflow: hidden;
+}
+
+.top-bar {
+  box-sizing: content-box;
+  position: sticky;
+  top: 1%;
+  left: 1%;
+  width: 94%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 2%;
+  z-index: 10;
+  border-radius: 10px;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.nav-left, .nav-center, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-center {
+  gap: 20px;
+}
+
+.nav-right {
+  gap: 15px;
+}
+
+.top-bar a {
+  color: #c6d0f5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.top-bar a:hover {
+  color: #f5c900;
+}
+
+.top-bar i {
+  font-size: 1.5rem;
+}
+
+.nav-left i {
+  font-size: 2rem;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+  overflow-y: scroll;
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(91, 96, 120, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6e738d;
 }
