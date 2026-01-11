@@ -180,7 +180,7 @@ const pointsDisplay = document.getElementById('points-display');
 const giantCookie = document.querySelector('.giant-cookie');
 
 function updatePointsDisplay() {
-  pointsDisplay.textContent = `Points: ${points}`;
+  pointsDisplay.innerHTML = `<i class="fa-solid fa-pointer" style="margin-right: 4px; color: #ffffff:"><i/>${points}`;
 }
 
 updatePointsDisplay();
