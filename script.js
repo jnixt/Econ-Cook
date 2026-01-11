@@ -173,3 +173,109 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// Clicker functionality
+let points = parseInt(localStorage.getItem('cookiePoints')) || 0;
+const pointsDisplay = document.getElementById('points-display');
+const giantCookie = document.querySelector('.giant-cookie');
+
+function updatePointsDisplay() {
+  pointsDisplay.textContent = `Points: ${points}`;
+}
+
+updatePointsDisplay();
+
+giantCookie.addEventListener('click', (e) => {
+  points++;
+  localStorage.setItem('cookiePoints', points);
+  updatePointsDisplay();
+
+  // Create +1 element
+  const plusOne = document.createElement('div');
+  plusOne.className = 'plus-one';
+  plusOne.textContent = '+1';
+  plusOne.style.left = `${e.clientX}px`;
+  plusOne.style.top = `${e.clientY}px`;
+  document.body.appendChild(plusOne);
+
+  // Remove after animation
+  setTimeout(() => {
+    plusOne.remove();
+  }, 1000);
+});
+
+// Add features to giant cookie
+function addCookieFeatures() {
+  const cookieSize = 200;
+
+  // Add eyes
+  const leftEye = document.createElement('div');
+  leftEye.className = 'eye';
+  leftEye.style.left = '20%';
+  leftEye.style.top = '25%';
+  giantCookie.appendChild(leftEye);
+
+  const rightEye = document.createElement('div');
+  rightEye.className = 'eye';
+  rightEye.style.left = '65%';
+  rightEye.style.top = '25%';
+  giantCookie.appendChild(rightEye);
+
+  const mouth = document.createElement('div');
+  mouth.className = 'mouth';
+  giantCookie.appendChild(mouth);
+
+  const chipCount = 3 + Math.floor(Math.random() * 8);
+  const placedChips = [];
+
+  const avoidAreas = [
+    { x: 0.3 * cookieSize, y: 0.25 * cookieSize, w: 0.15 * cookieSize, h: 0.15 * cookieSize },
+    { x: 0.55 * cookieSize, y: 0.25 * cookieSize, w: 0.15 * cookieSize, h: 0.15 * cookieSize },
+    { x: 0.3 * cookieSize, y: 0.6 * cookieSize, w: 0.4 * cookieSize, h: 0.2 * cookieSize }
+  ];
+
+  for (let i = 0; i < chipCount; i++) {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    const cSize = Math.max(8, Math.round(cookieSize * (0.04 + Math.random() * 0.08)));
+
+    let cLeft, cTop, placed = false;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      cLeft = Math.random() * (cookieSize - cSize);
+      cTop = Math.random() * (cookieSize - cSize);
+      const cx = cLeft + cSize / 2;
+      const cy = cTop + cSize / 2;
+
+      let overlaps = false;
+      for (const area of avoidAreas) {
+        if (cx > area.x && cx < area.x + area.w && cy > area.y && cy < area.y + area.h) {
+          overlaps = true;
+          break;
+        }
+      }
+      if (!overlaps) {
+        for (const p of placedChips) {
+          const dx = cx - p.cx;
+          const dy = cy - p.cy;
+          if (Math.hypot(dx, dy) < (cSize + p.size) / 2 + 4) {
+            overlaps = true;
+            break;
+          }
+        }
+      }
+      if (!overlaps) {
+        placedChips.push({ cx, cy, size: cSize });
+        placed = true;
+        break;
+      }
+    }
+    if (placed) {
+      chip.style.width = chip.style.height = cSize + 'px';
+      chip.style.left = cLeft + 'px';
+      chip.style.top = cTop + 'px';
+      giantCookie.appendChild(chip);
+    }
+  }
+}
+
+addCookieFeatures();
