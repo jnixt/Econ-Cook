@@ -172,239 +172,211 @@ document.addEventListener("DOMContentLoaded", () => {
       c.y = Math.random() * (window.innerHeight - c.size);
     }
   });
-});
-
-function setCookie(name, value, days) {
-  let expires = "";
-  if (typeof days === "number") {
-    const d = new Date();
-    d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + d.toUTCString();
-  }
-  document.cookie =
-    name + "=" + encodeURIComponent(value) + expires + "; path=/";
-}
-
-function getCookie(name) {
-  const match = document.cookie.match(
-    new RegExp("(?:^|; )" + name + "=([^;]*)")
-  );
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
-function eraseCookie(name) {
-  setCookie(name, "", -1);
-}
-
-let points = parseInt(getCookie("cookiePoints")) || 0;
-const pointsDisplay = document.getElementById("points-display");
-const giantCookie = document.querySelector(".giant-cookie");
-
-function updatePointsDisplay() {
-  if (!pointsDisplay) return;
-  pointsDisplay.innerHTML = `<i class="fa-solid fa-hand-pointer" style="margin-right: 4px; color: #ffffff;"></i>${points}`;
-}
-
-updatePointsDisplay();
-
-const MILESTONE_KEY = "cookieMilestone100Shown";
-
-const milestoneAudio = new Audio("message_popup_sound.wav");
-milestoneAudio.preload = "auto";
-milestoneAudio.volume = 0.9;
-
-function tryPlayMilestoneSound() {
-  if (!milestoneAudio) return;
-  try {
-    milestoneAudio.currentTime = 0;
-  } catch (e) {}
-  const playPromise = milestoneAudio.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      const onUserInteract = () => {
-        milestoneAudio.play().catch(() => {});
-        window.removeEventListener("click", onUserInteract);
-        window.removeEventListener("keydown", onUserInteract);
-      };
-      window.addEventListener("click", onUserInteract, { once: true });
-      window.addEventListener("keydown", onUserInteract, { once: true });
-    });
-  }
-}
-
-function showMilestoneMessage() {
-  if (getCookie(MILESTONE_KEY)) return;
-
-  const box = document.createElement("div");
-  box.id = "milestone-message";
-  box.style.position = "fixed";
-  box.style.left = "50%";
-  box.style.top = "20%";
-  box.style.transform = "translateX(-50%)";
-  box.style.background = "rgba(0,0,0,0.88)";
-  box.style.color = "#fff";
-  box.style.padding = "18px 20px";
-  box.style.borderRadius = "8px";
-  box.style.boxShadow = "0 8px 30px rgba(0,0,0,0.6)";
-  box.style.zIndex = 9999;
-  box.style.maxWidth = "90%";
-  box.style.width = "480px";
-  box.style.fontFamily =
-    'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
-  box.style.fontSize = "15px";
-  box.style.lineHeight = "1.35";
-
-  box.innerHTML = `
-    <div style="position:relative;padding-right:34px;">
-      <div>Wow, you've hit 100 cookie clicks. Looks like you liked cookies, would you like to make some cookies on your own using our recipe?</div>
-      <button aria-label="Close milestone" id="milestone-close" style="position:absolute;right:0;top:0;border:none;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 8px;line-height:1">×</button>
-    </div>
-  `;
-
-  document.body.appendChild(box);
-
-  tryPlayMilestoneSound();
-
-  const closeBtn = document.getElementById("milestone-close");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      box.remove();
-      setCookie(MILESTONE_KEY, "1", 365);
-    });
-  }
-}
-
-if (points >= 100 && !getCookie(MILESTONE_KEY)) {
-  setTimeout(showMilestoneMessage, 300);
-}
-
-if (giantCookie) {
-  giantCookie.addEventListener("click", (e) => {
-    points++;
-    setCookie("cookiePoints", String(points), 365);
-    updatePointsDisplay();
-
-    const plusOne = document.createElement("div");
-    plusOne.className = "plus-one";
-    plusOne.textContent = "+1";
-    plusOne.style.left = `${e.clientX}px`;
-    plusOne.style.top = `${e.clientY}px`;
-    document.body.appendChild(plusOne);
-
-    setTimeout(() => {
-      plusOne.remove();
-    }, 1000);
-
-    if (points >= 100 && !getCookie(MILESTONE_KEY)) {
-      showMilestoneMessage();
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (typeof days === "number") {
+      const d = new Date();
+      d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + d.toUTCString();
     }
-  });
-}
+    document.cookie =
+      name + "=" + encodeURIComponent(value) + expires + "; path=/";
+  }
 
-function addCookieFeatures() {
-  const cookieSize = 200;
-
-  // Add eyes
-  const leftEye = document.createElement("div");
-  leftEye.className = "eye";
-  leftEye.style.left = "20%";
-  leftEye.style.top = "25%";
-  giantCookie && giantCookie.appendChild(leftEye);
-
-  const rightEye = document.createElement("div");
-  rightEye.className = "eye";
-  rightEye.style.left = "65%";
-  rightEye.style.top = "25%";
-  giantCookie && giantCookie.appendChild(rightEye);
-
-  const mouth = document.createElement("div");
-  mouth.className = "mouth";
-  giantCookie && giantCookie.appendChild(mouth);
-
-  const chipCount = 3 + Math.floor(Math.random() * 8);
-  const placedChips = [];
-
-  const avoidAreas = [
-    {
-      x: 0.3 * cookieSize,
-      y: 0.25 * cookieSize,
-      w: 0.15 * cookieSize,
-      h: 0.15 * cookieSize,
-    },
-    {
-      x: 0.55 * cookieSize,
-      y: 0.25 * cookieSize,
-      w: 0.15 * cookieSize,
-      h: 0.15 * cookieSize,
-    },
-    {
-      x: 0.3 * cookieSize,
-      y: 0.6 * cookieSize,
-      w: 0.4 * cookieSize,
-      h: 0.2 * cookieSize,
-    },
-  ];
-
-  for (let i = 0; i < chipCount; i++) {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    const cSize = Math.max(
-      8,
-      Math.round(cookieSize * (0.04 + Math.random() * 0.08))
+  function getCookie(name) {
+    const match = document.cookie.match(
+      new RegExp("(?:^|; )" + name + "=([^;]*)")
     );
+    return match ? decodeURIComponent(match[1]) : null;
+  }
 
-    let cLeft,
-      cTop,
-      placed = false;
-    for (let attempt = 0; attempt < 20; attempt++) {
-      cLeft = Math.random() * (cookieSize - cSize);
-      cTop = Math.random() * (cookieSize - cSize);
-      const cx = cLeft + cSize / 2;
-      const cy = cTop + cSize / 2;
+  function eraseCookie(name) {
+    setCookie(name, "", -1);
+  }
 
-      let overlaps = false;
-      for (const area of avoidAreas) {
-        if (
-          cx > area.x &&
-          cx < area.x + area.w &&
-          cy > area.y &&
-          cy < area.y + area.h
-        ) {
-          overlaps = true;
-          break;
-        }
+  let points = parseInt(getCookie("cookiePoints")) || 0;
+  const pointsDisplay = document.getElementById("points-display");
+  const giantCookie = document.querySelector(".giant-cookie");
+
+  function updatePointsDisplay() {
+    if (!pointsDisplay) return;
+    pointsDisplay.innerHTML = `<i class="fa-solid fa-hand-pointer" style="margin-right: 4px; color: #ffffff;"></i>${points}`;
+  }
+
+  updatePointsDisplay();
+
+  const MILESTONE_KEY = "cookieMilestone100Shown";
+
+  const milestoneAudio = new Audio("./stuffs/milestone-sound.wav");
+  milestoneAudio.preload = "auto";
+  milestoneAudio.volume = 0.9;
+
+  function tryPlayMilestoneSound() {
+    if (!milestoneAudio) return;
+    try {
+      milestoneAudio.currentTime = 0;
+    } catch (e) {}
+    const playPromise = milestoneAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        const onUserInteract = () => {
+          milestoneAudio.play().catch(() => {});
+          window.removeEventListener("click", onUserInteract);
+          window.removeEventListener("keydown", onUserInteract);
+        };
+        window.addEventListener("click", onUserInteract, { once: true });
+        window.addEventListener("keydown", onUserInteract, { once: true });
+      });
+    }
+  }
+
+  function showMilestoneMessage() {
+    if (getCookie(MILESTONE_KEY)) return;
+
+    const box = document.getElementById("milestone-message");
+    if (!box) return;
+
+    box.style.display = "block";
+    tryPlayMilestoneSound();
+
+    const closeBtn = document.getElementById("milestone-close");
+    if (closeBtn && !closeBtn._milestoneListenerAdded) {
+      closeBtn._milestoneListenerAdded = true;
+      closeBtn.addEventListener("click", () => {
+        box.style.display = "none";
+        setCookie(MILESTONE_KEY, "1", 365);
+      });
+    }
+  }
+
+  if (points >= 100 && !getCookie(MILESTONE_KEY)) {
+    setTimeout(showMilestoneMessage, 300);
+  }
+
+  if (giantCookie) {
+    giantCookie.addEventListener("click", (e) => {
+      points++;
+      setCookie("cookiePoints", String(points), 365);
+      updatePointsDisplay();
+
+      const plusOne = document.createElement("div");
+      plusOne.className = "plus-one";
+      plusOne.textContent = "+1";
+      plusOne.style.left = `${e.clientX}px`;
+      plusOne.style.top = `${e.clientY}px`;
+      document.body.appendChild(plusOne);
+
+      setTimeout(() => {
+        plusOne.remove();
+      }, 1000);
+
+      if (points >= 100 && !getCookie(MILESTONE_KEY)) {
+        showMilestoneMessage();
       }
-      if (!overlaps) {
-        for (const p of placedChips) {
-          const dx = cx - p.cx;
-          const dy = cy - p.cy;
-          if (Math.hypot(dx, dy) < (cSize + p.size) / 2 + 4) {
+    });
+  }
+
+  function addCookieFeatures() {
+    const cookieSize = 200;
+
+    const leftEye = document.createElement("div");
+    leftEye.className = "eye";
+    leftEye.style.left = "20%";
+    leftEye.style.top = "25%";
+    giantCookie && giantCookie.appendChild(leftEye);
+
+    const rightEye = document.createElement("div");
+    rightEye.className = "eye";
+    rightEye.style.left = "65%";
+    rightEye.style.top = "25%";
+    giantCookie && giantCookie.appendChild(rightEye);
+
+    const mouth = document.createElement("div");
+    mouth.className = "mouth";
+    giantCookie && giantCookie.appendChild(mouth);
+
+    const chipCount = 3 + Math.floor(Math.random() * 8);
+    const placedChips = [];
+
+    const avoidAreas = [
+      {
+        x: 0.3 * cookieSize,
+        y: 0.25 * cookieSize,
+        w: 0.15 * cookieSize,
+        h: 0.15 * cookieSize,
+      },
+      {
+        x: 0.55 * cookieSize,
+        y: 0.25 * cookieSize,
+        w: 0.15 * cookieSize,
+        h: 0.15 * cookieSize,
+      },
+      {
+        x: 0.3 * cookieSize,
+        y: 0.6 * cookieSize,
+        w: 0.4 * cookieSize,
+        h: 0.2 * cookieSize,
+      },
+    ];
+
+    for (let i = 0; i < chipCount; i++) {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      const cSize = Math.max(
+        8,
+        Math.round(cookieSize * (0.04 + Math.random() * 0.08))
+      );
+
+      let cLeft,
+        cTop,
+        placed = false;
+      for (let attempt = 0; attempt < 20; attempt++) {
+        cLeft = Math.random() * (cookieSize - cSize);
+        cTop = Math.random() * (cookieSize - cSize);
+        const cx = cLeft + cSize / 2;
+        const cy = cTop + cSize / 2;
+
+        let overlaps = false;
+        for (const area of avoidAreas) {
+          if (
+            cx > area.x &&
+            cx < area.x + area.w &&
+            cy > area.y &&
+            cy < area.y + area.h
+          ) {
             overlaps = true;
             break;
           }
         }
+        if (!overlaps) {
+          for (const p of placedChips) {
+            const dx = cx - p.cx;
+            const dy = cy - p.cy;
+            if (Math.hypot(dx, dy) < (cSize + p.size) / 2 + 4) {
+              overlaps = true;
+              break;
+            }
+          }
+        }
+        if (!overlaps) {
+          placedChips.push({ cx, cy, size: cSize });
+          placed = true;
+          break;
+        }
       }
-      if (!overlaps) {
-        placedChips.push({ cx, cy, size: cSize });
-        placed = true;
-        break;
+      if (placed) {
+        chip.style.width = chip.style.height = cSize + "px";
+        chip.style.left = cLeft + "px";
+        chip.style.top = cTop + "px";
+        giantCookie && giantCookie.appendChild(chip);
       }
-    }
-    if (placed) {
-      chip.style.width = chip.style.height = cSize + "px";
-      chip.style.left = cLeft + "px";
-      chip.style.top = cTop + "px";
-      giantCookie && giantCookie.appendChild(chip);
     }
   }
-}
 
-addCookieFeatures();
-document.addEventListener("DOMContentLoaded", () => {
+  addCookieFeatures();
   function showPanel(name, opts = {}) {
     const panel = document.getElementById("ec-panel-" + name);
     if (!panel) return;
-    // hide other panels
     document.querySelectorAll(".ec-panel").forEach((p) => {
       if (p !== panel) p.style.display = "none";
     });
@@ -453,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
       showPanel("leaderboard", { position: "right" });
     });
 
-  // close buttons inside panels
   document.querySelectorAll(".ec-panel .ec-panel-close").forEach((btn) => {
     btn.addEventListener("click", (ev) => {
       const panel = btn.closest(".ec-panel");
@@ -461,13 +432,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // click outside to close panels
   document.addEventListener("click", (ev) => {
     if (ev.target.closest(".ec-toolbar") || ev.target.closest(".ec-panel")) return;
     document.querySelectorAll(".ec-panel").forEach((p) => (p.style.display = "none"));
   });
 
-  // reposition visible panels on resize
   window.addEventListener("resize", () => {
     document.querySelectorAll(".ec-panel").forEach((panel) => {
       if (panel.style.display === "block") {
