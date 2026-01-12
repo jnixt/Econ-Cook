@@ -172,6 +172,17 @@ h3 {
   padding: 20px;
 }
 
+.icon{
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.15em;
+}
+
+.ec-tool-btn .icon{width:1em;height:1em;margin-right:6px;vertical-align:middle}
+.icon.large{width:1.4em;height:1.4em}
+.icon--brand{filter: none}
+
 #points-display {
   font-family: 'Font Awesome 5 Free', 'GeistMono Nerd Font', monospace;
   font-size: 1.5rem;
