@@ -18,6 +18,10 @@ body {
 }
 
 h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-clip: text;
   color: transparent;
   background-image: linear-gradient(67deg, #f4762d 50%, #f4e900 80%);
@@ -64,14 +68,32 @@ h3 {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
 }
 
-.fa-cookie-bite {
-  background-clip: text;
-  color: transparent;
-  margin-right: 10px;
-  text-shadow: 0px 0px 14px rgba(255, 255, 0, 1);
-  background-image: linear-gradient(67deg, #f4e900 100%, #f5c900 0%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+#fa-bitten-cookie {
+  display: inline-block;
+  width: 1.6em;
+  height: 1.6em;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  transition: transform 0.18s ease, filter 0.18s ease;
+  filter: drop-shadow(0 0 8px rgba(255,230,80,0.9)) drop-shadow(0 0 20px rgba(255,200,0,0.6));
+  will-change: transform, filter;
+  animation: cookieGlow 2.8s ease-in-out infinite;
+}
+
+.title-container h1 .icon.large{
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+@keyframes cookieGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(255,220,80,0.8)) drop-shadow(0 0 18px rgba(255,180,0,0.45));
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(255,240,120,0.95)) drop-shadow(0 0 28px rgba(255,200,0,0.6));
+    transform: translateY(-1px) scale(1.02);
+  }
 }
 
 .cookie .eye {
