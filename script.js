@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const MILESTONE_KEY = "cookieMilestone100Shown";
 
-  const milestoneAudio = new Audio("./stuffs/milestone-sound.wav");
+  const milestoneAudio = new Audio("./.stuffs/milestone-sound.wav");
   milestoneAudio.preload = "auto";
   milestoneAudio.volume = 0.9;
 
