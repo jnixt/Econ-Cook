@@ -194,7 +194,6 @@ function eraseCookie(name) {
   setCookie(name, "", -1);
 }
 
-// Clicker functionality (now using HTTP cookies)
 let points = parseInt(getCookie('cookiePoints')) || 0;
 const pointsDisplay = document.getElementById('points-display');
 const giantCookie = document.querySelector('.giant-cookie');
@@ -208,23 +207,20 @@ updatePointsDisplay();
 
 const MILESTONE_KEY = 'cookieMilestone100Shown';
 
-// Preload milestone sound (replace with your actual file)
 const milestoneAudio = new Audio('message_popup_sound.wav');
 milestoneAudio.preload = 'auto';
 milestoneAudio.volume = 0.9;
 
-// Try to play the milestone sound, with a fallback to play on next user interaction if autoplay is blocked.
 function tryPlayMilestoneSound() {
   if (!milestoneAudio) return;
   try {
     milestoneAudio.currentTime = 0;
   } catch (e) {
-    // ignore if currentTime can't be set
+
   }
   const playPromise = milestoneAudio.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {
-      // Autoplay was blocked by the browser — play once on the next user interaction.
       const onUserInteract = () => {
         milestoneAudio.play().catch(() => {});
         window.removeEventListener('click', onUserInteract);
@@ -237,12 +233,10 @@ function tryPlayMilestoneSound() {
 }
 
 function showMilestoneMessage() {
-  // Don't show again if previously dismissed (cookie)
   if (getCookie(MILESTONE_KEY)) return;
 
   const box = document.createElement('div');
   box.id = 'milestone-message';
-  // Inline styles so this works without changing CSS files
   box.style.position = 'fixed';
   box.style.left = '50%';
   box.style.top = '20%';
@@ -268,33 +262,27 @@ function showMilestoneMessage() {
 
   document.body.appendChild(box);
 
-  // Play the sound when the milestone pops up (with autoplay fallback)
   tryPlayMilestoneSound();
 
   const closeBtn = document.getElementById('milestone-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       box.remove();
-      // Record that the user dismissed/seen the milestone so it won't reappear after reload
       setCookie(MILESTONE_KEY, '1', 365);
     });
   }
 }
 
-// If user already has >=100 points and hasn't seen the milestone, show it on load
 if (points >= 100 && !getCookie(MILESTONE_KEY)) {
-  // Delay slightly so it doesn't compete with page render
   setTimeout(showMilestoneMessage, 300);
 }
 
 if (giantCookie) {
   giantCookie.addEventListener('click', (e) => {
     points++;
-    // persist points in an HTTP cookie for 1 year
     setCookie('cookiePoints', String(points), 365);
     updatePointsDisplay();
 
-    // Create +1 element
     const plusOne = document.createElement('div');
     plusOne.className = 'plus-one';
     plusOne.textContent = '+1';
@@ -302,19 +290,16 @@ if (giantCookie) {
     plusOne.style.top = `${e.clientY}px`;
     document.body.appendChild(plusOne);
 
-    // Remove after animation
     setTimeout(() => {
       plusOne.remove();
     }, 1000);
 
-    // Show milestone message when hitting 100 (if not shown before)
     if (points >= 100 && !getCookie(MILESTONE_KEY)) {
       showMilestoneMessage();
     }
   });
 }
 
-// Add features to giant cookie
 function addCookieFeatures() {
   const cookieSize = 200;
 
@@ -390,18 +375,14 @@ function addCookieFeatures() {
 
 addCookieFeatures();
 
-// Add top-left (Achievements, Store) and top-right (Leaderboard) UI buttons + simple panels.
 document.addEventListener('DOMContentLoaded', () => {
-  // Inject styles for the toolbar and panels
   const style = document.createElement('style');
   style.textContent = `
-    /* Toolbar containers */
     .ec-toolbar { position: fixed; top: 12px; left: 12px; right: 12px; pointer-events: none; z-index: 10000; }
     .ec-left, .ec-right { display: inline-flex; gap: 8px; pointer-events: auto; }
     .ec-left { float: left; }
     .ec-right { float: right; }
 
-    /* Buttons */
     .ec-tool-btn {
       background: rgba(0,0,0,0.7);
       color: #fff;
@@ -415,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     .ec-tool-btn:hover { background: rgba(0,0,0,0.85); }
 
-    /* Panels */
     .ec-panel {
       position: fixed;
       top: 56px;
@@ -442,11 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
       font-size: 18px;
       cursor: pointer;
     }
-    /* Specific positions */
     .ec-panel.right { right: 12px; }
     .ec-panel.left { left: 12px; }
 
-    /* Placeholder content style */
     .ec-panel .ec-content { max-height: 360px; overflow: auto; padding-top: 6px; }
     @media (max-width: 420px) {
       .ec-panel { width: calc(100% - 32px); left: 16px; right: 16px; }
@@ -455,16 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.head.appendChild(style);
 
-  // Create toolbar root
   const toolbar = document.createElement('div');
   toolbar.className = 'ec-toolbar';
-  // left and right containers
   const left = document.createElement('div');
   left.className = 'ec-left';
   const right = document.createElement('div');
   right.className = 'ec-right';
 
-  // Helper to create a button
   function createBtn(text, id) {
     const b = document.createElement('button');
     b.className = 'ec-tool-btn';
@@ -485,9 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
   toolbar.appendChild(right);
   document.body.appendChild(toolbar);
 
-  // Panel management
   function openPanel(name, opts = {}) {
-    // if already open, bring to front
     const existing = document.getElementById('ec-panel-' + name);
     if (existing) {
       existing.style.display = 'block';
@@ -518,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return panel;
   }
 
-  // Click handlers to open modest placeholder panels (you can later populate via API)
   achievementsBtn.addEventListener('click', () => {
     openPanel('achievements', {
       position: 'left',
@@ -563,11 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Optional: close panels when clicking outside
   document.addEventListener('click', (ev) => {
-    // ignore clicks on toolbar buttons or panels
     if (ev.target.closest('.ec-toolbar') || ev.target.closest('.ec-panel')) return;
-    // close all panels
     const panels = document.querySelectorAll('.ec-panel');
     panels.forEach(p => p.remove());
   });
