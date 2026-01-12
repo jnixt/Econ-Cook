@@ -17,7 +17,7 @@
       </div>
       <div class="nav-center">
         <a href="#home">Home</a>
-        <a href="#">Recipes</a>
+        <a href="#reseps">Recipes</a>
         <a href="#clicker">Clicker</a>
       </div>
       <div class="nav-right">
@@ -25,15 +25,6 @@
         <a href="https://github.com/jnixt" target="_blank"><i class="fab fa-github"></i></a>
       </div>
     </nav>
-    <div class="ec-toolbar">
-      <div class="ec-left">
-        <button id="achievements-btn" class="ec-tool-btn" aria-label="Achievements" type="button"><i class="fa-solid fa-award"></i></button>
-        <button id="store-btn" class="ec-tool-btn" aria-label="Store" type="button"><i class="fa-solid fa-store"></i></button>
-      </div>
-      <div class="ec-right">
-        <button id="leaderboard-btn" class="ec-tool-btn" aria-label="Leaderboard" type="button"><i class="fa-solid fa-trophy"></i></button>
-      </div>
-    </div>
     <div id="cookie-bg"></div>
     <div class="title-container">
       <h1><i class="fa-solid fa-cookie-bite"></i>E.Cookie</h1>
@@ -41,12 +32,52 @@
     </div>
   </header>
   <footer id="clicker">
-    <div id="points-display"><i class="fa-solid fa-hand-pointer" style="margin-right: 7px; color: #ffffff"></i>0</div>
     <div class="giant-cookie"></div>
+    <div class="ec-toolbar">
+      <div class="ec-left">
+        <button id="achievements-btn" class="ec-tool-btn" style="letter-spacing: 2px;" aria-label="Achievements" type="button"><i class="fa-solid fa-award" style="margin-right: 5px;"></i>Achievements</button>
+        <div id="ec-panel-achievements" class="ec-panel left" style="display:none;">
+          <button class="ec-panel-close" aria-label="Close achievements">×</button>
+          <h3>Achievements</h3>
+          <div class="ec-content">
+            <p style="margin:0 0 8px 0">Your achievements will appear here.</p>
+            <ul style="margin:0 0 8px 16px">
+              <li>dalam perbaikan...</li>
+            </ul>
+          </div>
+        </div>
+        <button id="store-btn" class="ec-tool-btn" aria-label="Store" type="button"><i class="fa-solid fa-store"></i></button>
+        <div id="ec-panel-store" class="ec-panel left" style="display:none;">
+          <button class="ec-panel-close" aria-label="Close store">×</button>
+          <h3>Store</h3>
+          <div class="ec-content">
+            <p style="margin:0 0 8px 0">Buy upgrades from here.</p>
+            <button class="ec-tool-btn" style="margin-top:6px">dalam perbaikan...</button>
+          </div>
+        </div>
+      </div>
+      <div class="ec-midd">
+        <div id="points-display"><i class="fa-solid fa-hand-pointer" style="margin-right: 7px; color: #ffffff"></i>0</div>
+      </div>
+      <div class="ec-right">
+        <button id="leaderboard-btn" class="ec-tool-btn" aria-label="Leaderboard" type="button"><i class="fa-solid fa-trophy"></i></button>
+        <div id="ec-panel-leaderboard" class="ec-panel right" style="display:none;">
+          <button class="ec-panel-close" aria-label="Close leaderboard">×</button>
+          <h3>Leaderboard</h3>
+          <div class="ec-content">
+            <p style="margin:0 0 8px 0">Top players (placeholder).</p>
+            <ol style="margin:0 0 8px 18px">
+              <li>dalam perbaikan...</li>
+            </ol>
+            <div style="opacity:.85;font-size:12px">Connect to your server/DB to populate live leaderboard.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </footer>
+
   <br>
-  <p style="text-align: center; margin-bottom: 4vh;">Team <i class="fa-solid fa-people-group" style="margin-right: 6px;"></i><i style="margin-right: 4px;"><b>Shwcehneiger</b></i>&trade;</p>
-  <br>
+  <p style="text-align: center; margin-bottom: 3vh;">Team <i class="fa-solid fa-people-group" style="margin-right: 6px;"></i><i style="margin-right: 4px;"><b>Shwcehneiger</b></i>&trade;</p>
   <script src="script.js" defer></script>
 </body>
 

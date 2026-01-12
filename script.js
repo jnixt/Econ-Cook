@@ -174,7 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Helper functions for HTTP cookies
 function setCookie(name, value, days) {
   let expires = "";
   if (typeof days === "number") {
@@ -182,11 +181,14 @@ function setCookie(name, value, days) {
     d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
     expires = "; expires=" + d.toUTCString();
   }
-  document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+  document.cookie =
+    name + "=" + encodeURIComponent(value) + expires + "; path=/";
 }
 
 function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  const match = document.cookie.match(
+    new RegExp("(?:^|; )" + name + "=([^;]*)")
+  );
   return match ? decodeURIComponent(match[1]) : null;
 }
 
@@ -194,9 +196,9 @@ function eraseCookie(name) {
   setCookie(name, "", -1);
 }
 
-let points = parseInt(getCookie('cookiePoints')) || 0;
-const pointsDisplay = document.getElementById('points-display');
-const giantCookie = document.querySelector('.giant-cookie');
+let points = parseInt(getCookie("cookiePoints")) || 0;
+const pointsDisplay = document.getElementById("points-display");
+const giantCookie = document.querySelector(".giant-cookie");
 
 function updatePointsDisplay() {
   if (!pointsDisplay) return;
@@ -205,29 +207,27 @@ function updatePointsDisplay() {
 
 updatePointsDisplay();
 
-const MILESTONE_KEY = 'cookieMilestone100Shown';
+const MILESTONE_KEY = "cookieMilestone100Shown";
 
-const milestoneAudio = new Audio('message_popup_sound.wav');
-milestoneAudio.preload = 'auto';
+const milestoneAudio = new Audio("message_popup_sound.wav");
+milestoneAudio.preload = "auto";
 milestoneAudio.volume = 0.9;
 
 function tryPlayMilestoneSound() {
   if (!milestoneAudio) return;
   try {
     milestoneAudio.currentTime = 0;
-  } catch (e) {
-
-  }
+  } catch (e) {}
   const playPromise = milestoneAudio.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {
       const onUserInteract = () => {
         milestoneAudio.play().catch(() => {});
-        window.removeEventListener('click', onUserInteract);
-        window.removeEventListener('keydown', onUserInteract);
+        window.removeEventListener("click", onUserInteract);
+        window.removeEventListener("keydown", onUserInteract);
       };
-      window.addEventListener('click', onUserInteract, { once: true });
-      window.addEventListener('keydown', onUserInteract, { once: true });
+      window.addEventListener("click", onUserInteract, { once: true });
+      window.addEventListener("keydown", onUserInteract, { once: true });
     });
   }
 }
@@ -235,23 +235,24 @@ function tryPlayMilestoneSound() {
 function showMilestoneMessage() {
   if (getCookie(MILESTONE_KEY)) return;
 
-  const box = document.createElement('div');
-  box.id = 'milestone-message';
-  box.style.position = 'fixed';
-  box.style.left = '50%';
-  box.style.top = '20%';
-  box.style.transform = 'translateX(-50%)';
-  box.style.background = 'rgba(0,0,0,0.88)';
-  box.style.color = '#fff';
-  box.style.padding = '18px 20px';
-  box.style.borderRadius = '8px';
-  box.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
+  const box = document.createElement("div");
+  box.id = "milestone-message";
+  box.style.position = "fixed";
+  box.style.left = "50%";
+  box.style.top = "20%";
+  box.style.transform = "translateX(-50%)";
+  box.style.background = "rgba(0,0,0,0.88)";
+  box.style.color = "#fff";
+  box.style.padding = "18px 20px";
+  box.style.borderRadius = "8px";
+  box.style.boxShadow = "0 8px 30px rgba(0,0,0,0.6)";
   box.style.zIndex = 9999;
-  box.style.maxWidth = '90%';
-  box.style.width = '480px';
-  box.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
-  box.style.fontSize = '15px';
-  box.style.lineHeight = '1.35';
+  box.style.maxWidth = "90%";
+  box.style.width = "480px";
+  box.style.fontFamily =
+    'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+  box.style.fontSize = "15px";
+  box.style.lineHeight = "1.35";
 
   box.innerHTML = `
     <div style="position:relative;padding-right:34px;">
@@ -264,11 +265,11 @@ function showMilestoneMessage() {
 
   tryPlayMilestoneSound();
 
-  const closeBtn = document.getElementById('milestone-close');
+  const closeBtn = document.getElementById("milestone-close");
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener("click", () => {
       box.remove();
-      setCookie(MILESTONE_KEY, '1', 365);
+      setCookie(MILESTONE_KEY, "1", 365);
     });
   }
 }
@@ -278,14 +279,14 @@ if (points >= 100 && !getCookie(MILESTONE_KEY)) {
 }
 
 if (giantCookie) {
-  giantCookie.addEventListener('click', (e) => {
+  giantCookie.addEventListener("click", (e) => {
     points++;
-    setCookie('cookiePoints', String(points), 365);
+    setCookie("cookiePoints", String(points), 365);
     updatePointsDisplay();
 
-    const plusOne = document.createElement('div');
-    plusOne.className = 'plus-one';
-    plusOne.textContent = '+1';
+    const plusOne = document.createElement("div");
+    plusOne.className = "plus-one";
+    plusOne.textContent = "+1";
     plusOne.style.left = `${e.clientX}px`;
     plusOne.style.top = `${e.clientY}px`;
     document.body.appendChild(plusOne);
@@ -304,37 +305,57 @@ function addCookieFeatures() {
   const cookieSize = 200;
 
   // Add eyes
-  const leftEye = document.createElement('div');
-  leftEye.className = 'eye';
-  leftEye.style.left = '20%';
-  leftEye.style.top = '25%';
+  const leftEye = document.createElement("div");
+  leftEye.className = "eye";
+  leftEye.style.left = "20%";
+  leftEye.style.top = "25%";
   giantCookie && giantCookie.appendChild(leftEye);
 
-  const rightEye = document.createElement('div');
-  rightEye.className = 'eye';
-  rightEye.style.left = '65%';
-  rightEye.style.top = '25%';
+  const rightEye = document.createElement("div");
+  rightEye.className = "eye";
+  rightEye.style.left = "65%";
+  rightEye.style.top = "25%";
   giantCookie && giantCookie.appendChild(rightEye);
 
-  const mouth = document.createElement('div');
-  mouth.className = 'mouth';
+  const mouth = document.createElement("div");
+  mouth.className = "mouth";
   giantCookie && giantCookie.appendChild(mouth);
 
   const chipCount = 3 + Math.floor(Math.random() * 8);
   const placedChips = [];
 
   const avoidAreas = [
-    { x: 0.3 * cookieSize, y: 0.25 * cookieSize, w: 0.15 * cookieSize, h: 0.15 * cookieSize },
-    { x: 0.55 * cookieSize, y: 0.25 * cookieSize, w: 0.15 * cookieSize, h: 0.15 * cookieSize },
-    { x: 0.3 * cookieSize, y: 0.6 * cookieSize, w: 0.4 * cookieSize, h: 0.2 * cookieSize }
+    {
+      x: 0.3 * cookieSize,
+      y: 0.25 * cookieSize,
+      w: 0.15 * cookieSize,
+      h: 0.15 * cookieSize,
+    },
+    {
+      x: 0.55 * cookieSize,
+      y: 0.25 * cookieSize,
+      w: 0.15 * cookieSize,
+      h: 0.15 * cookieSize,
+    },
+    {
+      x: 0.3 * cookieSize,
+      y: 0.6 * cookieSize,
+      w: 0.4 * cookieSize,
+      h: 0.2 * cookieSize,
+    },
   ];
 
   for (let i = 0; i < chipCount; i++) {
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-    const cSize = Math.max(8, Math.round(cookieSize * (0.04 + Math.random() * 0.08)));
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    const cSize = Math.max(
+      8,
+      Math.round(cookieSize * (0.04 + Math.random() * 0.08))
+    );
 
-    let cLeft, cTop, placed = false;
+    let cLeft,
+      cTop,
+      placed = false;
     for (let attempt = 0; attempt < 20; attempt++) {
       cLeft = Math.random() * (cookieSize - cSize);
       cTop = Math.random() * (cookieSize - cSize);
@@ -343,7 +364,12 @@ function addCookieFeatures() {
 
       let overlaps = false;
       for (const area of avoidAreas) {
-        if (cx > area.x && cx < area.x + area.w && cy > area.y && cy < area.y + area.h) {
+        if (
+          cx > area.x &&
+          cx < area.x + area.w &&
+          cy > area.y &&
+          cy < area.y + area.h
+        ) {
           overlaps = true;
           break;
         }
@@ -365,98 +391,89 @@ function addCookieFeatures() {
       }
     }
     if (placed) {
-      chip.style.width = chip.style.height = cSize + 'px';
-      chip.style.left = cLeft + 'px';
-      chip.style.top = cTop + 'px';
+      chip.style.width = chip.style.height = cSize + "px";
+      chip.style.left = cLeft + "px";
+      chip.style.top = cTop + "px";
       giantCookie && giantCookie.appendChild(chip);
     }
   }
 }
 
 addCookieFeatures();
-document.addEventListener('DOMContentLoaded', () => {
-  function openPanel(name, opts = {}) {
-    const existing = document.getElementById('ec-panel-' + name);
-    if (existing) {
-      existing.style.display = 'block';
-      return existing;
+document.addEventListener("DOMContentLoaded", () => {
+  function showPanel(name, opts = {}) {
+    const panel = document.getElementById("ec-panel-" + name);
+    if (!panel) return;
+    // hide other panels
+    document.querySelectorAll(".ec-panel").forEach((p) => {
+      if (p !== panel) p.style.display = "none";
+    });
+    panel.style.display = "block";
+    panel.classList.remove("left", "right");
+    panel.classList.add(opts.position === "right" ? "right" : "left");
+    panel.style.position = "absolute";
+    panel.style.zIndex = 9999;
+
+    const btnId = name === "leaderboard" ? "leaderboard-btn" : name + "-btn";
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      const panelWidth = Math.min(Math.max(panel.offsetWidth || 300, 220), 360);
+      let left = rect.left + rect.width / 2 - panelWidth / 2;
+      if (opts.position === "right") {
+        left = rect.left + rect.width - panelWidth;
+      }
+      left = Math.max(8, Math.min(left, window.innerWidth - panelWidth - 8));
+      const top = rect.bottom + 8;
+      panel.style.left = left + "px";
+      panel.style.top = top + "px";
     }
-
-    const panel = document.createElement('div');
-    panel.className = 'ec-panel ' + (opts.position === 'right' ? 'right' : 'left');
-    panel.id = 'ec-panel-' + name;
-
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'ec-panel-close';
-    closeBtn.setAttribute('aria-label', 'Close ' + name);
-    closeBtn.innerHTML = '×';
-    closeBtn.addEventListener('click', () => panel.remove());
-    panel.appendChild(closeBtn);
-
-    const title = document.createElement('h3');
-    title.textContent = opts.title || name;
-    panel.appendChild(title);
-
-    const content = document.createElement('div');
-    content.className = 'ec-content';
-    content.innerHTML = opts.html || `<div style="opacity:.9">No content yet.</div>`;
-    panel.appendChild(content);
-
-    document.body.appendChild(panel);
     return panel;
   }
 
-  const achievementsBtn = document.getElementById('achievements-btn');
-  const storeBtn = document.getElementById('store-btn');
-  const leaderboardBtn = document.getElementById('leaderboard-btn');
+  const achievementsBtn = document.getElementById("achievements-btn");
+  const storeBtn = document.getElementById("store-btn");
+  const leaderboardBtn = document.getElementById("leaderboard-btn");
 
-  if (achievementsBtn) achievementsBtn.addEventListener('click', () => {
-    openPanel('achievements', {
-      position: 'left',
-      title: 'Achievements',
-      html: `
-        <div>
-          <p style="margin:0 0 8px 0">Your achievements will appear here.</p>
-          <ul style="margin:0 0 8px 16px">
-            <li>dalam perbaikan...</li>
-          </ul>
-        </div>
-      `
+  if (achievementsBtn)
+    achievementsBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showPanel("achievements", { position: "left" });
+    });
+
+  if (storeBtn)
+    storeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showPanel("store", { position: "left" });
+    });
+
+  if (leaderboardBtn)
+    leaderboardBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showPanel("leaderboard", { position: "right" });
+    });
+
+  // close buttons inside panels
+  document.querySelectorAll(".ec-panel .ec-panel-close").forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      const panel = btn.closest(".ec-panel");
+      if (panel) panel.style.display = "none";
     });
   });
 
-  if (storeBtn) storeBtn.addEventListener('click', () => {
-    openPanel('store', {
-      position: 'left',
-      title: 'Store',
-      html: `
-        <div>
-          <p style="margin:0 0 8px 0">Buy upgrades from here.</p>
-          <button class="ec-tool-btn" style="margin-top:6px">dalam perbaikan...</button>
-        </div>
-      `
-    });
+  // click outside to close panels
+  document.addEventListener("click", (ev) => {
+    if (ev.target.closest(".ec-toolbar") || ev.target.closest(".ec-panel")) return;
+    document.querySelectorAll(".ec-panel").forEach((p) => (p.style.display = "none"));
   });
 
-  if (leaderboardBtn) leaderboardBtn.addEventListener('click', () => {
-    openPanel('leaderboard', {
-      position: 'right',
-      title: 'Leaderboard',
-      html: `
-        <div>
-          <p style="margin:0 0 8px 0">Top players (placeholder).</p>
-          <ol style="margin:0 0 8px 18px">
-            <li>dalam perbaikan...</li>
-          </ol>
-          <div style="opacity:.85;font-size:12px">Connect to your server/DB to populate live leaderboard.</div>
-        </div>
-      `
+  // reposition visible panels on resize
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".ec-panel").forEach((panel) => {
+      if (panel.style.display === "block") {
+        const name = panel.id.replace("ec-panel-", "");
+        showPanel(name, { position: panel.classList.contains("right") ? "right" : "left" });
+      }
     });
-  });
-
-  document.addEventListener('click', (ev) => {
-    if (ev.target.closest('.ec-toolbar') || ev.target.closest('.ec-panel')) return;
-    const panels = document.querySelectorAll('.ec-panel');
-    panels.forEach(p => p.remove());
   });
 });
