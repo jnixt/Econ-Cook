@@ -374,92 +374,7 @@ function addCookieFeatures() {
 }
 
 addCookieFeatures();
-
 document.addEventListener('DOMContentLoaded', () => {
-  const style = document.createElement('style');
-  style.textContent = `
-    .ec-toolbar { position: fixed; top: 12px; left: 12px; right: 12px; pointer-events: none; z-index: 10000; }
-    .ec-left, .ec-right { display: inline-flex; gap: 8px; pointer-events: auto; }
-    .ec-left { float: left; }
-    .ec-right { float: right; }
-
-    .ec-tool-btn {
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      border: 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      font-size: 14px;
-      transition: background .12s;
-    }
-    .ec-tool-btn:hover { background: rgba(0,0,0,0.85); }
-
-    .ec-panel {
-      position: fixed;
-      top: 56px;
-      width: 320px;
-      max-width: calc(100% - 48px);
-      background: rgba(18,18,18,0.96);
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-      padding: 12px;
-      z-index: 10001;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      font-size: 14px;
-      line-height: 1.35;
-    }
-    .ec-panel h3 { margin: 0 0 8px 0; font-size: 16px; }
-    .ec-panel .ec-panel-close {
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .ec-panel.right { right: 12px; }
-    .ec-panel.left { left: 12px; }
-
-    .ec-panel .ec-content { max-height: 360px; overflow: auto; padding-top: 6px; }
-    @media (max-width: 420px) {
-      .ec-panel { width: calc(100% - 32px); left: 16px; right: 16px; }
-      .ec-panel.right { right: 16px; left: 16px; }
-    }
-  `;
-  document.head.appendChild(style);
-
-  const toolbar = document.createElement('div');
-  toolbar.className = 'ec-toolbar';
-  const left = document.createElement('div');
-  left.className = 'ec-left';
-  const right = document.createElement('div');
-  right.className = 'ec-right';
-
-  function createBtn(text, id) {
-    const b = document.createElement('button');
-    b.className = 'ec-tool-btn';
-    b.type = 'button';
-    b.textContent = text;
-    b.dataset.ecId = id;
-    return b;
-  }
-
-  const achievementsBtn = createBtn('Achievements', 'achievements');
-  const storeBtn = createBtn('Store', 'store');
-  const leaderboardBtn = createBtn('Leaderboard', 'leaderboard');
-
-  left.appendChild(achievementsBtn);
-  left.appendChild(storeBtn);
-  right.appendChild(leaderboardBtn);
-  toolbar.appendChild(left);
-  toolbar.appendChild(right);
-  document.body.appendChild(toolbar);
-
   function openPanel(name, opts = {}) {
     const existing = document.getElementById('ec-panel-' + name);
     if (existing) {
@@ -491,7 +406,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return panel;
   }
 
-  achievementsBtn.addEventListener('click', () => {
+  const achievementsBtn = document.getElementById('achievements-btn');
+  const storeBtn = document.getElementById('store-btn');
+  const leaderboardBtn = document.getElementById('leaderboard-btn');
+
+  if (achievementsBtn) achievementsBtn.addEventListener('click', () => {
     openPanel('achievements', {
       position: 'left',
       title: 'Achievements',
@@ -506,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  storeBtn.addEventListener('click', () => {
+  if (storeBtn) storeBtn.addEventListener('click', () => {
     openPanel('store', {
       position: 'left',
       title: 'Store',
@@ -519,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  leaderboardBtn.addEventListener('click', () => {
+  if (leaderboardBtn) leaderboardBtn.addEventListener('click', () => {
     openPanel('leaderboard', {
       position: 'right',
       title: 'Leaderboard',
