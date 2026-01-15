@@ -195,19 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let points = parseInt(getCookie("cookiePoints")) || 0;
-  const pointsDisplay = document.getElementById("points-display");
+  const pointsValue = document.getElementById("points-value");
   const giantCookie = document.querySelector(".giant-cookie");
 
   function updatePointsDisplay() {
-    if (!pointsDisplay) return;
-    pointsDisplay.innerHTML = `<i class="fa-solid fa-hand-pointer" style="margin-right: 4px; color: #ffffff;"></i>${points}`;
+    if (!pointsValue) return;
+    pointsValue.textContent = points;
   }
 
   updatePointsDisplay();
 
   const MILESTONE_KEY = "cookieMilestone100Shown";
 
-  const milestoneAudio = new Audio("./.stuffs/milestone-sound.wav");
+  const milestoneAudio = new Audio("stuffs/milestone-audio.mp3");
   milestoneAudio.preload = "auto";
   milestoneAudio.volume = 0.9;
 
@@ -416,25 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (p !== panel) p.style.display = "none";
     });
     panel.style.display = "block";
-    panel.classList.remove("left", "right");
-    panel.classList.add(opts.position === "right" ? "right" : "left");
-    panel.style.position = "absolute";
-    panel.style.zIndex = 9999;
-
-    const btnId = name === "leaderboard" ? "leaderboard-btn" : name + "-btn";
-    const btn = document.getElementById(btnId);
-    if (btn) {
-      const rect = btn.getBoundingClientRect();
-      const panelWidth = Math.min(Math.max(panel.offsetWidth || 300, 220), 360);
-      let left = rect.left + rect.width / 2 - panelWidth / 2;
-      if (opts.position === "right") {
-        left = rect.left + rect.width - panelWidth;
-      }
-      left = Math.max(8, Math.min(left, window.innerWidth - panelWidth - 8));
-      const top = rect.bottom + 8;
-      panel.style.left = left + "px";
-      panel.style.top = top + "px";
-    }
     return panel;
   }
 
@@ -445,19 +426,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if (achievementsBtn)
     achievementsBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      showPanel("achievements", { position: "left" });
+      showPanel("achievements");
     });
 
   if (storeBtn)
     storeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      showPanel("store", { position: "left" });
+      showPanel("store");
     });
 
   if (leaderboardBtn)
     leaderboardBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      showPanel("leaderboard", { position: "right" });
+      showPanel("leaderboard");
     });
 
   document.querySelectorAll(".ec-panel .ec-panel-close").forEach((btn) => {
@@ -476,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".ec-panel").forEach((panel) => {
       if (panel.style.display === "block") {
         const name = panel.id.replace("ec-panel-", "");
-        showPanel(name, { position: panel.classList.contains("right") ? "right" : "left" });
+        showPanel(name);
       }
     });
   });
