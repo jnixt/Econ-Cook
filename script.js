@@ -229,6 +229,28 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
+// Typing helper for milestone text
+  function typeText(el, text, perCharMs = 150) {
+    if (!el) return;
+    // stop any previous typing
+    if (el._typeInterval) {
+      clearInterval(el._typeInterval);
+      el._typeInterval = null;
+    }
+    el.textContent = "";
+    let i = 0;
+    // show cursor optionally (can be styled in CSS)
+    // simple implementation without blinking cursor:
+    el._typeInterval = setInterval(() => {
+      el.textContent += text.charAt(i);
+      i++;
+      if (i >= text.length) {
+        clearInterval(el._typeInterval);
+        el._typeInterval = null;
+      }
+    }, perCharMs);
+  }
+
 
   function showMilestoneMessage() {
     if (getCookie(MILESTONE_KEY)) return;
@@ -239,10 +261,23 @@ document.addEventListener("DOMContentLoaded", () => {
     box.style.display = "block";
     tryPlayMilestoneSound();
 
+    // start typing the message per character at 150ms
+    const textEl = document.getElementById("milestone-text");
+    if (textEl) {
+      const full = textEl.dataset.full || textEl.textContent || "";
+      typeText(textEl, full, 150);
+    }
+
     const closeBtn = document.getElementById("milestone-close");
     if (closeBtn && !closeBtn._milestoneListenerAdded) {
       closeBtn._milestoneListenerAdded = true;
       closeBtn.addEventListener("click", () => {
+        // clear typing interval if still typing
+        const textEl = document.getElementById("milestone-text");
+        if (textEl && textEl._typeInterval) {
+          clearInterval(textEl._typeInterval);
+          textEl._typeInterval = null;
+        }
         box.style.display = "none";
         setCookie(MILESTONE_KEY, "1", 365);
       });
@@ -268,10 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setTimeout(() => {
         plusOne.remove();
-      }, 1000);
+      }, 700);
 
       if (points >= 100 && !getCookie(MILESTONE_KEY)) {
-        showMilestoneMessage();
+        setTimeout(showMilestoneMessage, 300);
       }
     });
   }
@@ -446,3 +481,91 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+//Pyodide: kayak tulis kode python di js
+async function showMilestoneWithPyodide() {
+  const el = document.getElementById('milestone-text');
+  const popup = document.getElementById('milestone-message');
+  if (!el || !popup) return;
+
+  el.textContent = '';
+  popup.style.display = 'block';
+
+  // load pyodide (CDN)
+  if (!window.pyodide) {
+    window.pyodide = await loadPyodide();
+  }
+
+  // expose a JS function the Python can call to append text
+  window.append_char = (ch) => {
+    el.textContent += ch;
+  };
+
+  // Python code string 
+  const pyCode = `
+import time
+from js import append_char
+
+message = ("Wow, you've hit 100 cookie clicks. Looks like you liked cookies, "
+           "would you like to make some cookies on your own using our recipe?")
+for ch in message:
+    append_char(ch)
+    time.sleep(0.03)
+`;
+
+  // run asynchronously so UI doesn't block
+  window.pyodide.runPythonAsync(pyCode).catch(err => {
+    console.error(err);
+  });
+
+  // close button handler
+  const closeBtn = document.getElementById('milestone-close');
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      popup.style.display = 'none';
+    };
+  }
+}
+async function showMilestoneWithPyodide() {
+  const el = document.getElementById('milestone-text');
+  const popup = document.getElementById('milestone-message');
+  if (!el || !popup) return;
+
+  el.textContent = '';
+  popup.style.display = 'block';
+
+  // load pyodide (CDN)
+  if (!window.pyodide) {
+    window.pyodide = await loadPyodide();
+  }
+
+  // expose a JS function the Python can call to append text
+  window.append_char = (ch) => {
+    el.textContent += ch;
+  };
+
+  // Python code string 
+  const pyCode = `
+import time
+from js import append_char
+
+message = ("Wow, you've hit 100 cookie clicks. Looks like you liked cookies, "
+           "would you like to make some cookies on your own using our recipe?")
+for ch in message:
+    append_char(ch)
+    time.sleep(0.03)
+`;
+
+  // run asynchronously so UI doesn't block
+  window.pyodide.runPythonAsync(pyCode).catch(err => {
+    console.error(err);
+  });
+
+  // close button handler
+  const closeBtn = document.getElementById('milestone-close');
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      popup.style.display = 'none';
+    };
+  }
+}
