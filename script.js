@@ -198,6 +198,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const pointsValue = document.getElementById("points-value");
   const giantCookie = document.querySelector(".giant-cookie");
 
+  // Autoclicker state and helpers (declared early so handlers can reference them)
+  let autoclickerInterval = null;
+  function startAutoclicker(intervalMs = 250) {
+    if (!giantCookie || autoclickerInterval) return;
+    autoclickerInterval = setInterval(() => {
+      const rect = giantCookie.getBoundingClientRect();
+      const ev = new MouseEvent("click", {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+        bubbles: true,
+        cancelable: true,
+      });
+      giantCookie.dispatchEvent(ev);
+    }, intervalMs);
+  }
+
+  function stopAutoclicker() {
+    if (autoclickerInterval) {
+      clearInterval(autoclickerInterval);
+      autoclickerInterval = null;
+    }
+  }
+
   function updatePointsDisplay() {
     if (!pointsValue) return;
     pointsValue.textContent = points;
@@ -426,4 +449,107 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // Admin button + panel behavior (modal-based auth, persisted)
+  const adminBtn = document.getElementById("admin-btn");
+  const adminPanel = document.getElementById("ec-panel-admin");
+  const adminToggle = document.getElementById("admin-autoclick-toggle");
+  const adminReset = document.getElementById("admin-reset-btn");
+
+  const modal = document.getElementById("admin-password-modal");
+  const modalInput = document.getElementById("admin-password-input");
+  const modalSubmit = document.getElementById("admin-password-submit");
+  const modalCancel = document.getElementById("admin-password-cancel");
+  const modalClose = modal ? modal.querySelector(".admin-modal-close") : null;
+
+  const AUTH_KEY = "ec_admin_auth";
+
+  function openModal() {
+    if (!modal) return;
+    modal.style.display = "flex";
+    setTimeout(() => modalInput && modalInput.focus(), 50);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.style.display = "none";
+    if (modalInput) modalInput.value = "";
+  }
+
+  if (adminBtn) {
+    adminBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (localStorage.getItem(AUTH_KEY) === "1") {
+        showPanel("admin");
+      } else {
+        openModal();
+      }
+    });
+  }
+
+  if (modalSubmit) {
+    modalSubmit.addEventListener("click", () => {
+      const v = modalInput ? modalInput.value : "";
+      if (v === "12345") {
+        localStorage.setItem(AUTH_KEY, "1");
+        closeModal();
+        showPanel("admin");
+      } else {
+        alert("Incorrect password");
+        modalInput && modalInput.focus();
+      }
+    });
+  }
+
+  if (modalCancel) modalCancel.addEventListener("click", closeModal);
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+
+  // Allow Enter key in modal input
+  if (modalInput) {
+    modalInput.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        modalSubmit && modalSubmit.click();
+      }
+      if (ev.key === "Escape") {
+        closeModal();
+      }
+    });
+  }
+
+  // Admin panel controls
+  if (adminToggle) {
+    adminToggle.addEventListener("click", () => {
+      if (autoclickerInterval) {
+        stopAutoclicker();
+        adminToggle.textContent = "Start Autoclicker";
+      } else {
+        startAutoclicker(200);
+        adminToggle.textContent = "Stop Autoclicker";
+      }
+    });
+  }
+
+  if (adminReset) {
+    adminReset.addEventListener("click", () => {
+      if (!confirm("Reset points to 0?")) return;
+      points = 0;
+      setCookie("cookiePoints", String(points), 365);
+      updatePointsDisplay();
+      alert("Points reset to 0");
+    });
+  }
+
+  // If the user manually clicks the giant cookie while autoclicker is running,
+  // stop the autoclicker to give control back to the user.
+  if (giantCookie) {
+    giantCookie.addEventListener("click", (ev) => {
+      // only stop when the click is user-initiated (isTrusted === true)
+      if (ev && ev.isTrusted && autoclickerInterval) {
+        stopAutoclicker();
+        const t = document.getElementById("admin-autoclick-toggle");
+        if (t) t.textContent = "Start Autoclicker";
+      }
+    });
+  }
 });

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project ECookie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.3.1/core.js"></script>
@@ -125,28 +129,13 @@
               d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"
             />
           </svg>
-          E<span
-            style="margin-right: 4px; font-family: 'JetBrainsMono Nerd Font'"
-            >.</span
-          >Cookie
+          E.Cookie
         </h1>
         <h3>
-          Find your perfect
-          <i
-            style="
-              color: #ab6c1a;
-              font-size: 1.2em;
-              font-weight: 500;
-              font-family: 'JetBrainsMono Nerd Font';
-              letter-spacing: 0px;
-            "
-            >cookie</i
-          >.
-        </h3>
+          Find your perfect <p style="display: inline-block; font-style: italic; font-family: 'Geist Mono'; letter-spacing:0px; color:#ab6c1a; font-size: 1.2giem; font-weight: 700;">cookie</p>.
       </div>
     </header>
     <footer id="clicker">
-      <div class="giant-cookie"></div>
       <div class="ec-toolbar">
         <button
           id="achievements-btn"
@@ -199,7 +188,7 @@
           >
             <path fill="currentColor" d="M128 40c0-22.1 17.9-40 40-40s40 17.9 40 40l0 148.2c8.5-7.6 19.7-12.2 32-12.2 20.6 0 38.2 13 45 31.2 8.8-9.3 21.2-15.2 35-15.2 25.3 0 46 19.5 47.9 44.3 8.5-7.7 19.8-12.3 32.1-12.3 26.5 0 48 21.5 48 48l0 112c0 70.7-57.3 128-128 128l-85.3 0c-5 0-9.9-.3-14.7-1-55.3-5.6-106.2-34-140-79L8 336c-13.3-17.7-9.7-42.7 8-56s42.7-9.7 56 8l56 74.7 0-322.7zM240 304c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96zm48-16c-8.8 0-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96c0-8.8-7.2-16-16-16zm80 16c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96z"/>
           </svg>
-          <span style="font-family: 'Font Awesome 7 Free';" id="points-value">0</span>
+          <span id="points-value">0</span>
         </button>
         <div id="ec-panel-store" class="ec-panel" style="display: none">
           <button class="ec-panel-close" aria-label="Close store">×</button>
@@ -216,7 +205,7 @@
           class="ec-tool-btn"
           aria-label="Leaderboard"
           type="button"
-          style="letter-spacing: 2px"
+          style="letter-spacing: 0px"
         >
           <svg
             class="icon"
@@ -227,8 +216,7 @@
             <path
               fill="currentColor"
               d="M208.3 64L432.3 64C458.8 64 480.4 85.8 479.4 112.2C479.2 117.5 479 122.8 478.7 128L528.3 128C554.4 128 577.4 149.6 575.4 177.8C567.9 281.5 514.9 338.5 457.4 368.3C441.6 376.5 425.5 382.6 410.2 387.1C390 415.7 369 430.8 352.3 438.9L352.3 512L416.3 512C434 512 448.3 526.3 448.3 544C448.3 561.7 434 576 416.3 576L224.3 576C206.6 576 192.3 561.7 192.3 544C192.3 526.3 206.6 512 224.3 512L288.3 512L288.3 438.9C272.3 431.2 252.4 416.9 233 390.6C214.6 385.8 194.6 378.5 175.1 367.5C121 337.2 72.2 280.1 65.2 177.6C63.3 149.5 86.2 127.9 112.3 127.9L161.9 127.9C161.6 122.7 161.4 117.5 161.2 112.1C160.2 85.6 181.8 63.9 208.3 63.9zM165.5 176L113.1 176C119.3 260.7 158.2 303.1 198.3 325.6C183.9 288.3 172 239.6 165.5 176zM444 320.8C484.5 297 521.1 254.7 527.3 176L475 176C468.8 236.9 457.6 284.2 444 320.8z"
-            /></svg>
-        </button>
+            /></svg></button>
         <div
           id="ec-panel-leaderboard"
           class="ec-panel"
@@ -246,7 +234,36 @@
           </div>
         </div>
       </div>
+      <div class="giant-cookie"></div>
+      <button id="admin-btn" class="ec-tool-btn admin-btn" type="button" aria-label="Admin Panel">
+        <i class="fa-solid fa-tools" style="font-size:1rem; margin-right: 4px;"></i>
+        <span>Admin</span>
+      </button>
     </footer>
+
+    <div id="ec-panel-admin" class="ec-panel" style="display: none">
+      <button class="ec-panel-close" aria-label="Close admin panel">×</button>
+      <h3>Admin Panel.</h3>
+      <div class="ec-content">
+        <button id="admin-autoclick-toggle" class="ec-tool-btn" style="margin-top:6px"><i class="fa-solid fa-arrow-pointer"></i></button>
+        <button id="admin-reset-btn" class="ec-tool-btn"><i class="fa-solid fa-recycle"></i></button>
+      </div>
+    </div>
+
+    <div id="admin-password-modal" class="admin-modal" style="display:none">
+      <div class="admin-modal-box">
+        <button class="admin-modal-close" aria-label="Close password modal">×</button>
+        <h3>Admin Authentication</h3>
+        <div style="margin-top:8px">
+          <label for="admin-password-input" style="display:block; margin-bottom:6px">Enter password:</label>
+          <input id="admin-password-input" style="letter-spacing: 0px; width:100%; font-family: 'Geist Mono'; padding:8px; box-sizing:border-box; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit" placeholder="Hint: Numbers.." />
+          <div style="display:flex; gap:8px; margin-top:10px; justify-content:flex-end">
+            <button class="admin-panel-btn" id="admin-password-cancel" class="ec-tool-btn">Cancel</button>
+            <button class="admin-panel-btn" id="admin-password-submit" class="ec-tool-btn">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="milestone-message" class="ec-milestone" style="display: none">
       <div style="position: relative; padding-right: 34px">
@@ -261,12 +278,11 @@
             border: none;
             background: transparent;
             color: crimson;
-            font-size: 40px;
+            font-size: 20px;
             cursor: pointer;
             padding: 0px;
           "
-        >
-          &#9679;
+        >&#10005;
         </button>
       </div>
     </div>
