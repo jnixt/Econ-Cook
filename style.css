@@ -1,6 +1,7 @@
 * {
-  font-family: "Font Awesome 7 Free", monospace;
+  font-family: 'Font Awesome 7 Free', 'GeistMono Nerd Font', monospace;
   letter-spacing: 3px;
+  color: #cad3f5;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -10,6 +11,7 @@ body {
   background-color: rgba(36, 39, 58, 1);
   min-height: 100vh;
   color: #c6d0f5;
+  user-select: none;
 }
 
 .title-container {
@@ -140,11 +142,12 @@ h3 {
 }
 
 .nav-center {
+  font-size: 0.95rem;
   gap: 20px;
 }
 
 .nav-right {
-  gap: 15px;
+  gap: 5px;
 }
 
 .top-bar a {
@@ -155,14 +158,15 @@ h3 {
 
 .top-bar a:hover {
   color: #f5c900;
+  transform: scale(1.1);
 }
 
-.top-bar i {
-  font-size: 1.5rem;
+.top-bar{
+  font-size: 1rem;
 }
 
-.nav-left i {
-  font-size: 2rem;
+.nav-left {
+  font-size: 1.2rem;
 }
 
 ::-webkit-scrollbar {
@@ -195,25 +199,24 @@ h3 {
 }
 
 .icon{
-  display: inline-block;
-  width: 1.2em;
-  height: 1.2em;
-  vertical-align: -0.15em;
+  width:1.4em;
+  height:1.4em;
+  vertical-align:-3px;
+  margin-right:4px;
+  cursor: pointer;
 }
 
-.ec-tool-btn .icon{width:1em;height:1em;margin-right:6px;vertical-align:middle}
-.icon.large{width:1.4em;height:1.4em}
-.icon--brand{filter: none}
+.icon.large{
+  width: 1.4em;
+  height: 1.4em;
+}
 
-#points-display {
-  font-family: 'Font Awesome 5 Free', 'GeistMono Nerd Font', monospace;
-  font-size: 1.5rem;
-  letter-spacing: 3px;
-  padding: 7px 12px;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
-  backdrop-filter: blur(10px) saturate(140%);
+.ec-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
 }
 
 .giant-cookie {
@@ -287,13 +290,12 @@ h3 {
 }
 
 .ec-tool-btn {
-  font-family: 'Font Awesome 5 Free', 'GeistMono Nerd Font', monospace;
-  font-size: 1.1rem;
-  padding: 8px 12px;
+  font-family: 'Font Awesome Solid', 'GeistMono Nerd Font', monospace;
+  font-size: 1rem;
+  padding: 8px;
   border-radius: 12px;
   border: 0;
   cursor: pointer;
-  color: #fff;
   background: rgba(255,255,255,0.03);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
   backdrop-filter: blur(10px) saturate(140%);
@@ -315,6 +317,9 @@ h3 {
   box-shadow: 0 8px 30px rgba(0,0,0,0.6);
   z-index: 9999;
   border: 1px solid rgba(255,255,255,0.04);
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .ec-panel h3 {
@@ -351,10 +356,10 @@ h3 {
   padding: 18px 20px;
   border-radius: 8px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  z-index: 9999;
+  z-index: 999;
   max-width: 90%;
   width: 480px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: 'GeistMono Nerd Font';
   font-size: 15px;
   line-height: 1.35;
   -webkit-backdrop-filter: blur(10px) saturate(140%);
