@@ -17,7 +17,6 @@ async def type_text_anim(div_id: str, text: str):
     """
     Types out the given text into the specified div with a character-by-character animation.
     """
-    delay: float = 0.03
     text_container = await wait_for_element(div_id)
     if not text_container:
         print(f"Element with id '{div_id}' not found.")
@@ -26,10 +25,10 @@ async def type_text_anim(div_id: str, text: str):
     text_container.innerText = ""
     for char in text:
         if char == " ":
-            text_container.innerText += "\u00A0" # Non-breaking space
+            text_container.innerText += "\u00A0" # u00A0 adalah Non-breaking space
         else:
             text_container.innerText += char
-        await asyncio.sleep(delay)
+        await asyncio.sleep(0.03)
 
 # This function will be callable from JavaScript
 def start_typing_animation():
