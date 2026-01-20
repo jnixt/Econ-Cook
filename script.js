@@ -1,7 +1,46 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const cookie = document.getElementsByClassName("cookie");
-  if (cookie) {
 
+  // Funcs Section
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function typingAnim(text, speed, elementId) {
+    let i = 0;
+    function typeWriter() {
+      if (i < text.length) {
+        document.getElementById(elementId).innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+    typeWriter();
+  }
+
+  const cookieBackground = document.getElementById("cookie-bg");
+  if (cookieBackground) {
+    let cookieAmmount = getRandomInt(35, 67);
+    for (let i = 0; i < cookieAmmount; i++) {
+      let cookieWidth = getRandomInt(38, 220);
+      let chipsAmmount = getRandomInt(3, 10);
+      const cookie = document.createElement("div");
+      cookie.className = "cookie";
+      cookie.style.width = cookieWidth + "px";
+      cookieBackground.appendChild(cookie);
+      cookie.style.height = cookieWidth + "px";
+      for (let j = 0; j < chipsAmmount; j++) {
+        const chip = document.createElement("div");
+        chip.className = "cookie-chip";
+        let chipsWidth = getRandomInt(9, 31);
+        chip.style.width = chipsWidth + "px";
+        chip.style.height = chipsWidth + "px";
+        chip.style.top = getRandomInt(0, cookieWidth - chipsWidth) + "px";
+        chip.style.left = getRandomInt(0, cookieWidth - chipsWidth) + "px";
+        cookie.appendChild(chip);
+      }
+    }
   }
 
   const giantCookie = document.getElementById("giantCookie");
@@ -19,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       console.log(Math.random() * (1000 - 1))
       cookiePoints += pointsPerClick;
-      giantCookie.style.transform = "translateX(calc(-50% - 40px)) scale(0.95) rotate(360deg)";
       pointsCounter.innerHTML = "<i class=\"fa-solid fa-hand-pointer icon\"></i> " + cookiePoints;
       localStorage.setItem("cookiePoints", cookiePoints);
       const plusedPoints = document.createElement("div");
