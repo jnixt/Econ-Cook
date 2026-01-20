@@ -206,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const adminBtn = document.getElementById("adminBtn")
   adminBtn.addEventListener("click", () => {
-    const adminPanel = document.getElementById("adminBtn-panel")
     const adminContent = document.getElementById("adminBtn-panel-content")
     adminContent.innerHTML = `
       <h3 style="text-decoration:underline wavy; margin-bottom: 4px;">Admino Panelo.</h3>

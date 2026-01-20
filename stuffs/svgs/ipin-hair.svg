@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" width="200" height="200">
+  <path
+    d="M 50 90
+       C 45 70, 40 50, 45 35
+       C 50 20, 75 25, 70 45
+       C 65 60, 45 55, 52 40"
+    stroke="rgba(0, 0, 0, 0.8)"
+    stroke-width="6"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
