@@ -425,3 +425,294 @@ document.addEventListener("DOMContentLoaded", function () {
     clearUsers: () => { localStorage.removeItem(STORAGE_KEY); },
   };
 })();
+
+(() => {
+  const STORAGE_KEY = "econcook_leaderboard";
+  const CURRENT_USER_KEY = "econcook_username";
+
+  // DOM helpers
+  const $ = id => document.getElementById(id);
+  const create = (tag, attrs = {}, text) => {
+    const el = document.createElement(tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    if (text != null) el.textContent = text;
+    return el;
+  };
+
+  // --- persistence ---------------------------------------------------------
+  function loadLeaderboard() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      return JSON.parse(raw) || {};
+    } catch (e) {
+      console.error("Failed to load leaderboard:", e);
+      return {};
+    }
+  }
+
+  function saveLeaderboard(obj) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+    } catch (e) {
+      console.error("Failed to save leaderboard:", e);
+    }
+  }
+
+  function getCurrentUserFromStorage() {
+    return localStorage.getItem(CURRENT_USER_KEY) || null;
+  }
+
+  function setCurrentUserToStorage(username) {
+    if (username == null) {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    } else {
+      localStorage.setItem(CURRENT_USER_KEY, username);
+    }
+  }
+
+  // --- leaderboard logic ---------------------------------------------------
+  function ensureUserExists(username) {
+    if (!username) return;
+    const lb = loadLeaderboard();
+    if (typeof lb[username] === "undefined") {
+      lb[username] = 0;
+      saveLeaderboard(lb);
+    }
+  }
+
+  function setUserClicks(username, clicks) {
+    if (!username) return;
+    const lb = loadLeaderboard();
+    lb[username] = Number(clicks) || 0;
+    saveLeaderboard(lb);
+    refreshModalIfOpen();
+  }
+
+  function incrementUserClicks(username, amount = 1) {
+    if (!username) return 0;
+    const lb = loadLeaderboard();
+    lb[username] = (Number(lb[username]) || 0) + Number(amount);
+    saveLeaderboard(lb);
+    refreshModalIfOpen();
+    updatePointsCounter(lb[username]);
+    return lb[username];
+  }
+
+  function getSortedLeaderboardArray() {
+    const lb = loadLeaderboard();
+    const arr = Object.keys(lb).map(username => ({ username, clicks: Number(lb[username] || 0) }));
+    arr.sort((a, b) => b.clicks - a.clicks || a.username.localeCompare(b.username));
+    return arr;
+  }
+
+  // --- UI: leaderboard modal -----------------------------------------------
+  let modalEl = null;
+
+  function showLeaderboardModal() {
+    const items = getSortedLeaderboardArray();
+    if (!modalEl) {
+      modalEl = create("div");
+      modalEl.id = "leaderboardModal";
+      Object.assign(modalEl.style, {
+        position: "fixed",
+        inset: "0",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0,0,0,0.45)",
+        zIndex: 10000,
+      });
+
+      const card = create("div");
+      Object.assign(card.style, {
+        width: "420px",
+        background: "#000",
+        borderRadius: "10px",
+        padding: "16px",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+        maxHeight: "80vh",
+        overflow: "auto",
+        fontFamily: "inherit",
+      });
+
+      const top = create("div");
+      Object.assign(top.style, { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" });
+      const title = create("h3", {}, "Leaderboard");
+      title.style.margin = "0";
+      const closeBtn = create("button", {}, "✕");
+      Object.assign(closeBtn.style, { border: "none", background: "transparent", fontSize: "18px", cursor: "pointer" });
+      closeBtn.addEventListener("click", () => modalEl.remove());
+      top.appendChild(title);
+      top.appendChild(closeBtn);
+
+      const listContainer = create("div");
+      listContainer.id = "leaderboardList";
+
+      card.appendChild(top);
+      card.appendChild(listContainer);
+      modalEl.appendChild(card);
+      document.body.appendChild(modalEl);
+    }
+
+    renderLeaderboardList(items);
+  }
+
+  function renderLeaderboardList(items) {
+    if (!modalEl) return;
+    const list = $("leaderboardList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    if (!items || items.length === 0) {
+      list.innerHTML = "<p style='color:#666'>No players yet.</p>";
+      return;
+    }
+
+    const ul = create("ul");
+    Object.assign(ul.style, { listStyle: "none", padding: "0", margin: "0" });
+
+    items.forEach((it, idx) => {
+      const li = create("li");
+      Object.assign(li.style, { display: "flex", justifyContent: "space-between", padding: "8px 6px", borderBottom: "1px solid #eee" });
+
+      const left = create("div");
+      left.innerHTML = `<strong style="display:inline-block;width:220px">${idx + 1}. ${escapeHtml(it.username)}</strong>`;
+
+      const right = create("div");
+      right.style.color = "#fff";
+      right.textContent = `${it.clicks} clicks`;
+
+      li.appendChild(left);
+      li.appendChild(right);
+      ul.appendChild(li);
+    });
+
+    list.appendChild(ul);
+  }
+
+  function refreshModalIfOpen() {
+    if (!modalEl) return;
+    const items = getSortedLeaderboardArray();
+    renderLeaderboardList(items);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  }
+
+  // --- integrate with page elements ---------------------------------------
+  function updatePointsCounter(count) {
+    const pointsCounter = $("storeBtn");
+    if (!pointsCounter) return;
+    pointsCounter.innerHTML = '<i class="fa-solid fa-hand-pointer icon"></i> ' + Number(count || 0);
+  }
+
+  // Attempt to detect current user from storage or greeting element
+  function detectCurrentUser() {
+    let name = getCurrentUserFromStorage();
+    if (name) return name;
+    const greetingEl = $("greeting");
+    if (greetingEl) {
+      const match = greetingEl.textContent.match(/^Hello,\s*(.+?)!?$/i);
+      if (match) return match[1].trim();
+    }
+    return null;
+  }
+
+  // Hook giantCookie clicks to update leaderboard when a user is active
+  function attachGiantCookieHandler() {
+    const cookie = $("giantCookie");
+    if (!cookie) return;
+    cookie.addEventListener("click", (e) => {
+      const current = detectCurrentUser();
+      if (!current) return; // not logged in / no user set
+      ensureUserExists(current);
+      const newCount = incrementUserClicks(current, 1);
+      // update visible counter (storeBtn) and modal if open
+      updatePointsCounter(newCount);
+    });
+  }
+
+  // Hook leaderboardBtn to show modal
+  function attachLeaderboardButton() {
+    const btn = $("leaderboardBtn");
+    if (!btn) return;
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      // Ensure all known users appear even if 0 clicks (ensureUserExists called by auth flows)
+      const items = getSortedLeaderboardArray();
+      showLeaderboardModal(items);
+    });
+  }
+
+  // Public API to integrate with auth flows
+  const api = {
+    // Call when user logs in / is created
+    userLoggedIn(username) {
+      if (!username) return;
+      setCurrentUserToStorage(username);
+      ensureUserExists(username);
+      // reflect stored clicks to storeBtn
+      const lb = loadLeaderboard();
+      updatePointsCounter(lb[username] || 0);
+    },
+    userLoggedOut() {
+      setCurrentUserToStorage(null);
+    },
+    // Useful if you want to pre-create a username in leaderboard (e.g., when account created)
+    addUser(username) {
+      ensureUserExists(username);
+    },
+    // Manual increment (returns new count)
+    incrementFor(username, amount = 1) {
+      return incrementUserClicks(username, amount);
+    },
+    // Get current leaderboard array
+    getLeaderboard() {
+      return getSortedLeaderboardArray();
+    },
+    // Force refresh the leaderboard modal if it's open
+    refresh() {
+      refreshModalIfOpen();
+    },
+    // Get/set current user
+    getCurrentUser() {
+      return detectCurrentUser();
+    },
+    setCurrentUser(username) {
+      if (username == null) {
+        setCurrentUserToStorage(null);
+      } else {
+        setCurrentUserToStorage(username);
+        ensureUserExists(username);
+      }
+    }
+  };
+
+  // init on DOMContentLoaded
+  function init() {
+    // ensure leaderboard exists so leaderboardBtn shows players even if their clicks=0
+    loadLeaderboard(); // no-op but ensures parse error early
+
+    // If there's a detected current user, make sure they exist in leaderboard and update counter
+    const current = detectCurrentUser();
+    if (current) {
+      ensureUserExists(current);
+      const lb = loadLeaderboard();
+      updatePointsCounter(lb[current] || 0);
+    }
+
+    attachGiantCookieHandler();
+    attachLeaderboardButton();
+
+    // Expose for other scripts
+    window.EconCookLeaderboard = api;
+  }
+
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
