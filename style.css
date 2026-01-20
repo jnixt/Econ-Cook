@@ -40,11 +40,12 @@ body {
 
 #cookie-bg {
   z-index: -1;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .top-bar {
@@ -69,15 +70,17 @@ body {
   margin: 0 1vw;
 }
 
-a:hover {
+a:hover, a:focus {
   color: var(--accent-color);
   transform: scale(1.1) translateY(-2px);
+  outline: none;
 
 }
 
-a:hover .icon {
+a:hover .icon, a:focus .icon {
   color: var(--accent-color);
   transform: scale(1.1) translateY(-2px);
+  outline: none;
 }
 
 a {
@@ -102,32 +105,35 @@ a {
   border-radius: 12px;
   padding: 12px;
   display: none;
-  position: fixed;
+  position: absolute;
   visibility: hidden;
   max-width: 220px;
   pointer-events: auto;
 }
 
-.panel::after {
+.panel-pointer {
   content: '';
-  position: fixed;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  backdrop-filter: var(--liquid-glass-bf);
   left: calc(50% + var(--pointer-offset, 0px));
-  transform: translateX(-50%);
+  transform: translateX(-50%) rotate(45deg);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
-.panel.pointer-bottom::after {
-  border-bottom: 10px solid var(--liquid-glass-bg);
-  bottom: 100%;
+.panel.pointer-bottom .panel-pointer {
+  bottom: calc(100% - 7px);
+  border-bottom: none;
+  border-right: none;
 }
 
-.panel.pointer-top::after {
-  border-top: 10px solid var(--liquid-glass-bg);
-  top: 100%;
+.panel.pointer-top .panel-pointer {
+  top: calc(100% - 7px);
+  border-top: none;
+  border-left: none;
 }
 
 h1 {
@@ -188,12 +194,12 @@ h3 span {
   position: absolute;
   display: block;
   border: none;
+  opacity: 0.4;
   outline: none;
-  transition: transform 0.8s ease;
-  transform: rotate(360deg);
 }
 
 #giantCookie {
+  opacity: 1;
   position: relative;
   left: 50%;
   transform: translateX(calc(-50% - 40px));
@@ -212,7 +218,7 @@ h3 span {
 }
 
 #giantCookie:active {
-  transform: translateX(calc(-50% - 40px)) rotate(360deg) scale(0.95);
+  transform: translateX(calc(-50% - 40px)) scale(0.95) rotate(360deg);
 }
 
 .giantCookieEyes * {
@@ -253,6 +259,20 @@ h3 span {
   background-color: rgb(102, 51, 0);
 }
 
+.rainbow-effect {
+  background: linear-gradient(67deg, #ed8796, #ee99a0, #f5a97f, #eed49f, #a6da95, #8bd5ca, #91d7e3, #7dc4e4, #8aadf4, #b7bdf8, #f4dbd6, #f0c6c6, #f5bde6, #c6a0f6);
+  animation: rainbowCycle 2s linear infinite;
+}
+
+@keyframes rainbowCycle {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
 #gC-toolbar {
   gap: 12px;
   display: flex;
@@ -273,12 +293,22 @@ h3 span {
   letter-spacing: 2px;
   width: fit-content;
   font-family: var(--font-awesome);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.gC-btn:hover, .gC-btn:focus {
+  outline: none;
+  transform: scale(1.15);
+}
+
+.gC-btn:hover .icon, .gC-btn:focus .icon {
+  color: var(--accent-color);
 }
 
 .plused-points {
   position: absolute;
   color: #c6d0f5;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   pointer-events: none;
   animation: float-up 1s ease-out;
@@ -295,10 +325,21 @@ h3 span {
   }
 }
 
-#admin {
+#adminBtn {
   position: absolute;
   bottom: 2vh;
   right: 20px;
+}
+
+#adminBtn-panel {
+  position: fixed;
+  top: 30% !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+
+#adminBtn-panel-pointer {
+  display: none;
 }
 
 #watermark {
@@ -316,4 +357,14 @@ h3 span {
 #watermark span {
   font-size: 0.9em;
   vertical-align: 4px;
+}
+
+#backdrop {
+  position: fixed;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  display: none;
+  z-index: -3;
+  backdrop-filter: blur(5px);
 }

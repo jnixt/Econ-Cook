@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-
   // Funcs Section
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getRandomFloat(min, max) {
+    return Math.random() * (max - min) + min;
   }
 
   function typingAnim(text, speed, elementId) {
@@ -21,26 +24,86 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const cookieBackground = document.getElementById("cookie-bg");
   if (cookieBackground) {
-    let cookieAmmount = getRandomInt(35, 67);
-    for (let i = 0; i < cookieAmmount; i++) {
-      let cookieWidth = getRandomInt(38, 220);
-      let chipsAmmount = getRandomInt(3, 10);
-      const cookie = document.createElement("div");
-      cookie.className = "cookie";
-      cookie.style.width = cookieWidth + "px";
-      cookieBackground.appendChild(cookie);
-      cookie.style.height = cookieWidth + "px";
-      for (let j = 0; j < chipsAmmount; j++) {
+    const cookies = [];
+    const cookieAmount = getRandomInt(35, 67);
+    const screenWidth = window.innerWidth;
+    let screenHeight = cookieBackground.offsetHeight;
+    window.addEventListener('resize', () => {
+      screenHeight = cookieBackground.offsetHeight;
+    });
+
+    for (let i = 0; i < cookieAmount; i++) {
+      const cookieWidth = getRandomInt(38, 220);
+      const chipsAmount = getRandomInt(3, 10);
+      const element = document.createElement("div");
+      element.className = "cookie";
+      element.style.width = cookieWidth + "px";
+      element.style.height = cookieWidth + "px";
+      cookieBackground.appendChild(element);
+
+      for (let j = 0; j < chipsAmount; j++) {
         const chip = document.createElement("div");
         chip.className = "cookie-chip";
-        let chipsWidth = getRandomInt(9, 31);
+
+        const chipsWidth = getRandomInt(9, 31);
         chip.style.width = chipsWidth + "px";
         chip.style.height = chipsWidth + "px";
-        chip.style.top = getRandomInt(0, cookieWidth - chipsWidth) + "px";
-        chip.style.left = getRandomInt(0, cookieWidth - chipsWidth) + "px";
-        cookie.appendChild(chip);
+
+        const cookieRadius = cookieWidth / 2;
+        const chipRadius = chipsWidth / 2;
+        const maxDistance = cookieRadius - chipRadius;
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.sqrt(Math.random()) * maxDistance;
+
+        const x = cookieRadius + distance * Math.cos(angle) - chipRadius;
+        const y = cookieRadius + distance * Math.sin(angle) - chipRadius;
+
+        chip.style.left = x + "px";
+        chip.style.top = y + "px";
+
+        element.appendChild(chip);
       }
+
+      cookies.push({
+        element: element,
+        x: Math.random() * screenWidth,
+        y: Math.random() * screenHeight,
+        vx: getRandomFloat(-0.5, 0.5),
+        vy: getRandomFloat(-0.5, 0.5),
+        rotation: Math.random() * 360,
+        rotationSpeed: getRandomFloat(-0.2, 0.2),
+        size: cookieWidth,
+      });
     }
+
+    function animateCookies() {
+      for (const cookie of cookies) {
+        cookie.x += cookie.vx;
+        cookie.y += cookie.vy;
+        cookie.rotation += cookie.rotationSpeed;
+
+        if (cookie.x > screenWidth + cookie.size) {
+          cookie.x = -cookie.size;
+        } else if (cookie.x < -cookie.size) {
+          cookie.x = screenWidth + cookie.size;
+        }
+
+        if (cookie.y > screenHeight + cookie.size) {
+          cookie.y = -cookie.size;
+        } else if (cookie.y < -cookie.size) {
+          cookie.y = screenHeight + cookie.size;
+        }
+
+        cookie.element.style.left = cookie.x + 'px';
+        cookie.element.style.top = cookie.y + 'px';
+        cookie.element.style.transform = `rotate(${cookie.rotation}deg)`;
+      }
+
+      requestAnimationFrame(animateCookies);
+    }
+
+    animateCookies();
   }
 
   const giantCookie = document.getElementById("giantCookie");
@@ -49,16 +112,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let cookiePoints = parseInt(localStorage.getItem("cookiePoints")) || 0;
     if (cookiePoints < 0) cookiePoints = 0;
     const pointsCounter = document.getElementById("storeBtn");
-    pointsCounter.innerHTML = "<i class=\"fa-solid fa-hand-pointer icon\"></i> " + cookiePoints;
+    pointsCounter.innerHTML =
+      '<i class="fa-solid fa-hand-pointer icon"></i> ' + cookiePoints;
     let pointsPerClick = 1;
 
     giantCookie.addEventListener("click", (e) => {
-      if ((Math.random() * (1000 - 1)) === 67) {
-        giantCookie.style.background = "linear-gradient(67deg, red, orange, yellow, green, blue, pink, magenta)"
+      if (getRandomInt(1, 100) === 1) {
+        giantCookie.classList.add("rainbow-effect");
       }
-      console.log(Math.random() * (1000 - 1))
       cookiePoints += pointsPerClick;
-      pointsCounter.innerHTML = "<i class=\"fa-solid fa-hand-pointer icon\"></i> " + cookiePoints;
+      pointsCounter.innerHTML =
+        '<i class="fa-solid fa-hand-pointer icon"></i> ' + cookiePoints;
       localStorage.setItem("cookiePoints", cookiePoints);
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
@@ -68,27 +132,22 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log(e.clientX, e.clientY);
       document.body.appendChild(plusedPoints);
       setTimeout(() => plusedPoints.remove(), 1000);
+      setTimeout(() => giantCookie.classList.remove("rainbow-effect"), 67000);
     });
   }
 
-  let docDimensions = document.body.getBoundingClientRect()
 
-  const extraStuffz = document.getElementById("bottom");
-  extraStuffz.style.top = `${docDimensions.bottom}px`
-
-  if (extraStuffz) {
-    const adminButton = extraStuffz.querySelector("#adminBtn");
-  }
-
-  document.querySelectorAll(".gC-btn").forEach((butt) => {
+  document.querySelectorAll(".panCre").forEach((butt) => {
     butt.addEventListener("click", (e) => {
       e.stopPropagation();
 
       const panelId = butt.id + "-panel";
       const existingPanel = document.getElementById(panelId);
 
+      const buttonRect = butt.getBoundingClientRect();
+
       const allPanels = document.querySelectorAll(".panel");
-      allPanels.forEach(p => p.remove());
+      allPanels.forEach((p) => p.remove());
 
       if (existingPanel) return;
 
@@ -96,33 +155,42 @@ document.addEventListener("DOMContentLoaded", function () {
       panel.className = "panel";
       panel.id = panelId;
       panel.style.display = "block";
-      panel.innerHTML = `Lorem ipsum dolar sit amet, kawai simi adipisicing elit. Quisquam, quod.`;
+
+      const pointer = document.createElement("div");
+      pointer.className = "panel-pointer";
+      pointer.id = panelId + "-pointer";
+      panel.appendChild(pointer);
+
+      const content = document.createElement("div");
+      content.classname = "panel-content"
+      content.id = panelId + "-content";
+      panel.appendChild(content)
 
       document.body.appendChild(panel);
 
-      const buttonRect = butt.getBoundingClientRect();
       const panelRect = panel.getBoundingClientRect();
       const margin = 17;
 
       const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
       if (hasSpaceAbove) {
-        panel.style.top = `${buttonRect.top - panelRect.height - margin}px`;
-        panel.classList.remove('pointer-bottom');
-        panel.classList.add('pointer-top');
+        panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
+        panel.classList.remove("pointer-bottom");
+        panel.classList.add("pointer-top");
       } else {
-        panel.style.top = `${buttonRect.bottom + margin}px`;
-        panel.classList.remove('pointer-top');
-        panel.classList.add('pointer-bottom');
+        panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
+        panel.classList.remove("pointer-top");
+        panel.classList.add("pointer-bottom");
       }
 
-      const centerX = (buttonRect.left + (buttonRect.width / 2)) - (panelRect.width / 2);
+      const centerX =
+        buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
       panel.style.left = `${centerX}px`;
 
       const buttonCenterX = buttonRect.left + buttonRect.width / 2;
       const panelLeftX = window.scrollX + centerX;
       const panelCenterX = panelLeftX + panelRect.width / 2;
       const pointerOffsetX = buttonCenterX - panelCenterX;
-      panel.style.setProperty('--pointer-offset', `${pointerOffsetX}px`);
+      panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
       panel.style.visibility = "visible";
 
@@ -135,4 +203,15 @@ document.addEventListener("DOMContentLoaded", function () {
       panel.remove();
     });
   });
+
+  const adminBtn = document.getElementById("adminBtn")
+  adminBtn.addEventListener("click", () => {
+    const adminPanel = document.getElementById("adminBtn-panel")
+    const adminContent = document.getElementById("adminBtn-panel-content")
+    adminContent.innerHTML = `
+      <h3 style="text-decoration:underline wavy; margin-bottom: 4px;">Admino Panelo.</h3>
+      <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid"></i></button>
+      <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid"></i></button>
+    `
+  })
 });
