@@ -215,256 +215,213 @@ document.addEventListener("DOMContentLoaded", function () {
   })
 });
 
-// Robust client auth for Econ-Cook
-// - Better error messages (shows server message, HTTP status, or network error)
-// - Accepts several token field names returned by server
-// - Logs full responses to console for easier debugging
-// Set API_BASE if your backend runs on another origin, e.g. "http://localhost:5000"
+// Client-side account management using localStorage + Web Crypto (PBKDF2)
+// Stores users under localStorage key: "econcook_users"
+// Each user record: { salt: string(base64), hash: string(base64) }
+
 (() => {
-  const API_BASE = ""; // <-- set to backend origin if needed
-  const TOKEN_KEY = "econcook_token";
+  const STORAGE_KEY = 'econcook_users';
+  const ITERATIONS = 150_000; // PBKDF2 iterations
+  const KEY_LEN = 256; // bits
 
-  function log(...args) { console.log("[EconCookAuth]", ...args); }
-  function errlog(...args) { console.error("[EconCookAuth]", ...args); }
+  // --- Helpers -------------------------------------------------------------
+  const enc = new TextEncoder();
 
-  function saveToken(token) { localStorage.setItem(TOKEN_KEY, token); }
-  function loadToken() { return localStorage.getItem(TOKEN_KEY); }
-  function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+  function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
 
-  async function apiPost(path, body) {
+  function base64ToArrayBuffer(base64) {
+    const binary = atob(base64);
+    const len = binary.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function getStoredUsers() {
     try {
-      const res = await fetch(API_BASE + path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        credentials: "omit",
-      });
-
-      let text;
-      try {
-        text = await res.text();
-      } catch (tErr) {
-        text = "";
-      }
-
-      // Try to parse JSON, but preserve raw text for debugging
-      let data = {};
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch (parseErr) {
-        data = { __raw: text };
-      }
-
-      log("apiPost", path, "status=", res.status, "body=", data);
-      return { ok: res.ok, status: res.status, data, statusText: res.statusText };
-    } catch (networkErr) {
-      errlog("apiPost network error:", networkErr);
-      return { ok: false, status: 0, data: { error: "network_error", details: String(networkErr) } };
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      console.error('Failed to read users from localStorage', e);
+      return {};
     }
   }
-
-  function $(id) { return document.getElementById(id); }
-
-  // Try to create modal/app if missing (keeps integration simple)
-  function injectUIIfMissing() {
-    if (!$("authModal")) {
-      document.body.insertAdjacentHTML("beforeend", `
-        <div id="authModal" class="modal" style="display:flex;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:9999;">
-          <div class="modal-content" style="width:360px;background:#fff;padding:18px;border-radius:10px;">
-            <h2 id="modalTitle">Login</h2>
-            <div class="mode-switch">
-              <button id="switchLogin" class="active">Login</button>
-              <button id="switchCreate">Create Account</button>
-            </div>
-            <form id="authForm">
-              <label for="username">Username</label>
-              <input id="username" name="username" required>
-              <label for="password">Password</label>
-              <input id="password" name="password" type="password" required>
-              <div class="actions"><button type="submit" id="submitBtn">Log in</button></div>
-            </form>
-            <div id="authMessage" class="message" style="margin-top:8px;color:#b33;"></div>
-          </div>
-        </div>
-      `);
-      log("Injected auth modal into DOM.");
-    }
-
-    if (!$("app-content")) {
-      document.body.insertAdjacentHTML("beforeend", `
-        <section id="app-content" class="hidden" style="display:none;margin-top:18px;padding:16px;background:#fff;border-radius:10px;">
-          <h2 id="greeting">Hello!</h2>
-          <p>You are logged in.</p>
-          <button id="logoutBtn">Log out</button>
-        </section>
-      `);
-      log("Injected app-content into DOM.");
-    }
+  function saveUsers(obj) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
   }
 
-  async function initAuth() {
-    injectUIIfMissing();
+  // PBKDF2 derive
+  async function deriveKeyBase64(password, saltBase64) {
+    const saltBuf = base64ToArrayBuffer(saltBase64);
+    const pwKey = await crypto.subtle.importKey(
+      'raw',
+      enc.encode(password),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits']
+    );
+    const derived = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: saltBuf, iterations: ITERATIONS, hash: 'SHA-256' },
+      pwKey,
+      KEY_LEN
+    );
+    return arrayBufferToBase64(derived);
+  }
 
-    const modal = $("authModal");
-    const modalTitle = $("modalTitle");
-    const switchLogin = $("switchLogin");
-    const switchCreate = $("switchCreate");
-    const authForm = $("authForm");
-    const usernameInput = $("username");
-    const passwordInput = $("password");
-    const submitBtn = $("submitBtn");
-    const messageDiv = $("authMessage");
-    const appContent = $("app-content");
-    const greeting = $("greeting");
-    const logoutBtn = $("logoutBtn");
+  function makeSaltBase64() {
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    return arrayBufferToBase64(arr.buffer);
+  }
 
-    if (!authForm || !modal || !usernameInput || !passwordInput || !submitBtn || !messageDiv || !appContent || !greeting || !logoutBtn) {
-      errlog("Auth UI initialization failed: missing elements");
+  // --- Account logic -------------------------------------------------------
+  async function createUser(username, password) {
+    const users = getStoredUsers();
+    if (users[username]) {
+      throw new Error('Username already exists');
+    }
+    const salt = makeSaltBase64();
+    const hash = await deriveKeyBase64(password, salt);
+    users[username] = { salt, hash, created_at: new Date().toISOString() };
+    saveUsers(users);
+    return true;
+  }
+
+  async function verifyUser(username, password) {
+    const users = getStoredUsers();
+    const record = users[username];
+    if (!record) return false;
+    const hash = await deriveKeyBase64(password, record.salt);
+    // timing-attack resilience not critical here (client side demo)
+    return hash === record.hash;
+  }
+
+  // --- UI ---------------------------------------------------------------
+  const modal = document.getElementById('authModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const switchLogin = document.getElementById('switchLogin');
+  const switchCreate = document.getElementById('switchCreate');
+  const authForm = document.getElementById('authForm');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const messageDiv = document.getElementById('authMessage');
+  const appContent = document.getElementById('app-content');
+  const greeting = document.getElementById('greeting');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  let mode = 'login'; // or 'create'
+  let currentUser = null;
+
+  function setMode(newMode) {
+    mode = newMode;
+    if (mode === 'login') {
+      modalTitle.textContent = 'Login';
+      submitBtn.textContent = 'Log in';
+      switchLogin.classList.add('active');
+      switchCreate.classList.remove('active');
+      passwordInput.placeholder = '';
+    } else {
+      modalTitle.textContent = 'Create Account';
+      submitBtn.textContent = 'Create';
+      switchLogin.classList.remove('active');
+      switchCreate.classList.add('active');
+      passwordInput.placeholder = '';
+    }
+    messageDiv.textContent = '';
+  }
+
+  switchLogin.addEventListener('click', () => setMode('login'));
+  switchCreate.addEventListener('click', () => setMode('create'));
+
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    messageDiv.style.color = '#b33';
+    messageDiv.textContent = '';
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!username || !password) {
+      messageDiv.textContent = 'Please enter both username and password.';
       return;
     }
 
-    let mode = "login";
-    function setMessage(text, color = "#b33") {
-      messageDiv.style.color = color;
-      messageDiv.textContent = text;
-    }
-
-    function setMode(m) {
-      mode = m;
-      modalTitle.textContent = (m === "login") ? "Login" : "Create Account";
-      submitBtn.textContent = (m === "login") ? "Log in" : "Create";
-      if (switchLogin) switchLogin.classList.toggle("active", m === "login");
-      if (switchCreate) switchCreate.classList.toggle("active", m === "create");
-      setMessage("");
-    }
-
-    if (switchLogin) switchLogin.addEventListener("click", () => setMode("login"));
-    if (switchCreate) switchCreate.addEventListener("click", () => setMode("create"));
-
-    function extractToken(respData) {
-      if (!respData) return null;
-      return respData.access_token || respData.token || respData.accessToken || respData.access || null;
-    }
-
-    async function handleRegister(username, password) {
-      const resp = await apiPost("/api/register", { username, password });
-      if (!resp.ok) {
-        const serverMsg = resp.data && (resp.data.error || resp.data.message || resp.data.__raw);
-        // Special case 409 -> username exists
-        if (resp.status === 409) throw new Error(serverMsg || "Username already exists.");
-        throw new Error(serverMsg || `Server error (${resp.status || "network"})`);
-      }
-      const token = extractToken(resp.data);
-      if (!token) throw new Error("Server didn't return an access token. See console for response.");
-      saveToken(token);
-      return resp.data.username || username;
-    }
-
-    async function handleLogin(username, password) {
-      const resp = await apiPost("/api/login", { username, password });
-      if (!resp.ok) {
-        const serverMsg = resp.data && (resp.data.error || resp.data.message || resp.data.__raw);
-        throw new Error(serverMsg || `Invalid credentials or server error (${resp.status || "network"})`);
-      }
-      const token = extractToken(resp.data);
-      if (!token) throw new Error("Server didn't return an access token. See console for response.");
-      saveToken(token);
-      return resp.data.username || username;
-    }
-
-    authForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value;
-      if (!username || !password) {
-        setMessage("Enter both username and password.");
-        return;
-      }
-      submitBtn.disabled = true;
-      setMessage(""); // clear
-      try {
-        let resultUsername;
-        if (mode === "create") {
-          if (!/^[A-Za-z0-9_\-]{3,30}$/.test(username)) throw new Error("Username must be 3–30 chars: letters, numbers, - or _");
-          resultUsername = await handleRegister(username, password);
-          setMessage("Account created. Logged in.", "#1a7");
-        } else {
-          resultUsername = await handleLogin(username, password);
-          setMessage("Login successful.", "#1a7");
+    submitBtn.disabled = true;
+    try {
+      if (mode === 'create') {
+        // basic username validation
+        if (!/^[A-Za-z0-9_\-]{3,30}$/.test(username)) {
+          throw new Error('Username must be 3–30 chars: letters, numbers, - or _');
         }
-        onLoginSuccess(resultUsername);
-      } catch (err) {
-        // Show clear, actionable message
-        const show = (err && err.message) ? err.message : "An unknown error occurred. See console.";
-        setMessage(show);
-        errlog("Auth submit error:", err);
-      } finally {
-        submitBtn.disabled = false;
-      }
-    });
-
-    function onLoginSuccess(username) {
-      greeting.textContent = `Hello, ${username}!`;
-      appContent.classList.remove("hidden");
-      appContent.style.display = "";
-      modal.style.display = "none";
-      usernameInput.value = "";
-      passwordInput.value = "";
-    }
-
-    logoutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      clearToken();
-      appContent.classList.add("hidden");
-      appContent.style.display = "none";
-      setMode("login");
-      modal.style.display = "flex";
-      usernameInput.focus();
-    });
-
-    // Try resume session
-    const token = loadToken();
-    if (token) {
-      try {
-        const res = await fetch(API_BASE + "/api/profile", {
-          method: "GET",
-          headers: { "Authorization": "Bearer " + token }
-        });
-        let bodyText = await res.text().catch(() => "");
-        let data = {};
-        try { data = bodyText ? JSON.parse(bodyText) : {}; } catch { data = { __raw: bodyText }; }
-        log("/api/profile", "status=", res.status, "body=", data);
-        if (res.ok && data.username) {
-          onLoginSuccess(data.username);
-          return;
+        await createUser(username, password);
+        messageDiv.style.color = '#1a7';
+        messageDiv.textContent = 'Account created successfully — you are now logged in.';
+        onLoginSuccess(username);
+      } else {
+        const ok = await verifyUser(username, password);
+        if (!ok) {
+          messageDiv.textContent = 'Invalid username or password.';
         } else {
-          // expired/invalid token -> clear and show login
-          clearToken();
+          messageDiv.style.color = '#1a7';
+          messageDiv.textContent = 'Login successful.';
+          onLoginSuccess(username);
         }
-      } catch (networkErr) {
-        errlog("Profile fetch failed:", networkErr);
-        // keep token cleared to let user re-login
-        clearToken();
       }
+    } catch (err) {
+      console.error(err);
+      messageDiv.textContent = err.message || String(err);
+    } finally {
+      submitBtn.disabled = false;
     }
+  });
 
-    // show modal if no active session
-    modal.style.display = "flex";
-    usernameInput.focus();
-    setMode("login");
+  function onLoginSuccess(username) {
+    currentUser = username;
+    hideModal();
+    showAppForUser(username);
   }
 
-  // initialize when DOM is ready
-  if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", initAuth);
-  } else {
-    initAuth();
+  function hideModal() {
+    if (modal) modal.style.display = 'none';
   }
 
-  // Helpful debug tips — exposed on window
-  window.EconCookAuthDebug = {
-    API_BASE: () => API_BASE,
-    currentToken: () => loadToken(),
-    clearToken: () => clearToken(),
+  function showModal() {
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function showAppForUser(username) {
+    greeting.textContent = `Hello, ${username}!`;
+    appContent.classList.remove('hidden');
+  }
+
+  logoutBtn.addEventListener('click', () => {
+    currentUser = null;
+    appContent.classList.add('hidden');
+    usernameInput.value = '';
+    passwordInput.value = '';
+    setMode('login');
+    messageDiv.textContent = '';
+    showModal();
+  });
+
+  // On load: show modal. If someone is already "logged in" in this demo, you'd need a persisted session.
+  // For this simple demo we'll always prompt on page load.
+  setMode('login');
+  showModal();
+
+  // Expose small debug API on window (optional)
+  window.EconCookAuth = {
+    listUsers: () => getStoredUsers(),
+    clearUsers: () => { localStorage.removeItem(STORAGE_KEY); },
   };
 })();
