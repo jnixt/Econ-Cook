@@ -18,8 +18,9 @@ Our cookie jar is already full of some tasty features:
 
 ## 🛠️ Built With
 
-*   HTML, CSS, JavaScript
-*   **PyScript** for a dash of Python magic
-*   **Flask** for the (soon-to-be-implemented) leaderboard backend
+*   HTML
+*   CSS
+*   JavaScript
+
 
 We're currently in the process of refactoring and cleaning up the code to make it more modular and readable. Stay tuned for more updates!
