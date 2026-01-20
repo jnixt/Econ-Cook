@@ -1,112 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tester ECookie</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
-  </head>
 
-  <body>
-    <div id="cookie-bg"></div>
-    <div id="backdrop"></div>
-    <header id="home">
-      <nav class="top-bar">
-        <div class="nav-left">
-          <i class="fa-solid fa-cookie-bite icon"></i>
-        </div>
-        <div class="nav-center">
-          <a href="#home">Home</a>
-          <a href="#reseps">Recipes</a>
-          <a href="#clicker">Clicker</a>
-          <a href="#credits">Credits</a>
-        </div>
-        <div class="nav-right">
-          <a
-            href="https://discordapp.com/users/946215570607583273"
-            target="_blank"
-            aria-label="Discord profile"
-          >
-            <i class="fa-brands fa-discord icon"></i
-          ></a>
-          <a
-            href="https://github.com/jnixt"
-            target="_blank"
-            aria-label="GitHub profile"
-          >
-            <i class="fa-brands fa-github icon"></i>
-          </a>
-        </div>
-      </nav>
-      <div id="big-title">
-        <h1><i class="fa-solid fa-cookie-bite icon"></i>E. Cookie</h1>
-        <h3>
-          Find your perfect <span>cookie</span>.
-        </h3>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tester ECookie</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+</head>
+
+<body>
+  <div id="cookie-bg"></div>
+  <div id="backdrop"></div>
+  <header id="home">
+    <nav class="top-bar">
+      <div class="nav-left">
+        <i class="fa-solid fa-cookie-bite icon"></i>
       </div>
-    </header>
-    <main id="reseps"></main>
-    <footer id="clicker">
-      <div id="gC-toolbar">
-        <button id="leaderboardBtn" class="gC-btn panCre">
-          <i class="fa-solid fa-trophy icon"></i>
-        </button>
-        <button id="storeBtn" class="gC-btn panCre">
-          <i class="fa-solid fa-hand-pointer icon"></i>
-        </button>
-        <button id="achievementsBtn" class="gC-btn panCre">
-          <i class="fa-solid fa-chart-simple icon"></i>
-        </button>
+      <div class="nav-center">
+        <a href="#home">Home</a>
+        <a href="#reseps">Recipes</a>
+        <a href="#clicker">Clicker</a>
+        <a href="#credits">Credits</a>
       </div>
-      <div id="giantCookie" class="cookie">
-        <div id="giantCookieHair">
-          <svg>
-            <path
-              d="M 50 90
+      <div class="nav-right">
+        <a href="https://discordapp.com/users/946215570607583273" target="_blank" aria-label="Discord profile">
+          <i class="fa-brands fa-discord icon"></i></a>
+        <a href="https://github.com/jnixt" target="_blank" aria-label="GitHub profile">
+          <i class="fa-brands fa-github icon"></i>
+        </a>
+      </div>
+    </nav>
+    <div id="big-title">
+      <h1><i class="fa-solid fa-cookie-bite icon"></i>E. Cookie</h1>
+      <h3>
+        Find your perfect <span>cookie</span>.
+      </h3>
+    </div>
+  </header>
+  <main id="reseps"></main>
+  <footer id="clicker">
+    <div id="gC-toolbar">
+      <button id="leaderboardBtn" class="gC-btn panCre">
+        <i class="fa-solid fa-trophy icon"></i>
+      </button>
+      <button id="storeBtn" class="gC-btn panCre">
+        <i class="fa-solid fa-hand-pointer icon"></i>
+      </button>
+      <button id="achievementsBtn" class="gC-btn panCre">
+        <i class="fa-solid fa-chart-simple icon"></i>
+      </button>
+    </div>
+    <div id="giantCookie" class="cookie">
+      <div id="giantCookieHair">
+        <svg>
+          <path d="M 50 90
                  C 45 70, 40 50, 45 35
                  C 50 20, 75 25, 70 45
-                 C 65 60, 45 55, 52 40"
-              stroke="rgba(0, 0, 0, 0.8)"
-              stroke-width="6"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="giantCookieEyes">
-          <div id="left-eye"></div>
-          <div id="right-eye"></div>
-        </div>
-        <div id="giantCookieMouth"></div>
-        <div class="giantCookieHands">
-          <div id="left-hand"></div>
-          <div id="right-hand"></div>
-        </div>
-        <div class="giantCookieFeet">
-          <div id="left-foot"></div>
-          <div id="right-foot"></div>
-        </div>
+                 C 65 60, 45 55, 52 40" stroke="rgba(0, 0, 0, 0.8)" stroke-width="6" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
       </div>
-    </footer>
-    <section id="credits">
-
-    </section>
-    <div id="adminBtn" class="gC-btn panCre">
-      <i class="fa-tools fa-solid icon"></i> Admin
+      <div class="giantCookieEyes">
+        <div id="left-eye"></div>
+        <div id="right-eye"></div>
+      </div>
+      <div id="giantCookieMouth"></div>
+      <div class="giantCookieHands">
+        <div id="left-hand"></div>
+        <div id="right-hand"></div>
+      </div>
+      <div class="giantCookieFeet">
+        <div id="left-foot"></div>
+        <div id="right-foot"></div>
+      </div>
     </div>
-    <p id="watermark">
-      <i class="fa-people-group fa-solid icon"></i>Shwcehneiger<span
-        >&trade;</span>
-    </p>
-    <script src="script.js"></script>
-  </body>
+  </footer>
+  <section id="credits">
+
+  </section>
+  <div id="adminBtn" class="gC-btn panCre">
+    <i class="fa-tools fa-solid icon"></i> Admin
+  </div>
+  <p id="watermark">
+    <i class="fa-people-group fa-solid icon"></i>Shwcehneiger<span>&trade;</span>
+  </p>
+  <section id="app-content" class="hidden">
+    <h2 id="greeting">Hello!</h2>
+    <p>You are logged in.</p>
+    <button id="logoutBtn">Log out</button>
+  </section>
+
+  <p>Other site content goes here...</p>
+  </main>
+
+  <!-- If you prefer the modal to be injected automatically you can leave this out.
+       The JS will inject the modal if missing, but including this makes styling easier. -->
+  <div id="authModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2 id="modalTitle">Login</h2>
+      <div class="mode-switch">
+        <button id="switchLogin" class="active">Login</button>
+        <button id="switchCreate">Create Account</button>
+      </div>
+
+      <form id="authForm">
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+        <div class="actions">
+          <button type="submit" id="submitBtn">Log in</button>
+        </div>
+      </form>
+
+      <div id="authMessage" class="message"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
 </html>

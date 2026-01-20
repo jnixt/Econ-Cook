@@ -214,3 +214,257 @@ document.addEventListener("DOMContentLoaded", function () {
     `
   })
 });
+
+// Robust client auth for Econ-Cook
+// - Better error messages (shows server message, HTTP status, or network error)
+// - Accepts several token field names returned by server
+// - Logs full responses to console for easier debugging
+// Set API_BASE if your backend runs on another origin, e.g. "http://localhost:5000"
+(() => {
+  const API_BASE = ""; // <-- set to backend origin if needed
+  const TOKEN_KEY = "econcook_token";
+
+  function log(...args) { console.log("[EconCookAuth]", ...args); }
+  function errlog(...args) { console.error("[EconCookAuth]", ...args); }
+
+  function saveToken(token) { localStorage.setItem(TOKEN_KEY, token); }
+  function loadToken() { return localStorage.getItem(TOKEN_KEY); }
+  function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+  async function apiPost(path, body) {
+    try {
+      const res = await fetch(API_BASE + path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "omit",
+      });
+
+      let text;
+      try {
+        text = await res.text();
+      } catch (tErr) {
+        text = "";
+      }
+
+      // Try to parse JSON, but preserve raw text for debugging
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseErr) {
+        data = { __raw: text };
+      }
+
+      log("apiPost", path, "status=", res.status, "body=", data);
+      return { ok: res.ok, status: res.status, data, statusText: res.statusText };
+    } catch (networkErr) {
+      errlog("apiPost network error:", networkErr);
+      return { ok: false, status: 0, data: { error: "network_error", details: String(networkErr) } };
+    }
+  }
+
+  function $(id) { return document.getElementById(id); }
+
+  // Try to create modal/app if missing (keeps integration simple)
+  function injectUIIfMissing() {
+    if (!$("authModal")) {
+      document.body.insertAdjacentHTML("beforeend", `
+        <div id="authModal" class="modal" style="display:flex;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:9999;">
+          <div class="modal-content" style="width:360px;background:#fff;padding:18px;border-radius:10px;">
+            <h2 id="modalTitle">Login</h2>
+            <div class="mode-switch">
+              <button id="switchLogin" class="active">Login</button>
+              <button id="switchCreate">Create Account</button>
+            </div>
+            <form id="authForm">
+              <label for="username">Username</label>
+              <input id="username" name="username" required>
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" required>
+              <div class="actions"><button type="submit" id="submitBtn">Log in</button></div>
+            </form>
+            <div id="authMessage" class="message" style="margin-top:8px;color:#b33;"></div>
+          </div>
+        </div>
+      `);
+      log("Injected auth modal into DOM.");
+    }
+
+    if (!$("app-content")) {
+      document.body.insertAdjacentHTML("beforeend", `
+        <section id="app-content" class="hidden" style="display:none;margin-top:18px;padding:16px;background:#fff;border-radius:10px;">
+          <h2 id="greeting">Hello!</h2>
+          <p>You are logged in.</p>
+          <button id="logoutBtn">Log out</button>
+        </section>
+      `);
+      log("Injected app-content into DOM.");
+    }
+  }
+
+  async function initAuth() {
+    injectUIIfMissing();
+
+    const modal = $("authModal");
+    const modalTitle = $("modalTitle");
+    const switchLogin = $("switchLogin");
+    const switchCreate = $("switchCreate");
+    const authForm = $("authForm");
+    const usernameInput = $("username");
+    const passwordInput = $("password");
+    const submitBtn = $("submitBtn");
+    const messageDiv = $("authMessage");
+    const appContent = $("app-content");
+    const greeting = $("greeting");
+    const logoutBtn = $("logoutBtn");
+
+    if (!authForm || !modal || !usernameInput || !passwordInput || !submitBtn || !messageDiv || !appContent || !greeting || !logoutBtn) {
+      errlog("Auth UI initialization failed: missing elements");
+      return;
+    }
+
+    let mode = "login";
+    function setMessage(text, color = "#b33") {
+      messageDiv.style.color = color;
+      messageDiv.textContent = text;
+    }
+
+    function setMode(m) {
+      mode = m;
+      modalTitle.textContent = (m === "login") ? "Login" : "Create Account";
+      submitBtn.textContent = (m === "login") ? "Log in" : "Create";
+      if (switchLogin) switchLogin.classList.toggle("active", m === "login");
+      if (switchCreate) switchCreate.classList.toggle("active", m === "create");
+      setMessage("");
+    }
+
+    if (switchLogin) switchLogin.addEventListener("click", () => setMode("login"));
+    if (switchCreate) switchCreate.addEventListener("click", () => setMode("create"));
+
+    function extractToken(respData) {
+      if (!respData) return null;
+      return respData.access_token || respData.token || respData.accessToken || respData.access || null;
+    }
+
+    async function handleRegister(username, password) {
+      const resp = await apiPost("/api/register", { username, password });
+      if (!resp.ok) {
+        const serverMsg = resp.data && (resp.data.error || resp.data.message || resp.data.__raw);
+        // Special case 409 -> username exists
+        if (resp.status === 409) throw new Error(serverMsg || "Username already exists.");
+        throw new Error(serverMsg || `Server error (${resp.status || "network"})`);
+      }
+      const token = extractToken(resp.data);
+      if (!token) throw new Error("Server didn't return an access token. See console for response.");
+      saveToken(token);
+      return resp.data.username || username;
+    }
+
+    async function handleLogin(username, password) {
+      const resp = await apiPost("/api/login", { username, password });
+      if (!resp.ok) {
+        const serverMsg = resp.data && (resp.data.error || resp.data.message || resp.data.__raw);
+        throw new Error(serverMsg || `Invalid credentials or server error (${resp.status || "network"})`);
+      }
+      const token = extractToken(resp.data);
+      if (!token) throw new Error("Server didn't return an access token. See console for response.");
+      saveToken(token);
+      return resp.data.username || username;
+    }
+
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      if (!username || !password) {
+        setMessage("Enter both username and password.");
+        return;
+      }
+      submitBtn.disabled = true;
+      setMessage(""); // clear
+      try {
+        let resultUsername;
+        if (mode === "create") {
+          if (!/^[A-Za-z0-9_\-]{3,30}$/.test(username)) throw new Error("Username must be 3–30 chars: letters, numbers, - or _");
+          resultUsername = await handleRegister(username, password);
+          setMessage("Account created. Logged in.", "#1a7");
+        } else {
+          resultUsername = await handleLogin(username, password);
+          setMessage("Login successful.", "#1a7");
+        }
+        onLoginSuccess(resultUsername);
+      } catch (err) {
+        // Show clear, actionable message
+        const show = (err && err.message) ? err.message : "An unknown error occurred. See console.";
+        setMessage(show);
+        errlog("Auth submit error:", err);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function onLoginSuccess(username) {
+      greeting.textContent = `Hello, ${username}!`;
+      appContent.classList.remove("hidden");
+      appContent.style.display = "";
+      modal.style.display = "none";
+      usernameInput.value = "";
+      passwordInput.value = "";
+    }
+
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      clearToken();
+      appContent.classList.add("hidden");
+      appContent.style.display = "none";
+      setMode("login");
+      modal.style.display = "flex";
+      usernameInput.focus();
+    });
+
+    // Try resume session
+    const token = loadToken();
+    if (token) {
+      try {
+        const res = await fetch(API_BASE + "/api/profile", {
+          method: "GET",
+          headers: { "Authorization": "Bearer " + token }
+        });
+        let bodyText = await res.text().catch(() => "");
+        let data = {};
+        try { data = bodyText ? JSON.parse(bodyText) : {}; } catch { data = { __raw: bodyText }; }
+        log("/api/profile", "status=", res.status, "body=", data);
+        if (res.ok && data.username) {
+          onLoginSuccess(data.username);
+          return;
+        } else {
+          // expired/invalid token -> clear and show login
+          clearToken();
+        }
+      } catch (networkErr) {
+        errlog("Profile fetch failed:", networkErr);
+        // keep token cleared to let user re-login
+        clearToken();
+      }
+    }
+
+    // show modal if no active session
+    modal.style.display = "flex";
+    usernameInput.focus();
+    setMode("login");
+  }
+
+  // initialize when DOM is ready
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", initAuth);
+  } else {
+    initAuth();
+  }
+
+  // Helpful debug tips — exposed on window
+  window.EconCookAuthDebug = {
+    API_BASE: () => API_BASE,
+    currentToken: () => loadToken(),
+    clearToken: () => clearToken(),
+  };
+})();
