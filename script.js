@@ -330,17 +330,17 @@ document.addEventListener("DOMContentLoaded", function () {
           panel.classList.add("pointer-bottom");
         }
 
-        const centerX = buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
+        const centerX = window.scrollX + buttonRect.left + buttonRect.width / 2 - panelRect.width / 2;
         panel.style.left = `${centerX}px`;
 
-        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-        const panelLeftX = window.scrollX + centerX;
-        const panelCenterX = panelLeftX + panelRect.width / 2;
+        const buttonCenterX = window.scrollX + buttonRect.left + buttonRect.width / 2;
+        const panelCenterX = centerX + panelRect.width / 2;
         const pointerOffsetX = buttonCenterX - panelCenterX;
         panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
         panel.style.visibility = "visible";
       }, 0);
+
 
       panel.addEventListener("click", (e) => e.stopPropagation());
     });
@@ -512,28 +512,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  const creditsLanguager = document.getElementById("credits-language");
+  const languageToggle = creditsLanguager.querySelector(".language-toggle");
+  const toggleSlider = creditsLanguager.querySelector(".toggle-slider");
+
+  toggleSlider.addEventListener("click", () => {
+    const isIN = languageToggle.dataset.language === "IN";
+    languageToggle.dataset.language = isIN ? "EN" : "IN";
+    toggleSlider.classList.toggle("active");
+  });
+
   document.querySelectorAll(".nameBtn").forEach((butt) => {
-    const messages = [
+    const IN_messages = [
       //Jeffris
       "Pengguna Arch-Hyprland OS yang code website ini dari nol (sampai beberapa kali) menggunakan HTML, CSS, dan JS (tentunya). Sambil belajar cara menggunakan Git dan Github, orang ini speedrun nge-coding sampai hasilnya jadi sebagus ini. Iya, iya, website ini masih memiliki beberapa bug dan fitur-fitur yang kurang, karena deadlinenya hanya dua minggu... Apapun itu, enjoy websitenya!",
       //Ryan
       "Seorang pengangguran yang tidak bisa melakukan apa-apa ini entah bagaimana mendapatkan pekerjaan untuk membantu dalam membuat website ini. Tanpa Beliau, akan ada beberpa fitur yang tidak bisa diakses sampai sekarang, dan Shwcehneiger™ mungkin tidak sempat membuat page yang dibuat khusus untuk credit anggota (iya, saya yang buat page ini)",
       //Steven
-      "hai",
+      "Corrupti culpa error porro unde minus voluptas rem placeat odio, vitae expedita labore? Quaerat minima fuga ab, blanditiis, voluptatum vero quam recusandae tempore, earum molestias unde natus exercitationem! Qui similique aut necessitatibus beatae a officia corrupti blanditiis illum doloremque officiis fuga adipisci totam nam, vel facilis provident quae quisquam repellendus tempora eveniet quas! Molestiae nam, pariatur, tempore enim aliquid dolorem maxime, iure dicta placeat suscipit veritatis nihil.",
       //Simon
-      "hai",
+      "Nihil pariatur, provident inventore hic aperiam repellat nulla suscipit est laboriosam atque quis explicabo assumenda sunt corporis? Beatae ratione natus consectetur eius rerum, labore maxime quaerat ex nisi laudantium id iste, deleniti atque architecto quisquam quibusdam. Veniam dolores provident, dolore inventore, illo officiis placeat, optio quo neque ratione fugit. Officiis, labore architecto. Dolores harum totam quisquam! Provident maxime odit dolorem aut qui nisi laudantium blanditiis placeat! Libero!",
       //Marvel
       "Meskipun rapornya menunjukkan nilai yang tidak selalu mencolok—namun bahkan yang terendah pun tetap berada di atas KKM—ia adalah sosok yang tidak layak dianggap sepele. Angka-angka itu gagal menjangkau wilayah tempat ia benar-benar berkuasa: seni rupa, fotografi, dan ranah kreatif serupa, di mana kreativitasnya bergerak tenang namun mendalam, melampaui batas penilaian formal. Dalam keheningan yang ia pelihara, tersimpan delusi keagungan yang anggun—keyakinan bahwa dunia berjalan dengan hukum yang hanya dipahami oleh mereka yang cukup sabar mengamatinya. Ia menyerap realitas melalui cerita dan simbol, menonton lebih dari lima puluh anime setiap musim seolah sedang mempelajari arsip tak tertulis tentang manusia dan takdir. Maka berterima kasihlah kepadanya, karena dari balik bayangan itulah lahir desain karakter virtual perempuan di website ini, sebuah jejak halus dari pengaruh yang jarang disadari, namun nyata. (designer dan cameramen)",
       //Angeline
       "Berterima kasihlah kepada saya, karena foto-foto kalian akan jelek kalau tanpa HP saya hehehe. Oh ya, saya juga berperan sebagai cameramen yang merekam dan memfoto hampir semua scene-scene penting dalam progres grup ini. Saya juga membantu dalam masak cookienya, jadi jangan bilang gak enak >:(",
       //Beverlyn
-      "hai",
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, incidunt reiciendis? Reprehenderit facilis voluptatibus mollitia expedita ab qui ratione rerum iste consequatur, dicta, enim nostrum nobis exercitationem architecto incidunt autem. Suscipit non nisi, consectetur quisquam tempora quam quae, unde aspernatur voluptas vel dicta eos pariatur aperiam recusandae sit debitis minima beatae atque. Iusto a, exercitationem voluptatibus voluptate libero aspernatur quo magnam dicta qui iure labore ipsa error?",
       //Pangestu
       "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geriknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, dan tak kalah penting, mencuci piring—sebuah tindakan heroik sunyi yang memastikan dunia bisa kembali digunakan tanpa drama."
     ];
+    const EN_messages = [
+      //Jeffris
+      "An Arch-Hyprland OS User who coded the website from zero (many times) using HTML, CSS, and JS (ofcourse). While also learning how to use Git and Github, this person speedran the coding till the result became as good as this. Yes, yes, this website still has some bugs and missing features, because the deadline is only two weeks... Despite that, enjoy the website!",
+      //Ryan
+      "This unemployed, helpless man somehow found work helping build this website. Without him, some features would be inaccessible, and Shwcehneiger™ might not have had the chance to create a dedicated member credits page (yes, I created this page).",
+      //Steven
+      "Corrupti culpa error porro unde minus voluptas rem placeat odio, vitae expedita labore? Quaerat minima fuga ab, blanditiis, voluptatum vero quam recusandae tempore, earum molestias unde natus exercitationem! Qui similique aut necessitatibus beatae a officia corrupti blanditiis illum doloremque officiis fuga adipisci totam nam, vel facilis provident quae quisquam repellendus tempora eveniet quas! Molestiae nam, pariatur, tempore enim aliquid dolorem maxime, iure dicta placeat suscipit veritatis nihil.",
+      //Simon
+      "Nihil pariatur, provident inventore hic aperiam repellat nulla suscipit est laboriosam atque quis explicabo assumenda sunt corporis? Beatae ratione natus consectetur eius rerum, labore maxime quaerat ex nisi laudantium id iste, deleniti atque architecto quisquam quibusdam. Veniam dolores provident, dolore inventore, illo officiis placeat, optio quo neque ratione fugit. Officiis, labore architecto. Dolores harum totam quisquam! Provident maxime odit dolorem aut qui nisi laudantium blanditiis placeat! Libero!",
+      //Marvel
+      "Although his report card shows grades that aren't always impressive—even the lowest are still above the Minimum Completion Minimum (KKM)—he is a figure not to be underestimated. Those numbers fail to capture the realm where he truly excels: fine art, photography, and similar creative fields, where his creativity moves quietly yet profoundly, transcending the boundaries of formal assessment. Within the silence he maintains lies a graceful delusion of grandeur—a belief that the world operates by laws understood only by those patient enough to observe it. He absorbs reality through stories and symbols, watching over fifty anime each season as if studying an unwritten archive of humanity and destiny. Thank him, then, for it was from behind his shadow that the design of the virtual female character on this website was born, a subtle trace of an influence rarely noticed, yet real. (designer and cameraman)",
+      //Angeline
+      "Thank me, because your photos would be terrible without my phone, hehehe. Oh yeah, I also acted as a cameraman, recording and photographing almost all the important scenes in this group's progress. I also helped bake the cookies, so don't say they weren't delicious >:(",
+      //Beverlyn
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, incidunt reiciendis? Reprehenderit facilis voluptatibus mollitia expedita ab qui ratione rerum iste consequatur, dicta, enim nostrum nobis exercitationem architecto incidunt autem. Suscipit non nisi, consectetur quisquam tempora quam quae, unde aspernatur voluptas vel dicta eos pariatur aperiam recusandae sit debitis minima beatae atque. Iusto a, exercitationem voluptatibus voluptate libero aspernatur quo magnam dicta qui iure labore ipsa error?",
+      //Pangestu
+      "He is short, a functional advantage that makes his presence always efficient. His movements are casual and unobtrusive, a rare quality that saves him from the hassle of being visible. In this photo, he appears very tall—a visual feat that stems entirely from the decision of someone else to shoot from below. Much about him remains unknown, and that is precisely the proof of his success in consistently maintaining privacy. While others sit, he stands in the corner, making a real contribution by simply remaining in the correct position. He is a great help in measuring ingredients on the scale according to the recipe book, and, just as importantly, in washing the dishes—a silent heroic act that ensures the world can be used again without drama."
+    ];
     butt.addEventListener("click", (e) => {
       const index = parseInt(butt.dataset.index);
-      const message = messages[index];
+      const isIN = languageToggle.dataset.language === "IN";
+      const message = isIN ? IN_messages[index] : EN_messages[index];
       setTimeout(() => {
         const panelId = butt.id ? `${butt.id}-panel` : `nameBtn-${index}-panel`;
         const panelContent = document.getElementById(`${panelId}-content`);
