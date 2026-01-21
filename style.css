@@ -25,6 +25,21 @@ body {
   position: relative;
 }
 
+#login {
+  visibility: visible;
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  min-width: 400px;
+}
+
+#login button {
+  background-color: var(--liquid-glass-bg);
+}
+
 #bottom {
   width: 100%;
 }
@@ -34,8 +49,8 @@ body {
 }
 
 .icon {
-  font-size: calc(1em + 6px);
   margin: 0 1px;
+  letter-spacing: 1.5px;
 }
 
 #cookie-bg {
@@ -46,6 +61,17 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+input {
+  background: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  outline: none;
+  border-radius: 8px;
+}
+
+input:focus {
+  outline:none
 }
 
 .top-bar {
@@ -70,14 +96,14 @@ body {
   margin: 0 1vw;
 }
 
-a:hover, a:focus {
+a:hover {
   color: var(--accent-color);
   transform: scale(1.1) translateY(-2px);
   outline: none;
 
 }
 
-a:hover .icon, a:focus .icon {
+a:hover .icon {
   color: var(--accent-color);
   transform: scale(1.1) translateY(-2px);
   outline: none;
@@ -211,6 +237,7 @@ h3 span {
   margin: 100px 40px 40px 40px;
   cursor: pointer;
   transition: transform 0.12s ease;
+  user-select: none;
 }
 
 #giantCookie:hover {
@@ -349,13 +376,9 @@ h3 span {
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.gC-btn:hover, .gC-btn:focus {
+.gC-btn:hover {
   outline: none;
   transform: scale(1.15);
-}
-
-.gC-btn:hover .icon, .gC-btn:focus .icon {
-  color: var(--accent-color);
 }
 
 .plused-points {
@@ -389,6 +412,7 @@ h3 span {
   top: 30% !important;
   left: 50% !important;
   transform: translateX(-50%);
+  max-width: 350px;
 }
 
 #adminBtn-panel-pointer {
@@ -414,10 +438,66 @@ h3 span {
 
 #backdrop {
   position: fixed;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  height: 100%;
-  display: none;
-  z-index: -3;
-  backdrop-filter: blur(5px);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -2;
+  visibility: hidden;
+  backdrop-filter: blur(8px);
+}
+
+#adminPwdPanel {
+  position: relative;
+  visibility: hidden;
+  display: block;
+  text-align: center;
+  min-width: 250px;
+}
+
+#passwdInput {
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+  width: 80%;
+}
+
+.gC-btn.active .icon {
+  color: #a6da95;
+}
+
+#typerist {
+  position: relative;
+  vertical-align: 2px;
+  margin-left: 4px;
+  font-size: 0.7em;
+}
+
+#typerist:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  appearance: none;
+  -moz-appearance: textfield;
+}
+
+
+#typerist::placeholder {
+  color:rgba(255, 255, 255, 0.4);
+}
+
+#pointser:hover {
+  transform: none;
+  cursor: default;
 }

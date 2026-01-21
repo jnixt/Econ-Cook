@@ -22,6 +22,86 @@ document.addEventListener("DOMContentLoaded", function () {
     typeWriter();
   }
 
+  function formatPoints(points) {
+    let finalPoints = points;
+    if (points >= 1000 && points < 1000000) {
+      finalPoints = (points / 1000).toFixed(1) + "K"
+    } else if (points >= 1000000 && points < 1000000000) {
+      finalPoints = (points / 1000000).toFixed(1) + "M"
+    } else if (points >= 1000000000 && points < 1000000000000) {
+      finalPoints = (points / 1000000000).toFixed(1) + "B"
+    } else if (points >= 1000000000000 && points < 1000000000000000) {
+      finalPoints = (points / 1000000000000).toFixed(1) + "T"
+    } else if (points >= 1000000000000000 && points < 1000000000000000000) {
+      finalPoints = (points / 1000000000000000).toFixed(1) + "Qa"
+    } else if (points >= 1000000000000000000 && points < 1000000000000000000000) {
+      finalPoints = (points / 1000000000000000000).toFixed(1) + "Qi"
+    } else if (points >= 1000000000000000000000 && points < 1000000000000000000000000) {
+      finalPoints = (points / 1000000000000000000000).toFixed(1) + "Sx"
+    } else if (points >= 1000000000000000000000000 && points < 1e27) {
+      finalPoints = (points / 1000000000000000000000000).toFixed(1) + "Sp"
+    } else if (points >= 1e27 && points < 1e30) {
+      finalPoints = (points / 1e27).toFixed(1) + "Oc"
+    } else if (points >= 1e30 && points < 1e33) {
+      finalPoints = (points / 1e30).toFixed(1) + "No"
+    } else if (points >= 1e33 && points < 1e36) {
+      finalPoints = (points / 1e33).toFixed(1) + "De"
+    } else if (points >= 1e36 && points < 1e39) {
+      finalPoints = (points / 1e36).toFixed(1) + "UDe"
+    } else if (points >= 1e39 && points < 1e42) {
+      finalPoints = (points / 1e39).toFixed(1) + "DDe"
+    } else if (points >= 1e42 && points < 1e45) {
+      finalPoints = (points / 1e42).toFixed(1) + "TDe"
+    } else if (points >= 1e45 && points < 1e48) {
+      finalPoints = (points / 1e45).toFixed(1) + "QdDe"
+    } else if (points >= 1e48 && points < 1e51) {
+      finalPoints = (points / 1e48).toFixed(1) + "QnDe"
+    } else if (points >= 1e51 && points < 1e54) {
+      finalPoints = (points / 1e51).toFixed(1) + "SxDe"
+    } else if (points >= 1e54 && points < 1e57) {
+      finalPoints = (points / 1e54).toFixed(1) + "SpDe"
+    } else if (points >= 1e57 && points < 1e60) {
+      finalPoints = (points / 1e57).toFixed(1) + "OcDe"
+    } else if (points >= 1e60 && points < 1e63) {
+      finalPoints = (points / 1e60).toFixed(1) + "NoDe"
+    } else if (points >= 1e63 && points < 1e66) {
+      finalPoints = (points / 1e63).toFixed(1) + "Vt"
+    } else if (points >= 1e66 && points < 1e69) {
+      finalPoints = (points / 1e66).toFixed(1) + "UVt"
+    } else if (points >= 1e69 && points < 1e72) {
+      finalPoints = (points / 1e69).toFixed(1) + "DVt"
+    } else if (points >= 1e72 && points < 1e75) {
+      finalPoints = (points / 1e72).toFixed(1) + "TVt"
+    } else if (points >= 1e75 && points < 1e78) {
+      finalPoints = (points / 1e75).toFixed(1) + "QdVt"
+    } else if (points >= 1e78 && points < 1e81) {
+      finalPoints = (points / 1e78).toFixed(1) + "QnVt"
+    } else if (points >= 1e81 && points < 1e84) {
+      finalPoints = (points / 1e81).toFixed(1) + "SxVt"
+    } else if (points >= 1e84 && points < 1e87) {
+      finalPoints = (points / 1e84).toFixed(1) + "SpVt"
+    } else if (points >= 1e87 && points < 1e90) {
+      finalPoints = (points / 1e87).toFixed(1) + "OcVt"
+    } else if (points >= 1e90 && points < 1e93) {
+      finalPoints = (points / 1e90).toFixed(1) + "NoVt"
+    } else if (points >= 1e93 && points < 1e96) {
+      finalPoints = (points / 1e93).toFixed(1) + "Tg"
+    } else if (points >= 1e96 && points < 1e99) {
+      finalPoints = (points / 1e96).toFixed(1) + "qg"
+    } else if (points >= 1e99) {
+      finalPoints = points.toExponential(1)
+    }
+    return finalPoints;
+  }
+
+  const loginPanel = document.querySelector("#login")
+  let hasLogged = localStorage.getItem("loggedIn") === true;
+
+  if (!hasLogged) {
+    loginPanel.style.visibility = "visible";
+    loginPanel.style.zIndex = "999";
+  }
+
   const cookieBackground = document.getElementById("cookie-bg");
   if (cookieBackground) {
     const cookies = [];
@@ -106,34 +186,76 @@ document.addEventListener("DOMContentLoaded", function () {
     animateCookies();
   }
 
+  let cookiePoints = Number(localStorage.getItem("cookiePoints")) || 0;
+  const pointsCounter = document.getElementById("storeBtn");
   const giantCookie = document.getElementById("giantCookie");
 
   if (giantCookie) {
-    let cookiePoints = parseInt(localStorage.getItem("cookiePoints")) || 0;
     if (cookiePoints < 0) cookiePoints = 0;
-    const pointsCounter = document.getElementById("storeBtn");
+
     pointsCounter.innerHTML =
-      '<i class="fa-solid fa-hand-pointer icon"></i> ' + cookiePoints;
+      '<i class="fa-solid fa-hand-pointer icon"></i> ' + formatPoints(cookiePoints);
     let pointsPerClick = 1;
 
     giantCookie.addEventListener("click", (e) => {
-      if (getRandomInt(1, 100) === 1) {
+      if (e.isTrusted && autoClickerInterval) {
+        const autoclickerBtn = document.querySelector("#autoclicker");
+        toggleAutoClicker(autoclickerBtn);
+        return;
+      }
+
+      if (!e.isTrusted) {
+        e.stopPropagation();
+      }
+      if (getRandomInt(1, 1000) === 1) {
         giantCookie.classList.add("rainbow-effect");
       }
       cookiePoints += pointsPerClick;
+      let finalPoints = formatPoints(cookiePoints);
       pointsCounter.innerHTML =
-        '<i class="fa-solid fa-hand-pointer icon"></i> ' + cookiePoints;
+        '<i class="fa-solid fa-hand-pointer icon"></i> ' + finalPoints;
       localStorage.setItem("cookiePoints", cookiePoints);
+
+      const color = ["#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#ed8796", "#ee99a0", "#f5a97f", "#eed49f", "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8", "#cad3f5", "#b8c0e0"]
+
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
       plusedPoints.innerText = "+" + pointsPerClick;
+      plusedPoints.style.color = `${color[getRandomInt(0, 16)]}`
+      console.log(color[getRandomInt(0, 16)])
       plusedPoints.style.left = `${e.clientX + window.scrollX}px`;
       plusedPoints.style.top = `${e.clientY + window.scrollY}px`;
-      console.log(e.clientX, e.clientY);
       document.body.appendChild(plusedPoints);
       setTimeout(() => plusedPoints.remove(), 1000);
-      setTimeout(() => giantCookie.classList.remove("rainbow-effect"), 67000);
+      setTimeout(() => giantCookie.classList.remove("rainbow-effect"), 8000);
     });
+  }
+
+  let autoClickerInterval = null;
+  function toggleAutoClicker(button) {
+    if (autoClickerInterval) {
+      clearInterval(autoClickerInterval);
+      autoClickerInterval = null;
+      if (button) {
+        button.classList.remove("active");
+      }
+    } else {
+      autoClickerInterval = setInterval(() => {
+        const rect = giantCookie.getBoundingClientRect();
+        const x = rect.left + Math.random() * rect.width;
+        const y = rect.top + Math.random() * rect.height;
+        const clickEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          clientX: x,
+          clientY: y,
+        });
+        giantCookie.dispatchEvent(clickEvent);
+      }, 100);
+      if (button) {
+        button.classList.add("active");
+      }
+    }
   }
 
 
@@ -162,557 +284,528 @@ document.addEventListener("DOMContentLoaded", function () {
       panel.appendChild(pointer);
 
       const content = document.createElement("div");
-      content.classname = "panel-content"
+      content.className = "panel-content"
       content.id = panelId + "-content";
       panel.appendChild(content)
 
       document.body.appendChild(panel);
 
-      const panelRect = panel.getBoundingClientRect();
-      const margin = 17;
+      setTimeout(() => {
+        const panelRect = panel.getBoundingClientRect();
+        const margin = 17;
 
-      const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
-      if (hasSpaceAbove) {
-        panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
-        panel.classList.remove("pointer-bottom");
-        panel.classList.add("pointer-top");
-      } else {
-        panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
-        panel.classList.remove("pointer-top");
-        panel.classList.add("pointer-bottom");
-      }
+        const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
+        if (hasSpaceAbove) {
+          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
+          panel.classList.remove("pointer-bottom");
+          panel.classList.add("pointer-top");
+        } else {
+          panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
+          panel.classList.remove("pointer-top");
+          panel.classList.add("pointer-bottom");
+        }
 
-      const centerX =
-        buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
-      panel.style.left = `${centerX}px`;
+        const centerX = buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
+        panel.style.left = `${centerX}px`;
 
-      const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-      const panelLeftX = window.scrollX + centerX;
-      const panelCenterX = panelLeftX + panelRect.width / 2;
-      const pointerOffsetX = buttonCenterX - panelCenterX;
-      panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+        const panelLeftX = window.scrollX + centerX;
+        const panelCenterX = panelLeftX + panelRect.width / 2;
+        const pointerOffsetX = buttonCenterX - panelCenterX;
+        panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
-      panel.style.visibility = "visible";
+        panel.style.visibility = "visible";
+      }, 0);
 
       panel.addEventListener("click", (e) => e.stopPropagation());
     });
   });
 
-  document.addEventListener("click", () => {
-    document.querySelectorAll(".panel").forEach((panel) => {
-      panel.remove();
-    });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".panCre") && !e.target.closest(".panel") && !e.target.closest("#adminBtn")) {
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.remove();
+      });
+    }
   });
 
-  const adminBtn = document.getElementById("adminBtn")
-  adminBtn.addEventListener("click", () => {
-    const adminContent = document.getElementById("adminBtn-panel-content")
-    adminContent.innerHTML = `
-      <h3 style="text-decoration:underline wavy; margin-bottom: 4px;">Admino Panelo.</h3>
-      <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid"></i></button>
-      <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid"></i></button>
-    `
-  })
+  const adminBtn = document.getElementById("adminBtn");
+  const pwdBackdrop = document.querySelector("#backdrop");
+  const pwdInput = document.querySelector("#passwdInput");
+
+  function handlePasswordEntry(e) {
+    if (e.key === "Enter") {
+      if (pwdInput.value === "280112") {
+        localStorage.setItem("unlockedAP", "true");
+        pwdBackdrop.style.display = "none";
+        pwdInput.value = "";
+        alert("Access Granted! Click Admin again.");
+        pwdInput.removeEventListener("keydown", handlePasswordEntry);
+      } else {
+        alert("Incorrect Password");
+        pwdInput.value = "";
+      }
+    }
+  }
+
+  adminBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    let accessAP = localStorage.getItem("unlockedAP") === "true";
+
+    if (accessAP) {
+      if (document.getElementById("adminBtn-panel")) return;
+
+      const panel = document.createElement("div");
+      panel.className = "panel";
+      panel.id = "adminBtn-panel";
+      panel.style.display = "block";
+      panel.style.visibility = "visible";
+
+      panel.style.position = "fixed";
+      panel.style.top = "30%";
+      panel.style.left = "50%";
+      panel.style.transform = "translateX(-50%)";
+
+      const content = document.createElement("div");
+      content.id = "adminBtn-panel-content";
+      panel.appendChild(content);
+      document.body.appendChild(panel);
+
+      content.innerHTML = `
+        <h3 style="text-align:center; margin-bottom: 6px;">Admino Panelo.</h3>
+        <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid icon"></i></button>
+        <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid icon"></i></button>
+        <button id="pointser" class="gC-btn">
+          <i class="fa-solid fa-dollar-sign icon"></i><input id="typerist" type="number" placeholder="How many u want brah?">
+        </button>
+      `;
+
+      const autoBtn = panel.querySelector("#autoclicker");
+      if (autoClickerInterval) autoBtn.classList.add("active");
+      autoBtn.addEventListener("click", () => toggleAutoClicker(autoBtn));
+
+      const resetBtn = panel.querySelector("#resetter")
+      resetBtn.addEventListener("click", () => {
+        cookiePoints = 0;
+        localStorage.setItem("cookiePoints", 0);
+        pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> 0`;
+      });
+
+      const input = panel.querySelector("#typerist");
+      input.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+          cookiePoints = parseInt(input.value) || 0;
+          localStorage.setItem("cookiePoints", cookiePoints);
+          pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> ${formatPoints(cookiePoints)}`;
+          input.value = "";
+        }
+      });
+
+    } else {
+      pwdBackdrop.style.display = "flex";
+      pwdInput.focus();
+
+      pwdInput.removeEventListener("keydown", handlePasswordEntry);
+      pwdInput.addEventListener("keydown", handlePasswordEntry);
+    }
+  });
+
+
+  const leaderboardBtn = document.getElementById("leaderboardBtn")
+  if (leaderboardBtn) {
+    leaderboardBtn.addEventListener("click", () => {
+      const content = document.getElementById("leaderboardBtn-panel-content")
+      content.innerHTML = `<h3 style="text-align:center;">Leading Boardo</h3>
+      `
+    })
+  }
 });
 
-// Client-side account management using localStorage + Web Crypto (PBKDF2)
-// Stores users under localStorage key: "econcook_users"
-// Each user record: { salt: string(base64), hash: string(base64) }
+/* (function () {
+  const COOKIE_NAME = "ec_leaderboard";
+  const COOKIE_DAYS = 365;
+  const USERNAME_COOKIE = "ec_username";
+  const MAX_SAVED = 50;
+  const SHOW_TOP = 10;
+  const WIDGET_ID = "ec-leaderboard-widget";
 
-(() => {
-  const STORAGE_KEY = 'econcook_users';
-  const ITERATIONS = 150_000; // PBKDF2 iterations
-  const KEY_LEN = 256; // bits
-
-  // --- Helpers -------------------------------------------------------------
-  const enc = new TextEncoder();
-
-  function arrayBufferToBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
+  function setCookie(name, value, days, path = "/") {
+    const expires = days ? "; expires=" + new Date(Date.now() + days * 864e5).toUTCString() : "";
+    document.cookie = name + "=" + value + expires + "; path=" + path;
   }
 
-  function base64ToArrayBuffer(base64) {
-    const binary = atob(base64);
-    const len = binary.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes.buffer;
-  }
-
-  function getStoredUsers() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      console.error('Failed to read users from localStorage', e);
-      return {};
-    }
-  }
-  function saveUsers(obj) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-  }
-
-  // PBKDF2 derive
-  async function deriveKeyBase64(password, saltBase64) {
-    const saltBuf = base64ToArrayBuffer(saltBase64);
-    const pwKey = await crypto.subtle.importKey(
-      'raw',
-      enc.encode(password),
-      { name: 'PBKDF2' },
-      false,
-      ['deriveBits']
-    );
-    const derived = await crypto.subtle.deriveBits(
-      { name: 'PBKDF2', salt: saltBuf, iterations: ITERATIONS, hash: 'SHA-256' },
-      pwKey,
-      KEY_LEN
-    );
-    return arrayBufferToBase64(derived);
-  }
-
-  function makeSaltBase64() {
-    const arr = new Uint8Array(16);
-    crypto.getRandomValues(arr);
-    return arrayBufferToBase64(arr.buffer);
-  }
-
-  // --- Account logic -------------------------------------------------------
-  async function createUser(username, password) {
-    const users = getStoredUsers();
-    if (users[username]) {
-      throw new Error('Username already exists');
-    }
-    const salt = makeSaltBase64();
-    const hash = await deriveKeyBase64(password, salt);
-    users[username] = { salt, hash, created_at: new Date().toISOString() };
-    saveUsers(users);
-    return true;
-  }
-
-  async function verifyUser(username, password) {
-    const users = getStoredUsers();
-    const record = users[username];
-    if (!record) return false;
-    const hash = await deriveKeyBase64(password, record.salt);
-    // timing-attack resilience not critical here (client side demo)
-    return hash === record.hash;
-  }
-
-  // --- UI ---------------------------------------------------------------
-  const modal = document.getElementById('authModal');
-  const modalTitle = document.getElementById('modalTitle');
-  const switchLogin = document.getElementById('switchLogin');
-  const switchCreate = document.getElementById('switchCreate');
-  const authForm = document.getElementById('authForm');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const submitBtn = document.getElementById('submitBtn');
-  const messageDiv = document.getElementById('authMessage');
-  const appContent = document.getElementById('app-content');
-  const greeting = document.getElementById('greeting');
-  const logoutBtn = document.getElementById('logoutBtn');
-
-  let mode = 'login'; // or 'create'
-  let currentUser = null;
-
-  function setMode(newMode) {
-    mode = newMode;
-    if (mode === 'login') {
-      modalTitle.textContent = 'Login';
-      submitBtn.textContent = 'Log in';
-      switchLogin.classList.add('active');
-      switchCreate.classList.remove('active');
-      passwordInput.placeholder = '';
-    } else {
-      modalTitle.textContent = 'Create Account';
-      submitBtn.textContent = 'Create';
-      switchLogin.classList.remove('active');
-      switchCreate.classList.add('active');
-      passwordInput.placeholder = '';
-    }
-    messageDiv.textContent = '';
-  }
-
-  switchLogin.addEventListener('click', () => setMode('login'));
-  switchCreate.addEventListener('click', () => setMode('create'));
-
-  authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    messageDiv.style.color = '#b33';
-    messageDiv.textContent = '';
-
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!username || !password) {
-      messageDiv.textContent = 'Please enter both username and password.';
-      return;
-    }
-
-    submitBtn.disabled = true;
-    try {
-      if (mode === 'create') {
-        // basic username validation
-        if (!/^[A-Za-z0-9_\-]{3,30}$/.test(username)) {
-          throw new Error('Username must be 3–30 chars: letters, numbers, - or _');
-        }
-        await createUser(username, password);
-        messageDiv.style.color = '#1a7';
-        messageDiv.textContent = 'Account created successfully — you are now logged in.';
-        onLoginSuccess(username);
-      } else {
-        const ok = await verifyUser(username, password);
-        if (!ok) {
-          messageDiv.textContent = 'Invalid username or password.';
-        } else {
-          messageDiv.style.color = '#1a7';
-          messageDiv.textContent = 'Login successful.';
-          onLoginSuccess(username);
-        }
+  function getCookie(name) {
+    const pairs = document.cookie ? document.cookie.split("; ") : [];
+    for (let i = 0; i < pairs.length; i++) {
+      const p = pairs[i];
+      if (p.indexOf(name + "=") === 0) {
+        return p.substring(name.length + 1);
       }
-    } catch (err) {
-      console.error(err);
-      messageDiv.textContent = err.message || String(err);
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-
-  function onLoginSuccess(username) {
-    currentUser = username;
-    hideModal();
-    showAppForUser(username);
-  }
-
-  function hideModal() {
-    if (modal) modal.style.display = 'none';
-  }
-
-  function showModal() {
-    if (modal) modal.style.display = 'flex';
-  }
-
-  function showAppForUser(username) {
-    greeting.textContent = `Hello, ${username}!`;
-    appContent.classList.remove('hidden');
-  }
-
-  logoutBtn.addEventListener('click', () => {
-    currentUser = null;
-    appContent.classList.add('hidden');
-    usernameInput.value = '';
-    passwordInput.value = '';
-    setMode('login');
-    messageDiv.textContent = '';
-    showModal();
-  });
-
-  // On load: show modal. If someone is already "logged in" in this demo, you'd need a persisted session.
-  // For this simple demo we'll always prompt on page load.
-  setMode('login');
-  showModal();
-
-  // Expose small debug API on window (optional)
-  window.EconCookAuth = {
-    listUsers: () => getStoredUsers(),
-    clearUsers: () => { localStorage.removeItem(STORAGE_KEY); },
-  };
-})();
-
-(() => {
-  const STORAGE_KEY = "econcook_leaderboard";
-  const CURRENT_USER_KEY = "econcook_username";
-
-  // DOM helpers
-  const $ = id => document.getElementById(id);
-  const create = (tag, attrs = {}, text) => {
-    const el = document.createElement(tag);
-    for (const k in attrs) el.setAttribute(k, attrs[k]);
-    if (text != null) el.textContent = text;
-    return el;
-  };
-
-  // --- persistence ---------------------------------------------------------
-  function loadLeaderboard() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return {};
-      return JSON.parse(raw) || {};
-    } catch (e) {
-      console.error("Failed to load leaderboard:", e);
-      return {};
-    }
-  }
-
-  function saveLeaderboard(obj) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-    } catch (e) {
-      console.error("Failed to save leaderboard:", e);
-    }
-  }
-
-  function getCurrentUserFromStorage() {
-    return localStorage.getItem(CURRENT_USER_KEY) || null;
-  }
-
-  function setCurrentUserToStorage(username) {
-    if (username == null) {
-      localStorage.removeItem(CURRENT_USER_KEY);
-    } else {
-      localStorage.setItem(CURRENT_USER_KEY, username);
-    }
-  }
-
-  // --- leaderboard logic ---------------------------------------------------
-  function ensureUserExists(username) {
-    if (!username) return;
-    const lb = loadLeaderboard();
-    if (typeof lb[username] === "undefined") {
-      lb[username] = 0;
-      saveLeaderboard(lb);
-    }
-  }
-
-  function setUserClicks(username, clicks) {
-    if (!username) return;
-    const lb = loadLeaderboard();
-    lb[username] = Number(clicks) || 0;
-    saveLeaderboard(lb);
-    refreshModalIfOpen();
-  }
-
-  function incrementUserClicks(username, amount = 1) {
-    if (!username) return 0;
-    const lb = loadLeaderboard();
-    lb[username] = (Number(lb[username]) || 0) + Number(amount);
-    saveLeaderboard(lb);
-    refreshModalIfOpen();
-    updatePointsCounter(lb[username]);
-    return lb[username];
-  }
-
-  function getSortedLeaderboardArray() {
-    const lb = loadLeaderboard();
-    const arr = Object.keys(lb).map(username => ({ username, clicks: Number(lb[username] || 0) }));
-    arr.sort((a, b) => b.clicks - a.clicks || a.username.localeCompare(b.username));
-    return arr;
-  }
-
-  // --- UI: leaderboard modal -----------------------------------------------
-  let modalEl = null;
-
-  function showLeaderboardModal() {
-    const items = getSortedLeaderboardArray();
-    if (!modalEl) {
-      modalEl = create("div");
-      modalEl.id = "leaderboardModal";
-      Object.assign(modalEl.style, {
-        position: "fixed",
-        inset: "0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0,0,0,0.45)",
-        zIndex: 10000,
-      });
-
-      const card = create("div");
-      Object.assign(card.style, {
-        width: "420px",
-        background: "#000",
-        borderRadius: "10px",
-        padding: "16px",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-        maxHeight: "80vh",
-        overflow: "auto",
-        fontFamily: "inherit",
-      });
-
-      const top = create("div");
-      Object.assign(top.style, { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" });
-      const title = create("h3", {}, "Leaderboard");
-      title.style.margin = "0";
-      const closeBtn = create("button", {}, "✕");
-      Object.assign(closeBtn.style, { border: "none", background: "transparent", fontSize: "18px", cursor: "pointer" });
-      closeBtn.addEventListener("click", () => modalEl.remove());
-      top.appendChild(title);
-      top.appendChild(closeBtn);
-
-      const listContainer = create("div");
-      listContainer.id = "leaderboardList";
-
-      card.appendChild(top);
-      card.appendChild(listContainer);
-      modalEl.appendChild(card);
-      document.body.appendChild(modalEl);
-    }
-
-    renderLeaderboardList(items);
-  }
-
-  function renderLeaderboardList(items) {
-    if (!modalEl) return;
-    const list = $("leaderboardList");
-    if (!list) return;
-    list.innerHTML = "";
-
-    if (!items || items.length === 0) {
-      list.innerHTML = "<p style='color:#666'>No players yet.</p>";
-      return;
-    }
-
-    const ul = create("ul");
-    Object.assign(ul.style, { listStyle: "none", padding: "0", margin: "0" });
-
-    items.forEach((it, idx) => {
-      const li = create("li");
-      Object.assign(li.style, { display: "flex", justifyContent: "space-between", padding: "8px 6px", borderBottom: "1px solid #eee" });
-
-      const left = create("div");
-      left.innerHTML = `<strong style="display:inline-block;width:220px">${idx + 1}. ${escapeHtml(it.username)}</strong>`;
-
-      const right = create("div");
-      right.style.color = "#fff";
-      right.textContent = `${it.clicks} clicks`;
-
-      li.appendChild(left);
-      li.appendChild(right);
-      ul.appendChild(li);
-    });
-
-    list.appendChild(ul);
-  }
-
-  function refreshModalIfOpen() {
-    if (!modalEl) return;
-    const items = getSortedLeaderboardArray();
-    renderLeaderboardList(items);
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-  }
-
-  // --- integrate with page elements ---------------------------------------
-  function updatePointsCounter(count) {
-    const pointsCounter = $("storeBtn");
-    if (!pointsCounter) return;
-    pointsCounter.innerHTML = '<i class="fa-solid fa-hand-pointer icon"></i> ' + Number(count || 0);
-  }
-
-  // Attempt to detect current user from storage or greeting element
-  function detectCurrentUser() {
-    let name = getCurrentUserFromStorage();
-    if (name) return name;
-    const greetingEl = $("greeting");
-    if (greetingEl) {
-      const match = greetingEl.textContent.match(/^Hello,\s*(.+?)!?$/i);
-      if (match) return match[1].trim();
     }
     return null;
   }
 
-  // Hook giantCookie clicks to update leaderboard when a user is active
-  function attachGiantCookieHandler() {
-    const cookie = $("giantCookie");
-    if (!cookie) return;
-    cookie.addEventListener("click", (e) => {
-      const current = detectCurrentUser();
-      if (!current) return; // not logged in / no user set
-      ensureUserExists(current);
-      const newCount = incrementUserClicks(current, 1);
-      // update visible counter (storeBtn) and modal if open
-      updatePointsCounter(newCount);
-    });
+  function deleteCookie(name, path = "/") {
+    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=" + path;
   }
 
-  // Hook leaderboardBtn to show modal
-  function attachLeaderboardButton() {
-    const btn = $("leaderboardBtn");
-    if (!btn) return;
-    btn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      // Ensure all known users appear even if 0 clicks (ensureUserExists called by auth flows)
-      const items = getSortedLeaderboardArray();
-      showLeaderboardModal(items);
-    });
-  }
-
-  // Public API to integrate with auth flows
-  const api = {
-    // Call when user logs in / is created
-    userLoggedIn(username) {
-      if (!username) return;
-      setCurrentUserToStorage(username);
-      ensureUserExists(username);
-      // reflect stored clicks to storeBtn
-      const lb = loadLeaderboard();
-      updatePointsCounter(lb[username] || 0);
-    },
-    userLoggedOut() {
-      setCurrentUserToStorage(null);
-    },
-    // Useful if you want to pre-create a username in leaderboard (e.g., when account created)
-    addUser(username) {
-      ensureUserExists(username);
-    },
-    // Manual increment (returns new count)
-    incrementFor(username, amount = 1) {
-      return incrementUserClicks(username, amount);
-    },
-    // Get current leaderboard array
-    getLeaderboard() {
-      return getSortedLeaderboardArray();
-    },
-    // Force refresh the leaderboard modal if it's open
-    refresh() {
-      refreshModalIfOpen();
-    },
-    // Get/set current user
-    getCurrentUser() {
-      return detectCurrentUser();
-    },
-    setCurrentUser(username) {
-      if (username == null) {
-        setCurrentUserToStorage(null);
-      } else {
-        setCurrentUserToStorage(username);
-        ensureUserExists(username);
-      }
+  // ---------- Storage API (cookie JSON) ----------
+  function loadLeaderboard() {
+    const raw = getCookie(COOKIE_NAME);
+    if (!raw) return [];
+    try {
+      const decoded = decodeURIComponent(raw);
+      const parsed = JSON.parse(decoded);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(item => ({
+        name: String(item.name || "").trim(),
+        clicks: Number(item.clicks) || 0
+      })).filter(item => item.name.length > 0);
+    } catch (err) {
+      console.warn("Failed to parse leaderboard cookie:", err);
+      return [];
     }
+  }
+
+  function saveLeaderboard(list) {
+    const trimmed = list
+      .slice()
+      .sort((a, b) => b.clicks - a.clicks || a.name.localeCompare(b.name))
+      .slice(0, MAX_SAVED);
+    const json = JSON.stringify(trimmed);
+    setCookie(COOKIE_NAME, encodeURIComponent(json), COOKIE_DAYS);
+  }
+
+  function addOrUpdatePlayer(name, clicks) {
+    if (!name) return;
+    name = String(name).trim();
+    if (!name) return;
+    clicks = Number(clicks) || 0;
+
+    const list = loadLeaderboard();
+    const idx = list.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+    if (idx === -1) {
+      list.push({ name, clicks });
+    } else {
+
+      if (clicks > list[idx].clicks) list[idx].clicks = clicks;
+    }
+    saveLeaderboard(list);
+  }
+
+  function getTop(n = SHOW_TOP) {
+    const list = loadLeaderboard();
+    return list.sort((a, b) => b.clicks - a.clicks || a.name.localeCompare(b.name)).slice(0, n);
+  }
+
+  function clearLeaderboard() {
+    deleteCookie(COOKIE_NAME);
+  }
+
+  function createEl(tag, attrs = {}, children = []) {
+    const el = document.createElement(tag);
+    for (const k in attrs) {
+      if (k === "class") el.className = attrs[k];
+      else if (k === "html") el.innerHTML = attrs[k];
+      else el.setAttribute(k, attrs[k]);
+    }
+    (Array.isArray(children) ? children : [children]).forEach(c => {
+      if (!c) return;
+      if (typeof c === "string") el.appendChild(document.createTextNode(c));
+      else el.appendChild(c);
+    });
+    return el;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // ---------- Centered overlay for username ----------
+  function showUsernameOverlay(onSubmitCallback) {
+    // If already present, do nothing
+    if (document.getElementById("ec-username-overlay")) return;
+
+
+    const overlay = createEl("div", { id: "ec-username-overlay" });
+    Object.assign(overlay.style, {
+      position: "fixed",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.55)",
+      zIndex: 99999,
+    });
+
+    // centered box
+    const box = createEl("div", { id: "ec-username-box" });
+    Object.assign(box.style, {
+      background: "#fff",
+      padding: "24px",
+      borderRadius: "10px",
+      minWidth: "320px",
+      maxWidth: "90%",
+      boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+      textAlign: "center",
+      fontFamily: "Arial, sans-serif"
+    });
+
+    const title = createEl("h2", { html: "Fill your username" });
+    title.style.marginTop = "0";
+    title.style.marginBottom = "12px";
+    const subtitle = createEl("p", { html: "Please enter a display name to use on the leaderboard." });
+    subtitle.style.marginTop = "0";
+    subtitle.style.marginBottom = "18px";
+    subtitle.style.color = "#444";
+    subtitle.style.fontSize = "0.95rem";
+
+    const nameInput = createEl("input", { type: "text", placeholder: "Your username", id: "ec-overlay-username" });
+    Object.assign(nameInput.style, {
+      width: "100%",
+      padding: "10px 12px",
+      borderRadius: "6px",
+      border: "1px solid #ccc",
+      boxSizing: "border-box",
+      fontSize: "1rem",
+      marginBottom: "12px"
+    });
+
+    const btnRow = createEl("div");
+    btnRow.style.display = "flex";
+    btnRow.style.justifyContent = "center";
+    btnRow.style.gap = "8px";
+
+    const submitBtn = createEl("button", { type: "button", html: "Start" });
+    Object.assign(submitBtn.style, {
+      padding: "10px 16px",
+      borderRadius: "6px",
+      border: "none",
+      background: "#2b8aef",
+      color: "#fff",
+      cursor: "pointer"
+    });
+
+    const skipBtn = createEl("button", { type: "button", html: "Use anonymous" });
+    Object.assign(skipBtn.style, {
+      padding: "10px 12px",
+      borderRadius: "6px",
+      border: "1px solid #ccc",
+      background: "#fff",
+      cursor: "pointer"
+    });
+
+    btnRow.appendChild(submitBtn);
+    btnRow.appendChild(skipBtn);
+
+    // allow pressing Enter
+    nameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") submitBtn.click();
+    });
+
+    submitBtn.addEventListener("click", () => {
+      const val = (nameInput.value || "").trim();
+      const username = val.length ? val : "anonymous";
+      setCookie(USERNAME_COOKIE, encodeURIComponent(username), COOKIE_DAYS);
+      if (typeof onSubmitCallback === "function") onSubmitCallback(username);
+      overlay.remove();
+    });
+
+    skipBtn.addEventListener("click", () => {
+      const username = "anonymous";
+      setCookie(USERNAME_COOKIE, encodeURIComponent(username), COOKIE_DAYS);
+      if (typeof onSubmitCallback === "function") onSubmitCallback(username);
+      overlay.remove();
+    });
+
+    box.appendChild(title);
+    box.appendChild(subtitle);
+    box.appendChild(nameInput);
+    box.appendChild(btnRow);
+
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Focus input
+    setTimeout(() => nameInput.focus(), 50);
+  }
+
+  // ---------- Widget rendering ----------
+  function renderWidget(container, initialUsername) {
+    container.innerHTML = ""; // clear
+
+    const title = createEl("h3", { html: "Leaderboard (cookie)" });
+    container.appendChild(title);
+
+    // Controls
+    const controls = createEl("div", { class: "ec-controls" });
+    const nameInput = createEl("input", { type: "text", placeholder: "Your name", id: "ec-name-input" });
+    nameInput.style.marginRight = "8px";
+    if (initialUsername) nameInput.value = initialUsername;
+
+    let runtimeClicks = 0;
+    const clicksLabel = createEl("span", { id: "ec-clicks-label", html: "0" });
+    clicksLabel.style.margin = "0 8px";
+
+    const incBtn = createEl("button", { type: "button", html: "+1 click" });
+    incBtn.addEventListener("click", () => {
+      runtimeClicks++;
+      clicksLabel.innerHTML = String(runtimeClicks);
+    });
+
+    const saveBtn = createEl("button", { type: "button", html: "Save score" });
+    saveBtn.style.marginLeft = "8px";
+    saveBtn.addEventListener("click", () => {
+      const name = nameInput.value || initialUsername || "anonymous";
+      addOrUpdatePlayer(name, runtimeClicks);
+      renderLeaderboardTable(container);
+      showTemporaryMessage(container, `Saved ${runtimeClicks} clicks for "${name}"`);
+    });
+
+    const clearBtn = createEl("button", { type: "button", html: "Clear leaderboard" });
+    clearBtn.style.marginLeft = "8px";
+    clearBtn.addEventListener("click", () => {
+      if (!confirm("Clear local leaderboard cookie?")) return;
+      clearLeaderboard();
+      runtimeClicks = 0;
+      clicksLabel.innerHTML = "0";
+      renderLeaderboardTable(container);
+      showTemporaryMessage(container, "Leaderboard cleared");
+    });
+
+    const controlsRow = createEl("div", { class: "ec-controls-row" }, [
+      nameInput, incBtn, clicksLabel, saveBtn, clearBtn
+    ]);
+    controlsRow.style.marginBottom = "10px";
+    container.appendChild(controlsRow);
+
+    // Leaderboard container
+    const lbContainer = createEl("div", { id: "ec-leaderboard-table" });
+    container.appendChild(lbContainer);
+
+    // Initial table render
+    renderLeaderboardTable(container);
+  }
+
+  function renderLeaderboardTable(container) {
+    const lbContainer = container.querySelector("#ec-leaderboard-table");
+    if (!lbContainer) return;
+
+    const top = getTop(SHOW_TOP);
+    if (top.length === 0) {
+      lbContainer.innerHTML = "<p>No entries yet.</p>";
+      return;
+    }
+
+    // Build table
+    const table = createEl("table");
+    table.style.borderCollapse = "collapse";
+    table.style.width = "100%";
+    table.style.maxWidth = "360px";
+    table.style.marginTop = "6px";
+
+    const thead = createEl("thead");
+    const headerRow = createEl("tr");
+    ["#", "Player", "Clicks"].forEach(h => {
+      const th = createEl("th", { html: h });
+      th.style.border = "1px solid #ddd";
+      th.style.padding = "6px 8px";
+      th.style.background = "#f5f5f5";
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = createEl("tbody");
+    top.forEach((p, i) => {
+      const row = createEl("tr");
+      const idxTd = createEl("td", { html: String(i + 1) });
+      const nameTd = createEl("td", { html: escapeHtml(p.name) });
+      const clicksTd = createEl("td", { html: String(p.clicks) });
+      [idxTd, nameTd, clicksTd].forEach(td => {
+        td.style.border = "1px solid #ddd";
+        td.style.padding = "6px 8px";
+      });
+      row.appendChild(idxTd);
+      row.appendChild(nameTd);
+      row.appendChild(clicksTd);
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    lbContainer.innerHTML = "";
+    lbContainer.appendChild(table);
+  }
+
+  function showTemporaryMessage(container, text, ms = 1800) {
+    let msg = container.querySelector(".ec-temp-msg");
+    if (!msg) {
+      msg = createEl("div", { class: "ec-temp-msg" });
+      msg.style.marginTop = "8px";
+      msg.style.color = "#2a6f2a";
+      container.appendChild(msg);
+    }
+    msg.textContent = text;
+    setTimeout(() => {
+      if (msg && msg.parentNode) msg.parentNode.removeChild(msg);
+    }, ms);
+  }
+
+  // ---------- Public initializer ----------
+  function init(options = {}) {
+    const parent = options.parent || document.body;
+    let container = document.getElementById(WIDGET_ID);
+    if (!container) {
+      container = createEl("div", { id: WIDGET_ID });
+      // basic inline styling so widget looks reasonable without CSS file
+      container.style.border = "1px solid #ccc";
+      container.style.padding = "12px";
+      container.style.borderRadius = "8px";
+      container.style.maxWidth = "420px";
+      container.style.fontFamily = "Arial, sans-serif";
+      container.style.background = "#fff";
+      container.style.position = "relative";
+      container.style.margin = "18px";
+      parent.appendChild(container);
+    }
+
+    const storedUsername = getCookie(USERNAME_COOKIE);
+    const username = storedUsername ? decodeURIComponent(storedUsername) : null;
+
+    if (username) {
+      // If username exists, render widget immediately with prefilled name
+      renderWidget(container, username);
+    } else {
+      // Show overlay that centers the "Fill your username" prompt
+      showUsernameOverlay(function (submittedName) {
+        renderWidget(container, submittedName);
+      });
+    }
+  }
+
+  // Auto-init: create widget in document.body after DOMContentLoaded
+  function autoInit() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => init());
+    } else {
+      init();
+    }
+  }
+
+  // Expose API
+  window.ECLeaderboard = {
+    init,
+    addOrUpdatePlayer,
+    loadLeaderboard,
+    clearLeaderboard,
+    getTop
   };
 
-  // init on DOMContentLoaded
-  function init() {
-    // ensure leaderboard exists so leaderboardBtn shows players even if their clicks=0
-    loadLeaderboard(); // no-op but ensures parse error early
-
-    // If there's a detected current user, make sure they exist in leaderboard and update counter
-    const current = detectCurrentUser();
-    if (current) {
-      ensureUserExists(current);
-      const lb = loadLeaderboard();
-      updatePointsCounter(lb[current] || 0);
-    }
-
-    attachGiantCookieHandler();
-    attachLeaderboardButton();
-
-    // Expose for other scripts
-    window.EconCookLeaderboard = api;
-  }
-
-  if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-})();
+  // Kick off automatically
+  autoInit();
+})(); */

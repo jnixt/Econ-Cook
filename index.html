@@ -17,8 +17,20 @@
   </head>
 
   <body>
+    <div id="login" class="panel">
+      <h3 style="text-align: center;"><i class="fa-tools fa-solid icon"> Logerrino</i></h3>
+      <input type="text" name="" id="">
+      <button class="gC-btn"><i class="fa-cookie fa-solid icon"> SUBMIT</i></button>
+      <button class="gC-btn"><i class="fa-cookie fa-solid icon"> BE ANONYMOUS</i></button><sub style="color: grey; font-size: 0.8em;">(no leaderboard for u)</sub>
+    </div>
     <div id="cookie-bg"></div>
-    <div id="backdrop"></div>
+    <div id="backdrop">
+      <div id="adminPwdPanel" class="panel">
+        <h3> Is you Admin? </h3>
+        <i class="fa-toolbox fa-solid"></i>
+        <input type="password" id="passwdInput" placeholder="Enter thy passcode..">
+      </div>
+    </div>
     <header id="home">
       <nav class="top-bar">
         <div class="nav-left">
@@ -58,18 +70,18 @@
     <footer id="clicker">
       <div id="gC-toolbar">
         <button id="leaderboardBtn" class="gC-btn panCre">
-          <i class="fa-solid fa-trophy icon"></i>
+          <i class="fa-solid fa-chart-simple icon"></i>
         </button>
         <button id="storeBtn" class="gC-btn panCre">
           <i class="fa-solid fa-hand-pointer icon"></i>
         </button>
         <button id="achievementsBtn" class="gC-btn panCre">
-          <i class="fa-solid fa-chart-simple icon"></i>
+          <i class="fa-solid fa-trophy icon"></i>
         </button>
       </div>
       <div id="giantCookie" class="cookie">
         <div id="giantCookieHair">
-          <svg>
+          <svg width="75" height="100">
             <path
               d="M 50 90
                  C 45 70, 40 50, 45 35
@@ -100,7 +112,7 @@
     <section id="credits">
 
     </section>
-    <div id="adminBtn" class="gC-btn panCre">
+    <div id="adminBtn" class="gC-btn">
       <i class="fa-tools fa-solid icon"></i> Admin
     </div>
     <p id="watermark">
