@@ -89,9 +89,17 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (points >= 1e96 && points < 1e99) {
       finalPoints = (points / 1e96).toFixed(1) + "qg"
     } else if (points >= 1e99) {
-      finalPoints = points.toExponential(1) + "++"
+      finalPoints = points.toExponential(1)
     }
     return finalPoints;
+  }
+
+  const loginPanel = document.querySelector("#login")
+  let hasLogged = localStorage.getItem("loggedIn") === true;
+
+  if (!hasLogged) {
+    loginPanel.style.visibility = "visible";
+    loginPanel.style.zIndex = "999";
   }
 
   const cookieBackground = document.getElementById("cookie-bg");
@@ -199,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!e.isTrusted) {
         e.stopPropagation();
       }
-      if (getRandomInt(1, 100) === 1) {
+      if (getRandomInt(1, 1000) === 1) {
         giantCookie.classList.add("rainbow-effect");
       }
       cookiePoints += pointsPerClick;
@@ -207,9 +215,14 @@ document.addEventListener("DOMContentLoaded", function () {
       pointsCounter.innerHTML =
         '<i class="fa-solid fa-hand-pointer icon"></i> ' + finalPoints;
       localStorage.setItem("cookiePoints", cookiePoints);
+
+      const color = ["#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#ed8796", "#ee99a0", "#f5a97f", "#eed49f", "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8", "#cad3f5", "#b8c0e0"]
+
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
       plusedPoints.innerText = "+" + pointsPerClick;
+      plusedPoints.style.color = `${color[getRandomInt(0, 16)]}`
+      console.log(color[getRandomInt(0, 16)])
       plusedPoints.style.left = `${e.clientX + window.scrollX}px`;
       plusedPoints.style.top = `${e.clientY + window.scrollY}px`;
       document.body.appendChild(plusedPoints);
@@ -271,37 +284,38 @@ document.addEventListener("DOMContentLoaded", function () {
       panel.appendChild(pointer);
 
       const content = document.createElement("div");
-      content.classname = "panel-content"
+      content.className = "panel-content"
       content.id = panelId + "-content";
       panel.appendChild(content)
 
       document.body.appendChild(panel);
 
-      const panelRect = panel.getBoundingClientRect();
-      const margin = 17;
+      setTimeout(() => {
+        const panelRect = panel.getBoundingClientRect();
+        const margin = 17;
 
-      const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
-      if (hasSpaceAbove) {
-        panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
-        panel.classList.remove("pointer-bottom");
-        panel.classList.add("pointer-top");
-      } else {
-        panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
-        panel.classList.remove("pointer-top");
-        panel.classList.add("pointer-bottom");
-      }
+        const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
+        if (hasSpaceAbove) {
+          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
+          panel.classList.remove("pointer-bottom");
+          panel.classList.add("pointer-top");
+        } else {
+          panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
+          panel.classList.remove("pointer-top");
+          panel.classList.add("pointer-bottom");
+        }
 
-      const centerX =
-        buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
-      panel.style.left = `${centerX}px`;
+        const centerX = buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
+        panel.style.left = `${centerX}px`;
 
-      const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-      const panelLeftX = window.scrollX + centerX;
-      const panelCenterX = panelLeftX + panelRect.width / 2;
-      const pointerOffsetX = buttonCenterX - panelCenterX;
-      panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+        const panelLeftX = window.scrollX + centerX;
+        const panelCenterX = panelLeftX + panelRect.width / 2;
+        const pointerOffsetX = buttonCenterX - panelCenterX;
+        panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
-      panel.style.visibility = "visible";
+        panel.style.visibility = "visible";
+      }, 0);
 
       panel.addEventListener("click", (e) => e.stopPropagation());
     });
@@ -401,8 +415,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (leaderboardBtn) {
     leaderboardBtn.addEventListener("click", () => {
       const content = document.getElementById("leaderboardBtn-panel-content")
-      content.innerHTML = `
-        <h3 style="text-align:center;">Leading Boardo</h3>
+      content.innerHTML = `<h3 style="text-align:center;">Leading Boardo</h3>
       `
     })
   }

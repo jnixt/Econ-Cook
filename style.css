@@ -25,6 +25,21 @@ body {
   position: relative;
 }
 
+#login {
+  visibility: visible;
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  min-width: 400px;
+}
+
+#login button {
+  background-color: var(--liquid-glass-bg);
+}
+
 #bottom {
   width: 100%;
 }
@@ -35,6 +50,7 @@ body {
 
 .icon {
   margin: 0 1px;
+  letter-spacing: 1.5px;
 }
 
 #cookie-bg {
@@ -45,6 +61,17 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+input {
+  background: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  outline: none;
+  border-radius: 8px;
+}
+
+input:focus {
+  outline:none
 }
 
 .top-bar {
@@ -210,6 +237,7 @@ h3 span {
   margin: 100px 40px 40px 40px;
   cursor: pointer;
   transition: transform 0.12s ease;
+  user-select: none;
 }
 
 #giantCookie:hover {
@@ -432,8 +460,6 @@ h3 span {
 }
 
 #passwdInput {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 8px;
   border-radius: 4px;
   margin-top: 10px;
@@ -445,8 +471,6 @@ h3 span {
 }
 
 #typerist {
-  background-color: transparent;
-  border: none;
   position: relative;
   vertical-align: 2px;
   margin-left: 4px;
