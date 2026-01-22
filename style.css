@@ -567,10 +567,6 @@ input[type=number] {
   position: relative;
 }
 
-.resep-container:not(.unlocked):hover {
-  transform: none;
-}
-
 .resep-container:not(.unlocked)::before {
   content: '';
   position: absolute;
@@ -828,4 +824,55 @@ li {
 .panel p {
   line-height: 1.02rem;
   font-size: 1rem;
+}
+
+.virtualassistant img {
+  width: 100px;
+  position: fixed;
+  z-index: 3;
+  top: 0%;
+  left: 0%;
+  animation: blink 3s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 85% {
+    content: url('stuffs/imgs/virtualassistant/female-virtassistant-full-normal.png');
+  }
+  90% {
+    content: url('stuffs/imgs/virtualassistant/female-virtassistant-half-normal.png');
+  }
+  95%, 100% {
+    content: url('stuffs/imgs/virtualassistant/female-virtassistant-closed-normal.png');
+  }
+}
+#male-virtassistant img {
+  width: 100px;
+  position: fixed;
+  z-index: 3;
+  top: 0%;
+  left: 0%;
+  animation: male-blink 3s step-end infinite;
+  display: none; /* Hidden by default */
+}
+
+@keyframes male-blink {
+  0%, 15% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-full-normal.jpeg');
+  }
+  20% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-half-normal.jpeg');
+  }
+  25%, 45% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-closed-normal.jpeg');
+  }
+  50%, 65% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-full-white.jpeg');
+  }
+  70% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-half-white.jpeg');
+  }
+  75%, 100% {
+    content: url('stuffs/imgs/virtualassistant/male-virtassistant-closed-white.jpeg');
+  }
 }
