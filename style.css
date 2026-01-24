@@ -22,14 +22,9 @@
 body {
   background-color: var(--bg-color);
   min-height: 100vh;
-  height: calc(100% + 50vh);
   position: relative;
 }
 
-
-#bottom {
-  width: 100%;
-}
 
 ::-webkit-scrollbar {
   display: none;
@@ -83,6 +78,18 @@ input:focus {
   margin: 0 1vw;
 }
 
+@media (max-width: 1080px) {
+  .top-bar .nav-center a {
+    font-size: 0.8rem;
+  }
+  #watermark {
+    font-size: 0.8rem;
+  }
+  #adminBtn {
+    font-size: 0.8rem;
+  }
+}
+
 a:hover {
   color: var(--accent-color);
   transform: scale(1.1) translateY(-2px);
@@ -108,6 +115,29 @@ a {
 #big-title {
   text-align: center;
   padding-top: 2vh;
+}
+
+#researcher {
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+#researcher input {
+  background-color: transparent;
+  border: none;
+  width: 25ch;
+  padding: 3px;
+}
+
+#more-containers {
+  background: var(--liquid-glass-bg);
+  backdrop-filter: var(--liquid-glass-bf);
+  border: var(--liquid-glass-bd);
+  box-shadow: var(--liquid-glass-bs);
+  padding: 6px 14px;
+  border-radius: 20px;
 }
 
 .panel {
@@ -538,9 +568,20 @@ input[type=number] {
   border: var(--liquid-glass-bd);
   box-shadow: var(--liquid-glass-bs);
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.5s ease-out, transform 0.4s ease-out;
   text-align: left;
   max-width: 250px;
+  font-weight: 700;
+  height: 325px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resep-container-hidden {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .resep-container h3 {
@@ -557,11 +598,22 @@ input[type=number] {
   white-space: nowrap;
 }
 
+.resep-container h3 {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
 .resep-container:hover {
   transform: scale(1.08);
 }
 
-.resep-container:not(.unlocked) {
+.resep-container .ingredients li:nth-child(n+6) {
+  display: none;
+  text-decoration: none;
+}
+
+/* .resep-container:not(.unlocked) {
   opacity: 0.5;
   cursor: not-allowed;
   position: relative;
@@ -594,6 +646,10 @@ input[type=number] {
   font-size: 0.9em;
   text-align: center;
 }
+
+.resep-container:not(.unlocked):hover {
+  transform: none;
+} */
 
 .resep-container.unlocked {
   cursor: pointer;
@@ -712,10 +768,15 @@ li {
   background: var(--liquid-glass-bg);
   backdrop-filter: var(--liquid-glass-bf);
   cursor: pointer;
-  transition: background .12s ease, transform .08s ease;
+  transition: background .12s ease, transform .4s ease;
   user-select: none;
   margin: 6px auto;
   box-shadow: var(--liquid-glass-bs);
+}
+
+#credits .nameBtn:hover {
+  transform: scale(1.06);
+  background-color: #24273a;
 }
 
 #credits .nameBtn:active {
@@ -783,42 +844,48 @@ li {
 }
 
 .language-toggle[data-language="EN"] .lang-label:first-child,
-.language-toggle[data-language="IN"] .lang-label:last-child {
+.language-toggle[data-language="ID"] .lang-label:last-child {
   opacity: 0.5;
 }
 
 .toggle-slider {
   position: relative;
-  width: 52px;
-  height: 32px;
-  background: #555;
-  border-radius: 16px;
+  width: 200px;
+  height: 26px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background 0.3s ease;
   display: flex;
   align-items: center;
+  background-color: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  backdrop-filter: var(--liquid-glass-bf);
+  box-shadow: var(--liquid-glass-bs);
   padding: 2px;
-  border: 1px solid #777;
 }
 
 .toggle-slider.active {
+  .toggle-thumb {
+    width: 67px;
+    border-radius: 18px;
+    background-color: #24273a;
+  }
   background: #a6da95;
-  border-color: #a6da95;
 }
 
 .toggle-thumb {
   position: absolute;
-  width: 26px;
-  height: 26px;
+  width: 23px;
+  height: 23px;
   background: #fff;
   border-radius: 50%;
-  left: 3px;
+  left: 5px;
   transition: left 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .toggle-slider.active .toggle-thumb {
-  left: calc(100% - 29px);
+  left: calc(100% - 70px);
 }
 
 .panel p {
@@ -876,7 +943,3 @@ li {
     content: url('stuffs/imgs/virtualassistant/male-virtassistant-closed-white.jpeg');
   }
 }
-* {box-sizing:border-box}
-
-* {box-sizing:border-box}
-
