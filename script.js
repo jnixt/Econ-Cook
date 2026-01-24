@@ -94,6 +94,38 @@ document.addEventListener("DOMContentLoaded", function () {
     return finalPoints;
   }
 
+/*   function updateRecipeUnlockStates() {
+    let unlockedCount = 0;
+    recipeContainers.forEach((container, index) => {
+      const threshold = getRecipeUnlockThreshold(index);
+      const isUnlocked = cookiePoints >= threshold;
+
+      if (isUnlocked) {
+        container.classList.add("unlocked");
+        unlockedCount++;
+      } else {
+        container.classList.remove("unlocked");
+        container.setAttribute("data-unlock-threshold", threshold);
+      }
+    });
+
+    localStorage.setItem("unlockedRecipes", unlockedCount);
+  }
+
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("pageScrolled", JSON.stringify([window.scrollX, window.scrollY]));
+  }) */
+
+  const pagePosition = JSON.parse(localStorage.getItem("pageScrolled"));
+
+  if (pagePosition) {
+    window.scrollTo({
+      left: parseInt(pagePosition[0], 10),
+      top: parseInt(pagePosition[1], 10),
+      behavior: 'instant'
+    });
+  }
+
   const cookieBackground = document.getElementById("cookie-bg");
   if (cookieBackground) {
     const cookies = [];
@@ -178,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
     animateCookies();
   }
 
+
   let cookiePoints = Number(localStorage.getItem("cookiePoints")) || 0;
   const pointsCounter = document.querySelector("#pointsDisplay");
   const giantCookie = document.getElementById("giantCookie");
@@ -187,26 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const recipeContainers = document.querySelectorAll(".resep-container.pageCre");
-
-  function updateRecipeUnlockStates() {
-    let unlockedCount = 0;
-    recipeContainers.forEach((container, index) => {
-      const threshold = getRecipeUnlockThreshold(index);
-      const isUnlocked = cookiePoints >= threshold;
-
-      if (isUnlocked) {
-        container.classList.add("unlocked");
-        unlockedCount++;
-      } else {
-        container.classList.remove("unlocked");
-        container.setAttribute("data-unlock-threshold", threshold);
-      }
-    });
-
-    localStorage.setItem("unlockedRecipes", unlockedCount);
-  }
-
-  updateRecipeUnlockStates();
+  /* updateRecipeUnlockStates(); */
 
   if (giantCookie) {
     if (cookiePoints < 0) cookiePoints = 0;
@@ -234,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
         '<i class="fa-solid fa-hand-pointer icon"></i> ' + finalPoints;
       localStorage.setItem("cookiePoints", cookiePoints);
 
-      updateRecipeUnlockStates();
+      /* updateRecipeUnlockStates(); */
 
       const color = ["#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#ed8796", "#ee99a0", "#f5a97f", "#eed49f", "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8", "#cad3f5", "#b8c0e0"]
 
@@ -426,7 +440,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cookiePoints = 0;
         localStorage.setItem("cookiePoints", 0);
         pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> 0`;
-        updateRecipeUnlockStates()
+        /* updateRecipeUnlockStates() */
       });
 
       const input = panel.querySelector("#typerist");
@@ -436,7 +450,7 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.setItem("cookiePoints", cookiePoints);
           pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> ${formatPoints(cookiePoints)}`;
           input.value = "";
-          updateRecipeUnlockStates()
+          /* updateRecipeUnlockStates() */
         }
       });
 
@@ -461,9 +475,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll(".pageCre").forEach((butt) => {
     butt.addEventListener("click", (e) => {
-      if (!butt.classList.contains("unlocked")) {
+      /* if (!butt.classList.contains("unlocked")) {
         return;
-      }
+      } */
 
       const buttonRect = butt.getBoundingClientRect();
       const buttonX = buttonRect.left + buttonRect.width / 2;
@@ -525,7 +539,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".nameBtn").forEach((butt) => {
     const ID_messages = [
       //Jeffris
-      "Pengguna Arch-Hyprland OS yang code website ini dari nol (sampai beberapa kali) menggunakan HTML, CSS, dan JS (tentunya). Sambil belajar cara menggunakan Git dan Github, orang ini speedrun nge-coding sampai hasilnya jadi sebagus ini. Iya, iya, website ini masih memiliki beberapa bug dan fitur-fitur yang kurang, karena deadlinenya hanya dua minggu... Apapun itu, enjoy websitenya!",
+      "Pengguna Arch-Hyprland OS yang code website ini dari nol (sampai beberapa kali) menggunakan HTML, CSS, dan JS (tentunya). Sambil belajar cara menggunakan Git dan Github, orang ini speedrun nge-coding sampai hasilnya jadi sebagus ini. Iya, iya, website ini masih memiliki beberapa bug dan fitur-fitur yang kurang, karena deadlinenya hanya dua minggu... Apapun itu, enjoy websitenya! Oh, dan yang terakhir - dia akan 'mog' kalian (100% ga ditulis jeffris)",
       //Ryan
       "Seorang pengangguran yang tidak bisa melakukan apa-apa ini entah bagaimana mendapatkan pekerjaan untuk membantu dalam membuat website ini. Tanpa Beliau, akan ada beberpa fitur yang tidak bisa diakses sampai sekarang, dan Shwcehneiger™ mungkin tidak sempat membuat page yang dibuat khusus untuk credit anggota (iya, saya yang buat page ini)",
       //Steven
@@ -539,11 +553,11 @@ document.addEventListener("DOMContentLoaded", function () {
       //Beverlyn
       "Aku bukan orang yang melakukan semuanya—dan justru karena itu, sekitar delapan puluh persen proses pembuatan cookies berjalan di tanganku. Angka yang terdengar sederhana, hampir tidak pantas dibanggakan, namun cukup untuk memastikan sisanya tidak salah arah. Aku menakar bahan di atas timbangan dengan patuh pada angka di buku resep, setia pada hal-hal kecil yang sering dianggap berlebihan oleh mereka yang suka “kira-kira”. Tanpa banyak bicara dan tanpa perlu tampil, aku membiarkan adonan membuktikan kemampuannya sendiri. Pada akhirnya, cookies jadi, dapur tetap rapi, dan semua orang kenyang—sebuah keberhasilan bersama yang kebetulan sangat bergantung pada ketelitian yang katanya biasa saja.",
       //Pangestu
-      "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ke…Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ketepatan waktu, seperti kebersihan dan takaran, adalah bentuk disiplin yang tidak perlu diumumkan."
+      "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ketepatan waktu, seperti kebersihan dan takaran, adalah bentuk disiplin yang tidak perlu diumumkan."
     ];
     const EN_messages = [
       //Jeffris
-      "An Arch-Hyprland OS User who coded the website from zero (many times) using HTML, CSS, and JS (ofcourse). While also learning how to use Git and Github, this person speedran the coding till the result became as good as this. Yes, yes, this website still has some bugs and missing features, because the deadline is only two weeks... Despite that, enjoy the website!",
+      "An Arch-Hyprland OS User who coded the website from zero (many times) using HTML, CSS, and JS (ofcourse). While also learning how to use Git and Github, this person speedran the coding till the result became as good as this. Yes, yes, this website still has some bugs and missing features, because the deadline is only two weeks... Despite that, enjoy the website! Oh and lastly, he will 'mog' you (100% not written by jeffris).",
       //Ryan
       "This unemployed, helpless man somehow found work helping build this website. Without him, some features would be inaccessible, and Shwcehneiger™ might not have had the chance to create a dedicated member credits page (yes, I created this page).",
       //Steven
@@ -572,58 +586,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 0);
     })
   })
-
-  // Virtual Assistant Logic
-  let currentAssistant = 'female'; // Default assistant
-  const femaleAssistant = document.getElementById('female-virtassistant');
-  const maleAssistant = document.getElementById('male-virtassistant');
-
-  function switchAssistant(type) {
-    if (type === 'female') {
-      femaleAssistant.style.display = 'block';
-      maleAssistant.style.display = 'none';
-      currentAssistant = 'female';
-    } else if (type === 'male') {
-      femaleAssistant.style.display = 'none';
-      maleAssistant.style.display = 'block';
-      currentAssistant = 'male';
-    }
-  }
-
-  if (femaleAssistant) {
-    animateAssistant(femaleAssistant);
-  }
-
-  if (maleAssistant && maleAssistant.style.display !== 'none') {
-    animateAssistant(maleAssistant);
-  }
-
-  function animateAssistant(assistantElement) {
-    const imgElement = assistantElement.querySelector('img');
-    let x = getRandomFloat(0, window.innerWidth - 100);
-    let y = getRandomFloat(0, window.innerHeight * 0.2);
-    let vx = getRandomFloat(-0.7, 0.7);
-    let vy = getRandomFloat(-0.7, 0.7);
-
-    function updatePosition() {
-      x += vx;
-      y += vy;
-
-      if (x + imgElement.offsetWidth > window.innerWidth || x < 0) {
-        vx *= -1;
-      }
-      if (y + imgElement.offsetHeight > window.innerHeight * 0.2 || y < 0) {
-        vy *= -1;
-      }
-
-      assistantElement.style.left = x + 'px';
-      assistantElement.style.top = y + 'px';
-
-      requestAnimationFrame(updatePosition);
-    }
-    updatePosition();
-  }
-
-
-
 });

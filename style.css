@@ -22,14 +22,9 @@
 body {
   background-color: var(--bg-color);
   min-height: 100vh;
-  height: calc(100% + 50vh);
   position: relative;
 }
 
-
-#bottom {
-  width: 100%;
-}
 
 ::-webkit-scrollbar {
   display: none;
@@ -81,6 +76,18 @@ input:focus {
   font-family: var(--font-awesome);
   letter-spacing: 2px;
   margin: 0 1vw;
+}
+
+@media (max-width: 1080px) {
+  .top-bar .nav-center a {
+    font-size: 0.8rem;
+  }
+  #watermark {
+    font-size: 0.8rem;
+  }
+  #adminBtn {
+    font-size: 0.8rem;
+  }
 }
 
 a:hover {
@@ -541,6 +548,7 @@ input[type=number] {
   transition: transform 0.3s ease;
   text-align: left;
   max-width: 250px;
+  font-weight: 700;
 }
 
 .resep-container h3 {
@@ -557,11 +565,17 @@ input[type=number] {
   white-space: nowrap;
 }
 
+.resep-container h3 {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
 .resep-container:hover {
   transform: scale(1.08);
 }
 
-.resep-container:not(.unlocked) {
+/* .resep-container:not(.unlocked) {
   opacity: 0.5;
   cursor: not-allowed;
   position: relative;
@@ -594,6 +608,10 @@ input[type=number] {
   font-size: 0.9em;
   text-align: center;
 }
+
+.resep-container:not(.unlocked):hover {
+  transform: none;
+} */
 
 .resep-container.unlocked {
   cursor: pointer;
@@ -712,10 +730,15 @@ li {
   background: var(--liquid-glass-bg);
   backdrop-filter: var(--liquid-glass-bf);
   cursor: pointer;
-  transition: background .12s ease, transform .08s ease;
+  transition: background .12s ease, transform .4s ease;
   user-select: none;
   margin: 6px auto;
   box-shadow: var(--liquid-glass-bs);
+}
+
+#credits .nameBtn:hover {
+  transform: scale(1.06);
+  background-color: #24273a;
 }
 
 #credits .nameBtn:active {
@@ -783,96 +806,51 @@ li {
 }
 
 .language-toggle[data-language="EN"] .lang-label:first-child,
-.language-toggle[data-language="IN"] .lang-label:last-child {
+.language-toggle[data-language="ID"] .lang-label:last-child {
   opacity: 0.5;
 }
 
 .toggle-slider {
   position: relative;
-  width: 52px;
-  height: 32px;
-  background: #555;
-  border-radius: 16px;
+  width: 200px;
+  height: 26px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background 0.3s ease;
   display: flex;
   align-items: center;
+  background-color: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  backdrop-filter: var(--liquid-glass-bf);
+  box-shadow: var(--liquid-glass-bs);
   padding: 2px;
-  border: 1px solid #777;
 }
 
 .toggle-slider.active {
+  .toggle-thumb {
+    width: 67px;
+    border-radius: 18px;
+    background-color: #24273a;
+  }
   background: #a6da95;
-  border-color: #a6da95;
 }
 
 .toggle-thumb {
   position: absolute;
-  width: 26px;
-  height: 26px;
+  width: 23px;
+  height: 23px;
   background: #fff;
   border-radius: 50%;
-  left: 3px;
+  left: 5px;
   transition: left 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .toggle-slider.active .toggle-thumb {
-  left: calc(100% - 29px);
+  left: calc(100% - 70px);
 }
 
 .panel p {
   line-height: 1.02rem;
   font-size: 1rem;
-}
-
-.virtualassistant img {
-  width: 100px;
-  position: fixed;
-  z-index: 3;
-  top: 0%;
-  left: 0%;
-  animation: blink 3s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 85% {
-    content: url('stuffs/imgs/virtualassistant/female-virtassistant-full-normal.png');
-  }
-  90% {
-    content: url('stuffs/imgs/virtualassistant/female-virtassistant-half-normal.png');
-  }
-  95%, 100% {
-    content: url('stuffs/imgs/virtualassistant/female-virtassistant-closed-normal.png');
-  }
-}
-#male-virtassistant img {
-  width: 100px;
-  position: fixed;
-  z-index: 3;
-  top: 0%;
-  left: 0%;
-  animation: male-blink 3s step-end infinite;
-  display: none; /* Hidden by default */
-}
-
-@keyframes male-blink {
-  0%, 15% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-full-normal.jpeg');
-  }
-  20% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-half-normal.jpeg');
-  }
-  25%, 45% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-closed-normal.jpeg');
-  }
-  50%, 65% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-full-white.jpeg');
-  }
-  70% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-half-white.jpeg');
-  }
-  75%, 100% {
-    content: url('stuffs/imgs/virtualassistant/male-virtassistant-closed-white.jpeg');
-  }
 }
