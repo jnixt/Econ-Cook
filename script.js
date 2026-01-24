@@ -31,13 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (points >= 1000000000 && points < 1000000000000) {
       finalPoints = (points / 1000000000).toFixed(1) + "B"
     } else if (points >= 1000000000000 && points < 1000000000000000) {
-      finalPoints = (points / 1000000000000).toFixed(1) + "T"
+      finalPoints = (points / 1000000000000000).toFixed(1) + "T"
     } else if (points >= 1000000000000000 && points < 1000000000000000000) {
-      finalPoints = (points / 1000000000000000).toFixed(1) + "Qa"
+      finalPoints = (points / 1000000000000000000).toFixed(1) + "Qa"
     } else if (points >= 1000000000000000000 && points < 1000000000000000000000) {
       finalPoints = (points / 1000000000000000000).toFixed(1) + "Qi"
     } else if (points >= 1000000000000000000000 && points < 1000000000000000000000000) {
-      finalPoints = (points / 1000000000000000000000).toFixed(1) + "Sx"
+      finalPoints = (points / 1000000000000000000000000).toFixed(1) + "Sx"
     } else if (points >= 1000000000000000000000000 && points < 1e27) {
       finalPoints = (points / 1000000000000000000000000).toFixed(1) + "Sp"
     } else if (points >= 1e27 && points < 1e30) {
@@ -241,9 +241,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
       plusedPoints.innerText = "+" + pointsPerClick;
-      plusedPoints.style.color = `${color[getRandomInt(0, 16)]}`
-      plusedPoints.style.left = `${e.clientX + window.scrollX}px`;
-      plusedPoints.style.top = `${e.clientY + window.scrollY}px`;
+      plusedPoints.style.color = `${color[getRandomInt(0, 16)]} `
+      plusedPoints.style.left = `${e.clientX + window.scrollX} px`;
+      plusedPoints.style.top = `${e.clientY + window.scrollY} px`;
       document.body.appendChild(plusedPoints);
       setTimeout(() => plusedPoints.remove(), 1000);
       setTimeout(() => giantCookie.classList.remove("rainbow-effect"), 8000);
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let panelId;
       if (butt.classList.contains('nameBtn') && butt.dataset.index) {
-        panelId = `nameBtn-${butt.dataset.index}-panel`;
+        panelId = `nameBtn - ${butt.dataset.index} -panel`;
       } else {
         panelId = butt.id + "-panel";
       }
@@ -321,22 +321,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
         if (hasSpaceAbove) {
-          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
+          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin} px`;
           panel.classList.remove("pointer-bottom");
           panel.classList.add("pointer-top");
         } else {
-          panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
+          panel.style.top = `${window.scrollY + buttonRect.bottom + margin} px`;
           panel.classList.remove("pointer-top");
           panel.classList.add("pointer-bottom");
         }
 
         const centerX = window.scrollX + buttonRect.left + buttonRect.width / 2 - panelRect.width / 2;
-        panel.style.left = `${centerX}px`;
+        panel.style.left = `${centerX} px`;
 
         const buttonCenterX = window.scrollX + buttonRect.left + buttonRect.width / 2;
         const panelCenterX = centerX + panelRect.width / 2;
         const pointerOffsetX = buttonCenterX - panelCenterX;
-        panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
+        panel.style.setProperty("--pointer-offset", `${pointerOffsetX} px`);
 
         panel.style.visibility = "visible";
       }, 0);
@@ -409,13 +409,13 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(panel);
 
       content.innerHTML = `
-        <h3 style="text-align:center; margin-bottom: 6px;">Admino Panelo.</h3>
+  < h3 style = "text-align:center; margin-bottom: 6px;" > Admino Panelo.</h3 >
         <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid icon"></i></button>
         <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid icon"></i></button>
         <button id="pointser" class="gC-btn">
           <i class="fa-solid fa-dollar-sign icon"></i><input id="typerist" type="number" placeholder="How many u want brah?">
         </button>
-      `;
+`;
 
       const autoBtn = panel.querySelector("#autoclicker");
       if (autoClickerInterval) autoBtn.classList.add("active");
@@ -425,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
       resetBtn.addEventListener("click", () => {
         cookiePoints = 0;
         localStorage.setItem("cookiePoints", 0);
-        pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> 0`;
+        pointsCounter.innerHTML = `< i class="fa-solid fa-hand-pointer icon" ></i > 0`;
         updateRecipeUnlockStates()
       });
 
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ev.key === "Enter") {
           cookiePoints = parseInt(input.value) || 0;
           localStorage.setItem("cookiePoints", cookiePoints);
-          pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> ${formatPoints(cookiePoints)}`;
+          pointsCounter.innerHTML = `< i class="fa-solid fa-hand-pointer icon" ></i > ${formatPoints(cookiePoints)} `;
           input.value = "";
           updateRecipeUnlockStates()
         }
@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const closer = document.createElement("div");
       closer.id = page.id + "-closer";
       closer.className = "page-closer";
-      closer.innerHTML = `<i class="fa-solid fa-x icon" style="color: #f38ba8;"></i>`
+      closer.innerHTML = `< i class="fa-solid fa-x icon" style = "color: #f38ba8;" ></i > `
       closer.style.position = "absolute";
       closer.style.cursor = "pointer";
       closer.style.top = "3%";
@@ -539,7 +539,7 @@ document.addEventListener("DOMContentLoaded", function () {
       //Beverlyn
       "Aku bukan orang yang melakukan semuanya—dan justru karena itu, sekitar delapan puluh persen proses pembuatan cookies berjalan di tanganku. Angka yang terdengar sederhana, hampir tidak pantas dibanggakan, namun cukup untuk memastikan sisanya tidak salah arah. Aku menakar bahan di atas timbangan dengan patuh pada angka di buku resep, setia pada hal-hal kecil yang sering dianggap berlebihan oleh mereka yang suka “kira-kira”. Tanpa banyak bicara dan tanpa perlu tampil, aku membiarkan adonan membuktikan kemampuannya sendiri. Pada akhirnya, cookies jadi, dapur tetap rapi, dan semua orang kenyang—sebuah keberhasilan bersama yang kebetulan sangat bergantung pada ketelitian yang katanya biasa saja.",
       //Pangestu
-      "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ke…Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ketepatan waktu, seperti kebersihan dan takaran, adalah bentuk disiplin yang tidak perlu diumumkan."
+      "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geriknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ke…Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geriknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ketepatan waktu, seperti kebersihan dan takaran, adalah bentuk disiplin yang tidak perlu diumumkan."
     ];
     const EN_messages = [
       //Jeffris
@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
       //Angeline
       "Thank me, because your photos would be terrible without my phone, hehehe. Oh yeah, I also acted as a cameraman, recording and photographing almost all the important scenes in this group's progress. I also helped bake the cookies, so don't say they weren't delicious >:(",
       //Beverlyn
-      "I'm not the one who does everything—and that's precisely why I handle about eighty percent of the cookie-making process. It's a simple-sounding number, hardly worth bragging about, but it's enough to ensure the rest doesn't go astray. I measure the ingredients on the scale faithfully following the recipe book's numbers, faithful to the little things that those who like to 'guess' often overlook. Without saying much and without showing off, I let the dough prove itself. In the end, the cookies are done, the kitchen is tidy, and everyone is well fed—a shared success that, incidentally, relies heavily on that same meticulousness that I call common sense.",
+      "I'm not the one who does everything—and that's precisely why I handle about eighty percent of the cookie-making process. It's a simple-sounding number, hardly worth bragging about, but it's enough to ensure the rest doesn't go astray. I measure the ingredients on the scale faithfully following the recipe book's numbers, faithful to the little things that those who like to 'guess' often overlook. Without saying much and without showing off, I let the dough prove itself. In the end, the cookies are done, the kitchen is tidy, and everyone are well fed—a shared success that, incidentally, relies heavily on that same meticulousness that I call common sense.",
       //Pangestu
       "He is short, a functional advantage that makes his presence always efficient. His movements are casual and unobtrusive, a rare quality that saves him from the hassle of being visible. In this photo, he appears very tall—a visual feat that stems entirely from the decision of someone else to shoot from below. Much about him remains unknown, and that is precisely the proof of his success in consistently maintaining privacy. While others sit, he stands in the corner, giving a real contribution by simply remaining in the correct position. He is a great help in measuring ingredients on the scale according to the recipe book, and, just as importantly, in washing the dishes—a silent heroic act that ensures the world can be used again without drama."
     ];
@@ -563,15 +563,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const index = parseInt(butt.dataset.index);
       const isID = languageToggle.dataset.language === "ID";
       const message = isID ? ID_messages[index] : EN_messages[index];
+
+      // When a name's photo button is clicked, show the panel content typed one-by-one
       setTimeout(() => {
-        const panelId = butt.id ? `${butt.id}-panel` : `nameBtn-${index}-panel`;
-        const panelContent = document.getElementById(`${panelId}-content`);
+        const panelId = butt.id ? `${butt.id} -panel` : `nameBtn - ${index} -panel`;
+        const panelContent = document.getElementById(`${panelId} -content`);
         if (panelContent) {
-          panelContent.innerHTML = `<p style="white-space: pre-wrap;">${message}</p>`;
+          panelContent.innerHTML = `< p style = "white-space: pre-wrap;" > ${message}</p > `;
         }
       }, 0);
     })
   })
+
 
   // Virtual Assistant Logic
   let currentAssistant = 'female'; // Default assistant
