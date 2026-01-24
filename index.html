@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tester ECookie</title>
+    <title>Project ECookie</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -19,18 +19,6 @@
   <body>
     <div id="cookie-bg"></div>
     <div id="backdrop"></div>
-    <div id="female-virtassistant" class="virtualassistant">
-      <img src="stuffs/imgs/virtualassistant/female-virtassistant-full-normal.png" alt="female Maid Virtual Assistant">
-    </div>
-    <picture id="male-virtassistant" class="virtualassistant" style="display: none;">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-full-normal.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-half-normal.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-closed-normal.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-full-white.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-half-white.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <source srcset="stuffs/imgs/virtualassistant/male-virtassistant-closed-white.jpeg" media="(prefers-reduced-motion: no-preference)">
-      <img src="stuffs/imgs/virtualassistant/male-virtassistant-full-normal.jpeg" alt="male Maid Virtual Assistant">
-    </picture>
     <header id="home">
       <nav class="top-bar">
         <div class="nav-left">
@@ -39,7 +27,6 @@
         <div class="nav-center">
           <a href="#home">Home</a>
           <a href="#reseps">Recipes</a>
-          <a href="intro.html">Intro</a>
           <a href="#clicker">Clicker</a>
           <a href="#credits">Credits</a>
         </div>
@@ -62,314 +49,420 @@
       </nav>
       <div id="big-title">
         <h1><i class="fa-solid fa-cookie-bite icon"></i>E. Cookie</h1>
-        <h3>Find your perfect <span>cookie</span>.</h3>
+        <search id="researcher">
+          <div style="width: fit-content;" id="more-containers">
+            <i class="fa-search fa-solid icon"></i>
+            <input type="text" placeholder="Find your perfect cookie.">
+          </div>
+        </search>
       </div>
     </header>
 
     <main id="reseps">
-      <button class="resep-container pageCre" id="main-cookie">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Cookieee"
-        />
-        <h3 style="text-align: center">A Cool Cookie</h3>
+      <button class="resep-container pageCre" id="almond-cookie">
+        <img src="./stuffs/imgs/almond-cookie/almond-cookie-main.png" alt="Almond-Cookie" class="resep-imgs">
+        <h3>Almond Cookie</h3>
         <ul class="ingredients">
-          <li>340 gr tepung terigu protein sedan</li>
-          <li>1/2 sdt baking powder</li>
-          <li>1/2 sdt baking soda</li>
-          <li>1/2 sdt garam halus</li>
-          <li>170 gr salted butter</li>
-<!--           <li>90 gr gula pasir butiran kecil</li>
-          <li>90 gr gula palem / brown sugar</li>
-          <li>1 butir telur ayam</li>
-          <li>1/2 sdm vanilla extract</li>
-          <li>152 gr chocochips</li> -->
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="french-fries">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/french-fries/french-fries-main.png"
-          alt="Friesy"
-        />
-        <h3 style="text-align: center">Sum Fries</h3>
-        <ul class="ingredients">
-          <li>Lorem ipsum dolor sit amet.</li>
-          <li>Aspernatur veniam quibusdam illum magnam.</li>
-          <li>Perspiciatis nam iste quis quam?</li>
-          <li>Possimus vel odio placeat ex.</li>
-          <li>Ipsum non ex ut iure?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="pancakes">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/pancakes/pancakes-main.png"
-          alt="Pancakiess"
-        />
-        <h3 style="text-align: center">Floofy Pancakes</h3>
-        <ul class="ingredients">
-          <li>130 gr terigu serbaguna</li>
-          <li>1/4 sdt vanilla bubuk / vanilla cream</li>
-          <li>1 sdt baking powder</li>
-          <li>1/2 sdt baking soda</li>
-          <li>1/8 sdt garam halus</li>
-<!--           <li>1,5 - 2 sdm gula pasir</li>
-          <li>1 butir telur ukuran besar, kocok lepas</li>
-          <li>140 - 150 ml buttermilk (susu cair yang diberi perasan 2 sdm air jeruk nipis)</li>
-          <li>2 sdm butter, lelehkan</li> -->
+          <li>Ipsam officia vero ea numquam sit, laborum explicabo ipsam expedita, fugiat doloribus fugit vel incidunt ad?</li>
+          <li>Repellat saepe consectetur perferendis vitae qui iste, dolorem autem amet id explicabo placeat nihil, voluptate voluptatibus consectetur dolorem porro quo ab, quae illo dicta error cum, dolores illum sit ad?</li>
+          <li>Harum dignissimos ipsum accusamus alias deleniti omnis, eos enim nulla facere, dolor eum culpa unde necessitatibus minus.</li>
+          <li>Veritatis porro cum officiis in, debitis sunt magnam laborum velit sapiente molestiae, magni voluptate reiciendis voluptatibus velit unde.</li>
+          <li>Est eos dolores sequi voluptatum ea facere, temporibus quisquam molestias iste doloribus sed id, nulla impedit iste error eos aliquid?</li>
         </ul>
       </button>
       <button class="resep-container pageCre" id="apple-pie">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/apple-pie/apple-pie-main.png"
-          alt="Apple-π"
-        />
-        <h3 style="text-align: center">Apple 3.1415...</h3>
+        <img src="./stuffs/imgs/apple-pie/apple-pie-main.png" alt="Apple-Pie" class="resep-imgs">
+        <h3>Apple Pie</h3>
         <ul class="ingredients">
-          <li>2 lembar puff pastry instan</li>
-          <li>2 buah apel Fuji, potong dadu/sesuai selera</li>
-          <li>1 sendok makan kismis</li>
-          <li>1 sendok makan salted butter</li>
-          <li>3-4 sendok makan gula pasir</li>
-<!--           <li>2 sendok makan gula palem/sesuai selera</li>
-          <li>1/2 sendok teh tepung maizena, larutkan dengan 2 sendok makan air</li>
-          <li>1/2 sendok makan air perasan lemon</li>
-          <li>Cinnamon bubuk sesuai selera</li>
-          <li>1/4 sendok teh garam</li>
- -->
+          <li>Dicta ab veniam in non, ut quidem fugiat laborum error, debitis necessitatibus asperiores officiis.</li>
+          <li>Quos cum assumenda similique, esse ipsum odio a eaque hic?</li>
+          <li>Itaque odit magnam repellat cupiditate, id exercitationem praesentium porro tempore.</li>
+          <li>Placeat fugit nisi eos nulla, dolores placeat eaque voluptatum repellendus, corrupti earum recusandae ratione quaerat.</li>
+          <li>Consequuntur cupiditate earum expedita aperiam, labore quidem nam porro qui?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="beef-pho">
+        <img src="./stuffs/imgs/beef-pho/beef-pho-main.png" alt="Beef-Pho" class="resep-imgs">
+        <h3>Beef Pho</h3>
+        <ul class="ingredients">
+          <li>Architecto minima neque quas vitae explicabo molestiae, asperiores reprehenderit excepturi fuga velit, praesentium perferendis itaque iure, id dolores quod facere at harum fuga?</li>
+          <li>Et nobis deserunt soluta accusantium tempore, architecto voluptas aperiam blanditiis, praesentium eveniet laborum quis alias earum?</li>
+          <li>Fugit illo cum ut autem veritatis architecto, iusto ipsam officiis aperiam quidem obcaecati, dolore ipsam mollitia sunt sint error, amet similique sed labore exercitationem doloremque dolorum?</li>
+          <li>Fuga obcaecati consectetur natus molestiae, velit magnam veniam quia blanditiis, odio non iste ipsa expedita eos nihil, necessitatibus ad corporis architecto ab dolorum beatae.</li>
+          <li>Unde obcaecati quasi inventore exercitationem, ducimus corrupti iste sed voluptatem commodi.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="biscoff-cookie">
+        <img src="./stuffs/imgs/biscoff-cookie/biscoff-cookie-main.png" alt="Biscoff-Cookie" class="resep-imgs">
+        <h3>Biscoff Cookie</h3>
+        <ul class="ingredients">
+          <li>Itaque sequi unde repudiandae, qui sit cumque vitae explicabo mollitia?</li>
+          <li>Corporis aspernatur amet alias iste id, dolores fuga sit a quod, cum quos tempore veniam, deserunt aliquam sed laudantium amet deleniti.</li>
+          <li>Voluptas cupiditate suscipit minima nostrum, accusantium ducimus tempora optio earum fugit.</li>
+          <li>Expedita ut ratione ullam, nisi eos totam maxime autem minus dolorum?</li>
+          <li>Quaerat consequatur nisi est animi ullam, vel dignissimos nisi fuga.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="bread">
+        <img src="./stuffs/imgs/bread/bread-main.png" alt="Bread" class="resep-imgs">
+        <h3>Bread</h3>
+        <ul class="ingredients">
+          <li>Impedit ratione obcaecati maiores expedita laborum odit, hic labore enim autem.</li>
+          <li>Accusantium aut fuga at iure perspiciatis, placeat iusto accusamus autem distinctio, magnam temporibus accusamus quas enim, eius officia officiis rerum deleniti?</li>
+          <li>Aut facere eos distinctio quas commodi beatae, exercitationem aliquid dicta magni recusandae maiores, architecto laudantium obcaecati molestiae molestias, vitae voluptates ratione laudantium?</li>
+          <li>Odio magnam accusantium perferendis, omnis fugit cum vitae esse velit dolorum, libero ea nobis dignissimos perferendis ipsam ad, amet illum nesciunt nisi quidem.</li>
+          <li>Laborum nam exercitationem earum doloremque consequatur, doloribus laborum odit mollitia error ducimus ipsum, iusto dolor ab consequatur cum ut itaque, ex temporibus aliquid dicta maxime.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="brownies">
+        <img src="./stuffs/imgs/brownies/brownies-main.png" alt="Brownies" class="resep-imgs">
+        <h3>Brownies</h3>
+        <ul class="ingredients">
+          <li>Similique omnis impedit quas esse enim, eaque quidem aliquam temporibus culpa?</li>
+          <li>Omnis quae hic exercitationem, voluptas ratione autem eveniet tempore magni, deleniti dolorum corrupti assumenda maxime?</li>
+          <li>Laboriosam excepturi tempora architecto, veniam quasi perferendis hic labore ipsum, ipsum ducimus iste impedit ullam possimus cum?</li>
+          <li>Repellendus modi a fugit dignissimos, ad sunt vitae reprehenderit sit labore autem, tempora illo maxime omnis labore quisquam.</li>
+          <li>Neque voluptate voluptas vitae, provident eius eos omnis error ipsa.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="chicken-fajitas">
+        <img src="./stuffs/imgs/chicken-fajitas/chicken-fajitas-main.png" alt="Chicken-Fajitas" class="resep-imgs">
+        <h3>Chicken Fajitas</h3>
+        <ul class="ingredients">
+          <li>Quia explicabo cumque dolor, dolorum maxime eos ducimus quidem, enim aliquid incidunt consectetur praesentium similique vitae, repudiandae quia cupiditate enim, voluptas libero ullam perferendis consequuntur pariatur qui.</li>
+          <li>Eum esse magni natus unde sapiente, numquam qui tempore autem fuga, dolores magnam vel distinctio adipisci sed facilis.</li>
+          <li>Quod at sed tempora, totam alias ipsa sapiente voluptate quos veniam, minus libero vitae nulla, omnis ullam nobis enim beatae nemo illum, maxime quibusdam tempora unde aliquam voluptatibus accusamus?</li>
+          <li>Cum quaerat consectetur hic voluptate, ea quis consectetur similique, at quia quas minus reiciendis, nisi delectus libero ullam et?</li>
+          <li>Perspiciatis exercitationem quas explicabo suscipit odio, mollitia qui dicta iusto obcaecati suscipit eos, blanditiis quasi hic fugit nulla explicabo, reiciendis suscipit quibusdam exercitationem, facilis suscipit beatae sit quibusdam?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="chicken-marsala">
+        <img src="./stuffs/imgs/chicken-marsala/chicken-marsala-main.png" alt="Chicken-Marsala" class="resep-imgs">
+        <h3>Chicken Marsala</h3>
+        <ul class="ingredients">
+          <li>Rerum sunt delectus ab tenetur, corrupti perferendis blanditiis quasi ipsa, nihil deserunt atque repudiandae beatae?</li>
+          <li>Eaque corporis asperiores officia rerum nam, illum error magnam cupiditate?</li>
+          <li>Aspernatur pariatur quae voluptates, voluptatem optio labore minus, perspiciatis unde nulla vel deserunt expedita?</li>
+          <li>Soluta dolorum reiciendis atque, repellat aliquam voluptatem ratione, obcaecati voluptates laboriosam at veniam?</li>
+          <li>Nemo non fugiat dolorem iure beatae odio, aut quaerat repellendus explicabo, dolor fugit ipsum hic quidem vel, aliquam velit aspernatur repellendus modi?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="chicken-noodle-soup">
+        <img src="./stuffs/imgs/chicken-noodle-soup/chicken-noodle-soup-main.png" alt="Chicken-Noodle-Soup" class="resep-imgs">
+        <h3>Chicken Noodle Soup</h3>
+        <ul class="ingredients">
+          <li>Beatae quae tempore dolor, fuga ullam aspernatur magnam explicabo, itaque porro magni placeat eos nemo rem, sit asperiores quas quo eos officia ducimus, quam optio nulla maxime vel?</li>
+          <li>Voluptate placeat nesciunt minus delectus unde doloribus, ex iste tempora dolor hic amet harum, illo dignissimos nulla eaque voluptatum earum?</li>
+          <li>Molestias cupiditate ut deserunt, molestias cumque optio labore nam, blanditiis voluptates itaque tempora excepturi, accusamus quidem mollitia necessitatibus excepturi alias, esse voluptate sit culpa totam expedita velit?</li>
+          <li>Totam impedit quae eius saepe, ipsum est explicabo totam exercitationem optio nam, repellat similique expedita eum dolor sit fugit, quasi est tempore consequuntur?</li>
+          <li>Blanditiis aliquid modi molestias facilis eos, nobis provident aut ab sequi praesentium suscipit, dolorum repellat similique optio quasi quisquam, animi nisi cum deleniti esse, harum delectus atque tempore dignissimos sed?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="croissant">
+        <img src="./stuffs/imgs/croissant/croissant-main.png" alt="Croissant" class="resep-imgs">
+        <h3>Croissant</h3>
+        <ul class="ingredients">
+          <li>Commodi dolorem at labore perspiciatis, non facere illo ad facilis, mollitia assumenda veniam sequi.</li>
+          <li>Nemo eaque sunt atque autem quis, iure itaque ullam illum, ipsum quod architecto enim voluptatum consequuntur, fugit dolor architecto repellendus, culpa debitis libero recusandae repellat nisi iusto.</li>
+          <li>Doloribus veritatis voluptatibus inventore ad, tenetur repellat rem ullam suscipit totam deleniti?</li>
+          <li>Odio esse maxime consequuntur similique, excepturi ducimus voluptatum nobis?</li>
+          <li>Quidem omnis quos dolorem et delectus, harum commodi ratione reiciendis.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="french-fries">
+        <img src="./stuffs/imgs/french-fries/french-fries-main.png" alt="French-Fries" class="resep-imgs">
+        <h3>French Fries</h3>
+        <ul class="ingredients">
+          <li>Unde tempore ad accusantium, quae cupiditate enim quam eveniet?</li>
+          <li>Vel repellat accusantium velit maxime omnis, doloribus officia libero sunt natus error, consequatur itaque odit mollitia nam cumque, eum dolorem eveniet soluta sunt reprehenderit?</li>
+          <li>Porro ea praesentium facilis, asperiores itaque nihil quo labore at consequuntur, necessitatibus mollitia nesciunt et repellat ea, dolores quia recusandae qui voluptatem impedit, quod quibusdam officia odio.</li>
+          <li>Laudantium magnam dolorum ullam, possimus ullam impedit molestias non, a non nihil quasi, corporis tempora soluta facilis porro, eaque nihil magnam earum quae.</li>
+          <li>Eligendi deleniti quidem saepe error accusantium assumenda, sint laborum necessitatibus veritatis veniam, reprehenderit nam distinctio ullam cupiditate omnis, distinctio possimus sapiente quibusdam in aliquid illo, tempore commodi enim quos aperiam?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="garlic-noodles">
+        <img src="./stuffs/imgs/garlic-noodles/garlic-noodles-main.png" alt="Garlic-Noodles" class="resep-imgs">
+        <h3>Garlic Noodles</h3>
+        <ul class="ingredients">
+          <li>Soluta cupiditate ipsum officia repudiandae nobis, pariatur quod nulla sequi cumque voluptas quisquam, voluptates facilis in magnam veniam saepe, facilis minus incidunt ea eaque?</li>
+          <li>Atque et cum suscipit, quos deleniti atque consequuntur, saepe numquam maiores quo, in sapiente omnis earum amet, ipsam aspernatur sit animi alias esse?</li>
+          <li>Placeat quae aliquam minima reiciendis, quibusdam officia quisquam explicabo, harum aliquid quisquam nulla accusantium tempora ipsum, voluptatibus cum illum minus.</li>
+          <li>Placeat neque assumenda deleniti rerum, nam dolor odio doloremque officiis ex animi.</li>
+          <li>Animi obcaecati assumenda facere quasi voluptatum molestiae, magnam culpa fugiat eos quae voluptas quam, voluptatem sapiente deserunt dolor voluptas sint, deleniti vero quisquam iure.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="gyoza">
+        <img src="./stuffs/imgs/gyoza/gyoza-main.png" alt="Gyoza" class="resep-imgs">
+        <h3>Gyoza</h3>
+        <ul class="ingredients">
+          <li>Odit libero dolore sunt impedit sed earum, perferendis ab nesciunt iusto optio commodi.</li>
+          <li>Iusto magni blanditiis voluptates hic soluta, nihil accusamus assumenda delectus, vero aliquid magnam quis temporibus natus modi?</li>
+          <li>Eum amet natus molestias non, ipsa nostrum eum qui, amet cum sed laboriosam.</li>
+          <li>Autem impedit eum rem sapiente hic amet, aperiam officiis iusto asperiores veniam enim harum, vitae recusandae nostrum tenetur cupiditate ipsa, consectetur quisquam qui tenetur libero?</li>
+          <li>Omnis similique animi earum molestias repellendus dolore, impedit esse incidunt ipsum animi nemo, ab perspiciatis inventore excepturi?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="hamburger">
+        <img src="./stuffs/imgs/hamburger/hamburger-main.png" alt="Hamburger" class="resep-imgs">
+        <h3>Hamburger</h3>
+        <ul class="ingredients">
+          <li>Pariatur nam sed magnam sapiente sunt sequi, vel repudiandae ab dolorem sapiente nostrum, nemo natus modi veritatis.</li>
+          <li>Incidunt temporibus molestiae reiciendis eos consectetur sint, assumenda eos repudiandae a, facere animi quisquam libero excepturi quo, blanditiis expedita hic sit.</li>
+          <li>Aperiam atque a molestiae facere veritatis repellat, aut aperiam officiis consectetur omnis?</li>
+          <li>Voluptates quidem reprehenderit minima necessitatibus quibusdam hic, debitis saepe iure ad, quis commodi asperiores dolor, distinctio optio officiis tempora mollitia magnam delectus.</li>
+          <li>Explicabo sunt quod doloribus illum blanditiis fugiat, hic explicabo ipsam qui itaque quam saepe, rem veritatis dolorum iure repellendus nesciunt nulla.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="hotdog">
+        <img src="./stuffs/imgs/hotdog/hotdog-main.png" alt="Hotdog" class="resep-imgs">
+        <h3>Hotdog</h3>
+        <ul class="ingredients">
+          <li>Facilis nemo amet veniam iste eveniet voluptas, placeat facilis error blanditiis animi, quidem iste cum facere minus debitis.</li>
+          <li>Suscipit quos enim repellat explicabo, sit dolores illum quos reprehenderit deleniti, perspiciatis atque earum iusto veritatis expedita, quaerat optio consequatur culpa magnam libero?</li>
+          <li>Eum dolorum voluptatum tempora eius, atque facilis placeat rerum molestiae sunt nobis, iusto enim praesentium architecto similique molestias, mollitia nobis perferendis vero maiores dignissimos?</li>
+          <li>Accusamus itaque provident distinctio impedit laboriosam, iure quis ab harum incidunt ex, ut autem alias quisquam, illum perferendis provident beatae?</li>
+          <li>Rerum ad inventore dicta voluptatem ut pariatur, tenetur enim veniam molestias, consectetur quo assumenda pariatur magnam aut rerum, unde corporis incidunt sapiente vitae alias, sequi voluptates ex ullam mollitia.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="mac-and-cheese">
+        <img src="./stuffs/imgs/mac-and-cheese/mac-and-cheese-main.png" alt="Mac-And-Cheese" class="resep-imgs">
+        <h3>Mac And Cheese</h3>
+        <ul class="ingredients">
+          <li>Eveniet animi vero autem perspiciatis nobis ipsam, nostrum molestiae eligendi quod repellendus aliquid officia, consectetur tempore ipsa sed autem quasi qui, eveniet enim cum amet?</li>
+          <li>Illum quo unde optio tempore obcaecati, dolorum pariatur ab corporis deleniti, velit delectus rem alias, nobis impedit ut autem quisquam odit, error dolore aut nesciunt fugiat esse.</li>
+          <li>Laudantium consectetur rerum optio possimus minus, unde molestiae nam minus illum.</li>
+          <li>Explicabo reiciendis doloribus veniam, enim ipsum quam culpa eum quo nihil.</li>
+          <li>Atque at placeat nesciunt autem ipsum ipsam, doloremque sapiente aut debitis commodi nihil, hic dolorum facilis rem nam et, laborum explicabo possimus harum debitis.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="mie-jawa">
+        <img src="./stuffs/imgs/mie-jawa/mie-jawa-main.png" alt="Mie-Jawa" class="resep-imgs">
+        <h3>Mie Jawa</h3>
+        <ul class="ingredients">
+          <li>Molestiae reprehenderit iusto ipsa illum, a quaerat quia atque ratione asperiores, modi atque eos debitis ducimus, cum impedit eum veniam.</li>
+          <li>Sunt deserunt doloribus cum, voluptate natus placeat dolorem officiis debitis, dignissimos rerum ipsum quidem quis perspiciatis.</li>
+          <li>Excepturi veniam exercitationem fugit ut, facere ad esse aut fuga odio iste, expedita doloremque sapiente numquam, iure cumque sint quam eaque ratione.</li>
+          <li>Odio architecto veritatis provident sequi amet, aliquid quo ipsam quae nesciunt modi quaerat, molestias saepe minus at maxime deserunt.</li>
+          <li>Animi perferendis consequuntur sed quasi, expedita illum quisquam quasi nostrum quibusdam, consequatur eum impedit fugit hic, corporis cum id exercitationem, quia molestias libero exercitationem?</li>
         </ul>
       </button>
       <button class="resep-container pageCre" id="muffin">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/muffin/muffin-main.png"
-          alt="Muffled"
-        />
-        <h3 style="text-align: center">Muffinos</h3>
+        <img src="./stuffs/imgs/muffin/muffin-main.png" alt="Muffin" class="resep-imgs">
+        <h3>Muffin</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Architecto odio consequatur molestiae dignissimos, mollitia consequatur corrupti atque, neque aut officia tenetur dolorem cumque, quos ut minus at ipsum consequuntur sed, reiciendis error mollitia quia?</li>
+          <li>Ea neque obcaecati alias ipsum aliquid rerum, laudantium a non dolor quos, labore enim rerum velit, aliquid neque quasi cupiditate in?</li>
+          <li>Doloremque numquam quidem dolore magnam doloribus, dolore repudiandae aspernatur libero?</li>
+          <li>Voluptatum obcaecati sunt labore sint autem aspernatur, exercitationem dolorum quaerat asperiores aspernatur, aperiam ipsa nihil pariatur quo dolore distinctio, beatae ex esse facere?</li>
+          <li>Possimus molestias tenetur earum, dicta a similique quo sint corporis, animi necessitatibus quos suscipit fugit, labore sequi earum similique debitis quia voluptatibus, inventore dolores ab tempora iusto in veniam?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="nasi-goreng">
+        <img src="./stuffs/imgs/nasi-goreng/nasi-goreng-main.png" alt="Nasi-Goreng" class="resep-imgs">
+        <h3>Nasi Goreng</h3>
+        <ul class="ingredients">
+          <li>Aliquid repellat alias est autem, magni commodi similique necessitatibus quas, unde quasi eveniet explicabo facilis, laudantium fuga adipisci atque.</li>
+          <li>Laudantium fugiat numquam excepturi necessitatibus, eius illo neque minima impedit, ex minus animi corrupti nemo quis, consequatur rerum vel libero aspernatur magni.</li>
+          <li>Nobis quibusdam quos omnis voluptatibus mollitia qui, facilis culpa dolorum quos deserunt, ipsum incidunt quas rem sint molestias, inventore id cumque ipsam deleniti quisquam, libero repudiandae autem culpa consectetur provident?</li>
+          <li>Repellendus distinctio ab recusandae in veniam, maxime provident quia dolorum optio perferendis illo, cum veritatis labore ipsa molestiae.</li>
+          <li>Ullam deserunt accusamus nihil, delectus amet natus eligendi nihil magnam, at pariatur eos numquam eaque quod cupiditate, enim id nostrum hic facilis provident?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="nuttela-cookie">
+        <img src="./stuffs/imgs/nuttela-cookie/nuttela-cookie-main.png" alt="Nuttela-Cookie" class="resep-imgs">
+        <h3>Nuttela Cookie</h3>
+        <ul class="ingredients">
+          <li>Velit quos placeat numquam, nostrum minima itaque quisquam quos odit, fugit laborum animi dolor rerum praesentium voluptatibus, eius officia est illum enim, sed ab repudiandae nobis est a.</li>
+          <li>Atque repellendus voluptatem totam quaerat, vitae debitis tempora maxime dicta cupiditate laboriosam, magni totam obcaecati harum sapiente ullam, odio cupiditate reprehenderit ipsam mollitia harum soluta.</li>
+          <li>Aliquam eaque amet unde, vitae obcaecati fuga a fugiat harum laborum, in commodi fuga molestiae, inventore nesciunt necessitatibus repellat, reprehenderit sequi ducimus voluptatem aliquid dolor.</li>
+          <li>Eos dolore tempore consequuntur, nisi quaerat impedit obcaecati, sit distinctio doloremque voluptatem in, eum suscipit officia perspiciatis, dolores doloremque aut rem ipsam?</li>
+          <li>Inventore magni quibusdam iusto nostrum, eveniet iure illo aliquid cumque deleniti.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="onigiri">
+        <img src="./stuffs/imgs/onigiri/onigiri-main.png" alt="Onigiri" class="resep-imgs">
+        <h3>Onigiri</h3>
+        <ul class="ingredients">
+          <li>Perferendis ullam in similique culpa labore impedit, eius tempora expedita pariatur aliquam perspiciatis, inventore quasi officiis quis asperiores?</li>
+          <li>Illo corrupti praesentium in ipsam porro blanditiis, doloribus nesciunt cumque optio cupiditate, repudiandae commodi nostrum pariatur.</li>
+          <li>Corporis saepe sunt magni quibusdam deserunt, quia repudiandae illum suscipit repellendus labore, rerum nihil natus tenetur aut assumenda.</li>
+          <li>Voluptatibus esse expedita provident, totam omnis ut corporis repudiandae explicabo, id quidem dolor possimus eveniet enim autem, unde temporibus repellat facilis beatae ratione, saepe vitae iure commodi enim eligendi cupiditate?</li>
+          <li>Repellendus obcaecati praesentium dolor, amet itaque at rem sunt quos, nostrum perspiciatis praesentium obcaecati sint fuga deleniti, perferendis eos numquam id, minus eaque omnis voluptatum.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="pancakes">
+        <img src="./stuffs/imgs/pancakes/pancakes-main.png" alt="Pancakes" class="resep-imgs">
+        <h3>Pancakes</h3>
+        <ul class="ingredients">
+          <li>Quod cupiditate reiciendis accusamus distinctio, eaque velit voluptate aut odit facilis, repellendus veniam assumenda laborum sint molestiae?</li>
+          <li>Debitis voluptatum dolore nihil, magni amet cupiditate earum laudantium.</li>
+          <li>Quis sunt recusandae perspiciatis, doloremque aliquid consequatur ea, aperiam voluptatum iste delectus beatae, laboriosam tenetur assumenda eius saepe.</li>
+          <li>Doloribus nihil dicta veniam, quae nobis ut debitis.</li>
+          <li>Doloremque fuga maxime suscipit, non modi cumque explicabo soluta exercitationem similique, veniam possimus rem repellat?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="pasta">
+        <img src="./stuffs/imgs/pasta/pasta-main.png" alt="Pasta" class="resep-imgs">
+        <h3>Pasta</h3>
+        <ul class="ingredients">
+          <li>Corrupti eum laudantium porro hic reprehenderit, modi animi illum deleniti pariatur, consequuntur saepe nemo esse?</li>
+          <li>Quasi magnam quam ad molestiae quidem architecto, velit magnam porro voluptatum vero expedita, eaque rem eos facilis laborum distinctio, officiis excepturi fuga veniam porro.</li>
+          <li>Voluptas voluptates corrupti saepe excepturi totam maxime, harum fugiat voluptas ratione repudiandae saepe veniam, soluta exercitationem reiciendis repudiandae, praesentium provident pariatur vel dolorem, aliquid voluptates natus iure.</li>
+          <li>Non inventore doloremque molestias neque, tempora porro quo molestias impedit, suscipit obcaecati nisi delectus quam.</li>
+          <li>Tempora perspiciatis sequi architecto dolore, tempore ullam vero explicabo suscipit tenetur.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="peanut-butter-cookie">
+        <img src="./stuffs/imgs/peanut-butter-cookie/peanut-butter-cookie-main.png" alt="Peanut-Butter-Cookie" class="resep-imgs">
+        <h3>Peanut Butter Cookie</h3>
+        <ul class="ingredients">
+          <li>Repudiandae minus totam nulla, architecto optio sed eligendi nihil aspernatur saepe, in explicabo eligendi impedit odio fugiat quia?</li>
+          <li>Vero excepturi unde numquam id modi facere, iste est eaque maxime, iusto ducimus exercitationem sapiente, nulla repudiandae fuga tenetur veritatis consequatur?</li>
+          <li>Cumque necessitatibus tenetur nulla quos, sed eos non maiores aspernatur voluptate.</li>
+          <li>Tempora optio repellat id perferendis, nam praesentium eveniet dicta explicabo nulla voluptate, voluptatibus voluptatem dolores voluptates nam iste rerum, alias quibusdam quo blanditiis accusantium, recusandae explicabo asperiores totam dolore quas.</li>
+          <li>Similique exercitationem est explicabo natus ullam, beatae harum hic rem veniam?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="peanut-noodles">
+        <img src="./stuffs/imgs/peanut-noodles/peanut-noodles-main.png" alt="Peanut-Noodles" class="resep-imgs">
+        <h3>Peanut Noodles</h3>
+        <ul class="ingredients">
+          <li>Cupiditate cumque vel eum fugit, aliquam consectetur voluptate excepturi repudiandae temporibus aspernatur, excepturi illo corrupti fugit quam veritatis distinctio?</li>
+          <li>Explicabo officiis natus facere, saepe harum esse quia repellat ut ex, rem error repudiandae cum, vero maxime quis odio obcaecati explicabo?</li>
+          <li>Magni esse deleniti ex, reprehenderit in alias cupiditate ad, sit itaque ad quam, quam pariatur ea magni provident.</li>
+          <li>Numquam tenetur pariatur recusandae aliquam, provident qui eligendi eveniet, omnis dignissimos temporibus delectus, tenetur vitae dignissimos a quae?</li>
+          <li>Natus quibusdam porro ipsum autem ea, corrupti maiores natus aut, harum at accusantium aut, illo at maiores amet eius nulla.</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="pizza">
+        <img src="./stuffs/imgs/pizza/pizza-main.png" alt="Pizza" class="resep-imgs">
+        <h3>Pizza</h3>
+        <ul class="ingredients">
+          <li>Odit illum necessitatibus quos suscipit repellat sint, iste corporis sint quaerat, corporis animi unde laborum quaerat et doloremque, a ullam error obcaecati facilis voluptas.</li>
+          <li>Voluptatem veniam error porro architecto aperiam, sit sapiente assumenda mollitia sed, adipisci minima cupiditate quibusdam molestias veritatis quasi, non reprehenderit commodi quo tempora inventore fuga.</li>
+          <li>Aliquid illo possimus ex quo obcaecati esse, quaerat qui voluptatem corporis dicta in saepe, illum deserunt dignissimos nobis consequuntur suscipit est.</li>
+          <li>Quisquam dignissimos voluptate vero ut ipsa veniam, ducimus a doloribus ab mollitia, autem ratione temporibus totam, error accusantium incidunt sint, voluptatum perferendis illo illum hic blanditiis?</li>
+          <li>Laudantium ut explicabo suscipit doloremque omnis, accusamus possimus placeat excepturi dolor?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="pozole-rojo">
+        <img src="./stuffs/imgs/pozole-rojo/pozole-rojo-main.png" alt="Pozole-Rojo" class="resep-imgs">
+        <h3>Pozole Rojo</h3>
+        <ul class="ingredients">
+          <li>Itaque excepturi eveniet quidem esse voluptatum, est beatae repellendus sit aut nam?</li>
+          <li>Fuga facilis expedita consequatur quae assumenda eius, ut iste magni placeat nihil, natus deserunt exercitationem esse autem harum quam, fugiat ad vel quas?</li>
+          <li>Saepe accusamus dolore facere magnam, ea asperiores eum molestiae eligendi et.</li>
+          <li>Repellendus inventore nihil nobis labore accusamus dicta, nesciunt iste libero blanditiis?</li>
+          <li>Incidunt exercitationem animi soluta officia delectus consectetur, facilis distinctio eius fugit, recusandae temporibus quas minima, consectetur saepe eaque quae vitae?</li>
+        </ul>
+      </button>
+      <button class="resep-container pageCre" id="red-velvet-cookie">
+        <img src="./stuffs/imgs/red-velvet-cookie/red-velvet-cookie-main.png" alt="Red-Velvet-Cookie" class="resep-imgs">
+        <h3>Red Velvet Cookie</h3>
+        <ul class="ingredients">
+          <li>Esse sunt debitis architecto ullam incidunt, dolorum ad sapiente doloremque veniam molestias suscipit, deleniti odio ratione asperiores praesentium placeat a, commodi quas praesentium facere, iusto possimus recusandae minima.</li>
+          <li>Ipsam excepturi voluptas eos repudiandae facilis adipisci, cum quam quidem cumque iusto in?</li>
+          <li>Sequi excepturi beatae ipsa, molestias nisi distinctio dolore magni harum explicabo, esse voluptates enim voluptatibus rerum, officiis assumenda eligendi velit sint nulla vel.</li>
+          <li>Eveniet natus numquam sapiente, error quaerat nesciunt delectus ipsa, quod mollitia voluptas iste sequi veniam fugit, iure neque cupiditate tempora architecto.</li>
+          <li>Recusandae nemo architecto inventore, dolorum ullam necessitatibus non facere voluptates aperiam.</li>
         </ul>
       </button>
       <button class="resep-container pageCre" id="rollcake">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/rollcake/rollcake-main.png"
-          alt="Rollecake"
-        />
-        <h3 style="text-align: center">Rollerr Cake</h3>
+        <img src="./stuffs/imgs/rollcake/rollcake-main.png" alt="Rollcake" class="resep-imgs">
+        <h3>Rollcake</h3>
         <ul class="ingredients">
-          <li>Ad rerum officia ea quam.</li>
-          <li>Dolor ad rem aliquam ullam.</li>
-          <li>Sequi delectus minus id dignissimos!</li>
-          <li>Tempora odio quia nam perspiciatis!</li>
-          <li>Dignissimos neque ullam totam cum.</li>
+          <li>At blanditiis veniam ab voluptate commodi cumque, aliquid maiores quia magnam quasi ab, et illum molestias id, illo consectetur omnis assumenda placeat modi nesciunt, illo iure accusantium quia?</li>
+          <li>Non praesentium optio beatae, temporibus repellendus voluptate unde omnis distinctio esse, in deleniti architecto sit nihil est mollitia, itaque sed fugit iure eum beatae fuga, nulla ab adipisci earum accusantium officiis.</li>
+          <li>Ratione quam deserunt deleniti numquam, culpa libero recusandae aliquid?</li>
+          <li>Ex eius tempore soluta asperiores deleniti numquam, accusamus suscipit labore minima earum nobis, veniam eveniet eos ducimus officia illo esse?</li>
+          <li>Vel illo facere quibusdam sapiente, dolorum fugiat distinctio quaerat excepturi exercitationem atque, quo ut impedit repellendus quisquam id ipsa.</li>
         </ul>
       </button>
-      <button class="resep-container pageCre" id="cheese-cake">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/cheese-cake/cheese-cake-main.png"
-          alt="Cheesy Cakey"
-        />
-        <h3 style="text-align: center">Cheesy Cake</h3>
+      <button class="resep-container pageCre" id="salad">
+        <img src="./stuffs/imgs/salad/salad-main.png" alt="Salad" class="resep-imgs">
+        <h3>Salad</h3>
         <ul class="ingredients">
-          <li>Ullam perspiciatis accusantium perferendis magnam dolorem.</li>
-          <li>Sequi ipsam dignissimos facilis dolorum dolor?</li>
-          <li>Cumque nulla quisquam in totam accusantium.</li>
-          <li>Aspernatur, pariatur! Officia beatae deleniti dolores?</li>
-          <li>Corrupti voluptatibus reiciendis sunt fuga vitae.</li>
+          <li>Veniam consequatur aliquam beatae quibusdam dignissimos earum, ipsa quae aperiam esse, non alias id ratione magnam.</li>
+          <li>Repudiandae exercitationem enim nisi tenetur, velit obcaecati quia explicabo delectus nesciunt.</li>
+          <li>Nihil necessitatibus debitis ea dolores pariatur, ab error cupiditate earum voluptates laborum, illo vero illum distinctio beatae nihil aliquid, quaerat sed fuga aut nisi sit reiciendis?</li>
+          <li>Aspernatur necessitatibus enim quas incidunt aperiam, architecto a veritatis corporis eveniet sunt, reprehenderit nemo perspiciatis deleniti fuga rerum totam, tenetur doloribus qui iste maiores, minus animi explicabo qui beatae corporis in?</li>
+          <li>A aliquam quam numquam animi velit, a quaerat animi corporis adipisci error saepe?</li>
         </ul>
       </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
+      <button class="resep-container pageCre" id="shortbread-cookie">
+        <img src="./stuffs/imgs/shortbread-cookie/shortbread-cookie-main.png" alt="Shortbread-Cookie" class="resep-imgs">
+        <h3>Shortbread Cookie</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Consequuntur nihil ex beatae error, repellat recusandae magnam distinctio aliquid, modi sequi reiciendis odit sapiente adipisci, expedita ullam neque cupiditate sit, sunt nisi nulla illum.</li>
+          <li>Molestiae maiores eaque quos temporibus, quia suscipit inventore nam doloribus maiores enim, nam voluptatem non nihil eum eaque?</li>
+          <li>Laborum omnis odio amet cupiditate, deserunt sunt rerum suscipit doloribus, quos quis optio ipsum, mollitia corrupti pariatur voluptatem, officia obcaecati totam doloremque nam.</li>
+          <li>Doloremque dolores est beatae ipsam, repudiandae placeat nemo quos hic itaque, natus ipsam asperiores ab dolor ducimus repellendus?</li>
+          <li>Perferendis aliquam amet numquam ratione officiis quia, facere ducimus quibusdam nemo placeat, enim sapiente cum corporis quisquam, ipsa id blanditiis ea?</li>
         </ul>
       </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
+      <button class="resep-container pageCre" id="tempe">
+        <img src="./stuffs/imgs/tempe/tempe-main.png" alt="Tempe" class="resep-imgs">
+        <h3>Tempe</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Cum obcaecati facilis maxime blanditiis voluptas, harum quasi nemo fuga, inventore cum eum quasi mollitia, exercitationem accusantium minus odit repellat ratione, provident eum temporibus odit.</li>
+          <li>Neque similique doloribus iusto perspiciatis, eum voluptatem cumque voluptatibus reiciendis?</li>
+          <li>Numquam eum voluptate dignissimos consequuntur, ea sunt sequi provident nam modi ab?</li>
+          <li>Possimus soluta natus libero nobis, facere dicta explicabo repellat quisquam, voluptatibus cupiditate iste voluptatum quae doloribus, adipisci voluptatem unde enim saepe recusandae?</li>
+          <li>Velit impedit numquam consequatur, ea odio nobis maiores provident tenetur nisi, in iusto modi facilis commodi impedit pariatur, facere obcaecati temporibus quam quisquam sequi repellat?</li>
         </ul>
       </button>
       <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
+        <img src="./stuffs/imgs/tester/tester-main.png" alt="Tester" class="resep-imgs">
+        <h3>Tester</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Temporibus repudiandae doloremque delectus, rerum similique facere est laboriosam, excepturi temporibus veritatis sed, modi dignissimos porro totam.</li>
+          <li>Quae quasi exercitationem sint a eveniet, exercitationem soluta maiores odio iure, accusantium harum vel nostrum ex quo eos, debitis placeat saepe obcaecati reiciendis vitae eligendi?</li>
+          <li>Nisi repellendus voluptates ex quisquam magnam maxime, numquam suscipit ea eaque sint fugiat eos, ipsa minus consequatur sit cum expedita mollitia, qui ipsa facere sint, aliquam repellendus vero blanditiis iusto?</li>
+          <li>Quibusdam molestiae maxime impedit tempore ullam architecto, at doloribus nemo quod?</li>
+          <li>Dolores magni in excepturi autem repellat hic, ab officia cum in asperiores labore fugiat, deleniti temporibus necessitatibus maiores rem magni, veniam at nesciunt labore alias natus?</li>
         </ul>
       </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
+      <button class="resep-container pageCre" id="thumbprint-cookie">
+        <img src="./stuffs/imgs/thumbprint-cookie/thumbprint-cookie-main.png" alt="Thumbprint-Cookie" class="resep-imgs">
+        <h3>Thumbprint Cookie</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Autem quisquam optio quam beatae, porro nesciunt quas laborum animi nobis, impedit natus libero ad ratione eveniet iusto?</li>
+          <li>Alias voluptatem obcaecati quia, accusamus ad iure eos deleniti, ullam perferendis magnam nesciunt iusto excepturi nam.</li>
+          <li>Consequuntur animi sunt nesciunt, reiciendis distinctio fugit maxime doloribus ut, sunt fugit nesciunt blanditiis minima molestiae repellendus, placeat natus voluptatibus architecto?</li>
+          <li>Cupiditate placeat nulla voluptates dolores, mollitia molestias alias quo, placeat vel reiciendis sint aperiam, optio molestiae beatae repellat, magni laboriosam at cupiditate porro.</li>
+          <li>Accusamus quisquam nihil fugit laboriosam iusto, hic quas optio architecto, voluptas vero est possimus, distinctio porro maiores dolor pariatur, delectus id deserunt at est quas sit?</li>
         </ul>
       </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
+      <button class="resep-container pageCre" id="tortilla-soup">
+        <img src="./stuffs/imgs/tortilla-soup/tortilla-soup-main.png" alt="Tortilla-Soup" class="resep-imgs">
+        <h3>Tortilla Soup</h3>
         <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
-        </ul>
-      </button>
-      <button class="resep-container pageCre" id="tester">
-        <img
-          class="resep-imgs"
-          src="./stuffs/imgs/main-cookie/main-cookie-main.png"
-          alt="Testiss"
-        />
-        <h3 style="text-align: center">A Testing Cooker</h3>
-        <ul class="ingredients">
-          <li>Eos pariatur rerum sapiente itaque!</li>
-          <li>Ad illum aliquam optio tempore?</li>
-          <li>At accusamus hic iure cupiditate?</li>
-          <li>Quidem tempora nostrum omnis. Fuga.</li>
-          <li>Quibusdam tenetur doloremque soluta odit?</li>
+          <li>Optio eveniet aperiam explicabo tenetur mollitia inventore, quaerat impedit corrupti adipisci numquam facilis, quis corrupti nihil laborum laudantium laboriosam recusandae, dolorem animi dicta maxime ut non, iste voluptatum enim corporis unde.</li>
+          <li>Odio magni inventore beatae qui, similique perspiciatis possimus quisquam nisi iure, eius nisi impedit fuga harum, nostrum ratione aut sapiente veritatis, aspernatur aliquam veniam ea culpa aliquid maiores?</li>
+          <li>Rerum itaque saepe repudiandae reiciendis, tempore dolor molestias impedit harum non, voluptas provident dolor accusantium, repudiandae quod facere ratione dignissimos nulla.</li>
+          <li>Illo quo quam explicabo, sequi facere eaque porro ipsam animi, nisi ut ipsa sint quam, cum sequi natus maiores incidunt nesciunt, officia sit corrupti eos maiores odio ratione?</li>
+          <li>Debitis nihil cum praesentium corrupti fugiat facilis, omnis eius eaque dignissimos voluptate exercitationem necessitatibus, deserunt provident tenetur dolore perspiciatis pariatur reprehenderit, eum perspiciatis sed praesentium.</li>
         </ul>
       </button>
     </main>
 
-  <footer id="clicker">
-    <div id="gC-toolbar">
-      <button id="storeBtn" class="gC-btn panCre">
-        <i class="fa-solid fa-store icon"></i>
-      </button>
-      <p id="pointsDisplay" class="gC-btn" style="cursor: default">
-        <i class="fa-solid fa-hand-pointer icon"></i>
-      </p>
-      <button id="achievementsBtn" class="gC-btn panCre">
-        <i class="fa-solid fa-trophy icon"></i>
-      </button>
-    </div>
-    <div id="giantCookie" class="cookie">
-      <div id="giantCookieHair">
-        <svg width="75" height="100">
-          <path d="M 50 90
+    <footer id="clicker">
+      <div id="gC-toolbar">
+        <button id="storeBtn" class="gC-btn panCre">
+          <i class="fa-solid fa-store icon"></i>
+        </button>
+        <p id="pointsDisplay" class="gC-btn" style="cursor: default">
+          <i class="fa-solid fa-hand-pointer icon"></i>
+        </p>
+        <button id="achievementsBtn" class="gC-btn panCre">
+          <i class="fa-solid fa-trophy icon"></i>
+        </button>
+      </div>
+      <div id="giantCookie" class="cookie">
+        <div id="giantCookieHair">
+          <svg width="75" height="100">
+            <path
+              d="M 50 90
                  C 45 70, 40 50, 45 35
                  C 50 20, 75 25, 70 45
                  C 65 60, 45 55, 52 40"
@@ -410,28 +503,19 @@
       <div class="name-list">
         <div class="entry">
           <h4>Web engineer</h4>
-          <button
-            class="nameBtn panCre"
-            data-index="0"
-          >
+          <button class="nameBtn panCre" data-index="0">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Jeffris.jpeg" alt="Jeffris"
             /></span>
             <span class="btn-label">Jeffris</span>
           </button>
-          <button
-            class="nameBtn panCre"
-            data-index="1"
-          >
+          <button class="nameBtn panCre" data-index="1">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Ryan.jpeg" alt="Ryan"
             /></span>
             <span class="btn-label">Ryan</span>
           </button>
-          <button
-            class="nameBtn panCre"
-            data-index="2"
-          >
+          <button class="nameBtn panCre" data-index="2">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Steven.jpeg" alt="Steven"
             /></span>
@@ -441,19 +525,13 @@
 
         <div class="entry">
           <h4>Designer</h4>
-          <button
-            class="nameBtn panCre"
-            data-index="3"
-          >
+          <button class="nameBtn panCre" data-index="3">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Simon.jpeg" alt="Feilysia Simon"
             /></span>
             <span class="btn-label">Feilysia Simon</span>
           </button>
-          <button
-            class="nameBtn panCre"
-            data-index="4"
-          >
+          <button class="nameBtn panCre" data-index="4">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Marvel.jpeg" alt="Marvel"
             /></span>
@@ -463,28 +541,19 @@
 
         <div class="entry">
           <h4>Our chef</h4>
-          <button
-            class="nameBtn panCre"
-            data-index="5"
-          >
+          <button class="nameBtn panCre" data-index="5">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Angeline.jpeg" alt="Angeline"
             /></span>
             <span class="btn-label">Angeline</span>
           </button>
-          <button
-            class="nameBtn panCre"
-            data-index="6"
-          >
+          <button class="nameBtn panCre" data-index="6">
             <span class="btn-photo"
               ><img src="./stuffs/imgs/pfps/Beverlyn.jpeg" alt="Beverlyn"
             /></span>
             <span class="btn-label">Beverlyn</span>
           </button>
-          <button
-            class="nameBtn panCre"
-            data-index="7"
-          >
+          <button class="nameBtn panCre" data-index="7">
             <span class="btn-photo"
               ><img
                 src="./stuffs/imgs/pfps/Pangestu.jpeg"
@@ -495,7 +564,7 @@
         </div>
       </div>
     </section>
-    <br><br><br><br><br>
+    <br /><br /><br /><br /><br />
     <div id="adminPwdPanel" class="panel">
       <h3>Is you Admin?</h3>
       <i class="fa-toolbox fa-solid"></i>
