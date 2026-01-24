@@ -220,6 +220,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const recipeContainers = document.querySelectorAll(".resep-container.pageCre");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove("resep-container-hidden");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+  });
+
+  recipeContainers.forEach((container) => {
+    container.classList.add("resep-container-hidden");
+    observer.observe(container);
+  });
   /* updateRecipeUnlockStates(); */
 
   if (giantCookie) {

@@ -117,6 +117,29 @@ a {
   padding-top: 2vh;
 }
 
+#researcher {
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+#researcher input {
+  background-color: transparent;
+  border: none;
+  width: 25ch;
+  padding: 3px;
+}
+
+#more-containers {
+  background: var(--liquid-glass-bg);
+  backdrop-filter: var(--liquid-glass-bf);
+  border: var(--liquid-glass-bd);
+  box-shadow: var(--liquid-glass-bs);
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
 .panel {
   background: var(--liquid-glass-bg);
   border: var(--liquid-glass-bd);
@@ -545,10 +568,20 @@ input[type=number] {
   border: var(--liquid-glass-bd);
   box-shadow: var(--liquid-glass-bs);
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.5s ease-out, transform 0.4s ease-out;
   text-align: left;
   max-width: 250px;
   font-weight: 700;
+  height: 325px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resep-container-hidden {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .resep-container h3 {
@@ -573,6 +606,11 @@ input[type=number] {
 
 .resep-container:hover {
   transform: scale(1.08);
+}
+
+.resep-container .ingredients li:nth-child(n+6) {
+  display: none;
+  text-decoration: none;
 }
 
 /* .resep-container:not(.unlocked) {
