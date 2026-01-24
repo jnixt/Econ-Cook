@@ -94,14 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return finalPoints;
   }
 
-  const loginPanel = document.querySelector("#login")
-  let hasLogged = localStorage.getItem("loggedIn") === true;
-
-  if (!hasLogged) {
-    loginPanel.style.visibility = "visible";
-    loginPanel.style.zIndex = "999";
-  }
-
   const cookieBackground = document.getElementById("cookie-bg");
   if (cookieBackground) {
     const cookies = [];
@@ -187,8 +179,34 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   let cookiePoints = Number(localStorage.getItem("cookiePoints")) || 0;
-  const pointsCounter = document.getElementById("storeBtn");
+  const pointsCounter = document.querySelector("#pointsDisplay");
   const giantCookie = document.getElementById("giantCookie");
+
+  function getRecipeUnlockThreshold(index) {
+    return Math.round(10 * Math.E ** index);
+  }
+
+  const recipeContainers = document.querySelectorAll(".resep-container.pageCre");
+
+  function updateRecipeUnlockStates() {
+    let unlockedCount = 0;
+    recipeContainers.forEach((container, index) => {
+      const threshold = getRecipeUnlockThreshold(index);
+      const isUnlocked = cookiePoints >= threshold;
+
+      if (isUnlocked) {
+        container.classList.add("unlocked");
+        unlockedCount++;
+      } else {
+        container.classList.remove("unlocked");
+        container.setAttribute("data-unlock-threshold", threshold);
+      }
+    });
+
+    localStorage.setItem("unlockedRecipes", unlockedCount);
+  }
+
+  updateRecipeUnlockStates();
 
   if (giantCookie) {
     if (cookiePoints < 0) cookiePoints = 0;
@@ -216,13 +234,14 @@ document.addEventListener("DOMContentLoaded", function () {
         '<i class="fa-solid fa-hand-pointer icon"></i> ' + finalPoints;
       localStorage.setItem("cookiePoints", cookiePoints);
 
+      updateRecipeUnlockStates();
+
       const color = ["#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#ed8796", "#ee99a0", "#f5a97f", "#eed49f", "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8", "#cad3f5", "#b8c0e0"]
 
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
       plusedPoints.innerText = "+" + pointsPerClick;
       plusedPoints.style.color = `${color[getRandomInt(0, 16)]}`
-      console.log(color[getRandomInt(0, 16)])
       plusedPoints.style.left = `${e.clientX + window.scrollX}px`;
       plusedPoints.style.top = `${e.clientY + window.scrollY}px`;
       document.body.appendChild(plusedPoints);
@@ -263,7 +282,13 @@ document.addEventListener("DOMContentLoaded", function () {
     butt.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      const panelId = butt.id + "-panel";
+      let panelId;
+      if (butt.classList.contains('nameBtn') && butt.dataset.index) {
+        panelId = `nameBtn-${butt.dataset.index}-panel`;
+      } else {
+        panelId = butt.id + "-panel";
+      }
+
       const existingPanel = document.getElementById(panelId);
 
       const buttonRect = butt.getBoundingClientRect();
@@ -305,17 +330,17 @@ document.addEventListener("DOMContentLoaded", function () {
           panel.classList.add("pointer-bottom");
         }
 
-        const centerX = buttonRect.left + window.scrollX + buttonRect.width / 2 - panelRect.width / 2;
+        const centerX = window.scrollX + buttonRect.left + buttonRect.width / 2 - panelRect.width / 2;
         panel.style.left = `${centerX}px`;
 
-        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-        const panelLeftX = window.scrollX + centerX;
-        const panelCenterX = panelLeftX + panelRect.width / 2;
+        const buttonCenterX = window.scrollX + buttonRect.left + buttonRect.width / 2;
+        const panelCenterX = centerX + panelRect.width / 2;
         const pointerOffsetX = buttonCenterX - panelCenterX;
         panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
         panel.style.visibility = "visible";
       }, 0);
+
 
       panel.addEventListener("click", (e) => e.stopPropagation());
     });
@@ -332,12 +357,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const adminBtn = document.getElementById("adminBtn");
   const pwdBackdrop = document.querySelector("#backdrop");
   const pwdInput = document.querySelector("#passwdInput");
+  const adminPwdPanel = document.querySelector("#adminPwdPanel");
+
+  function closeAdminPanel() {
+    const adminPanel = document.getElementById("adminBtn-panel");
+    if (adminPanel) {
+      adminPanel.remove();
+    }
+    pwdBackdrop.style.visibility = "hidden";
+  }
 
   function handlePasswordEntry(e) {
     if (e.key === "Enter") {
       if (pwdInput.value === "280112") {
         localStorage.setItem("unlockedAP", "true");
-        pwdBackdrop.style.display = "none";
+        pwdBackdrop.style.visibility = "hidden";
+        adminPwdPanel.style.visibility = "hidden";
         pwdInput.value = "";
         alert("Access Granted! Click Admin again.");
         pwdInput.removeEventListener("keydown", handlePasswordEntry);
@@ -366,6 +401,8 @@ document.addEventListener("DOMContentLoaded", function () {
       panel.style.left = "50%";
       panel.style.transform = "translateX(-50%)";
 
+      panel.addEventListener("click", (e) => e.stopPropagation());
+
       const content = document.createElement("div");
       content.id = "adminBtn-panel-content";
       panel.appendChild(content);
@@ -389,6 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cookiePoints = 0;
         localStorage.setItem("cookiePoints", 0);
         pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> 0`;
+        updateRecipeUnlockStates()
       });
 
       const input = panel.querySelector("#typerist");
@@ -398,11 +436,13 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.setItem("cookiePoints", cookiePoints);
           pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> ${formatPoints(cookiePoints)}`;
           input.value = "";
+          updateRecipeUnlockStates()
         }
       });
 
     } else {
-      pwdBackdrop.style.display = "flex";
+      pwdBackdrop.style.visibility = "visible";
+      adminPwdPanel.style.visibility = "visible";
       pwdInput.focus();
 
       pwdInput.removeEventListener("keydown", handlePasswordEntry);
@@ -410,402 +450,180 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  pwdBackdrop.addEventListener("click", (e) => {
+    if (e.target === pwdBackdrop) {
+      closeAdminPanel();
+      adminPwdPanel.style.visibility = "hidden";
+      pwdInput.value = "";
+      pwdInput.removeEventListener("keydown", handlePasswordEntry);
+    }
+  });
 
-  const leaderboardBtn = document.getElementById("leaderboardBtn")
-  if (leaderboardBtn) {
-    leaderboardBtn.addEventListener("click", () => {
-      const content = document.getElementById("leaderboardBtn-panel-content")
-      content.innerHTML = `<h3 style="text-align:center;">Leading Boardo</h3>
-      `
-    })
-  }
-});
-
-/* (function () {
-  const COOKIE_NAME = "ec_leaderboard";
-  const COOKIE_DAYS = 365;
-  const USERNAME_COOKIE = "ec_username";
-  const MAX_SAVED = 50;
-  const SHOW_TOP = 10;
-  const WIDGET_ID = "ec-leaderboard-widget";
-
-  function setCookie(name, value, days, path = "/") {
-    const expires = days ? "; expires=" + new Date(Date.now() + days * 864e5).toUTCString() : "";
-    document.cookie = name + "=" + value + expires + "; path=" + path;
-  }
-
-  function getCookie(name) {
-    const pairs = document.cookie ? document.cookie.split("; ") : [];
-    for (let i = 0; i < pairs.length; i++) {
-      const p = pairs[i];
-      if (p.indexOf(name + "=") === 0) {
-        return p.substring(name.length + 1);
+  document.querySelectorAll(".pageCre").forEach((butt) => {
+    butt.addEventListener("click", (e) => {
+      if (!butt.classList.contains("unlocked")) {
+        return;
       }
-    }
-    return null;
-  }
 
-  function deleteCookie(name, path = "/") {
-    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=" + path;
-  }
+      const buttonRect = butt.getBoundingClientRect();
+      const buttonX = buttonRect.left + buttonRect.width / 2;
+      const buttonY = buttonRect.top + buttonRect.height / 2;
 
-  // ---------- Storage API (cookie JSON) ----------
-  function loadLeaderboard() {
-    const raw = getCookie(COOKIE_NAME);
-    if (!raw) return [];
-    try {
-      const decoded = decodeURIComponent(raw);
-      const parsed = JSON.parse(decoded);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.map(item => ({
-        name: String(item.name || "").trim(),
-        clicks: Number(item.clicks) || 0
-      })).filter(item => item.name.length > 0);
-    } catch (err) {
-      console.warn("Failed to parse leaderboard cookie:", err);
-      return [];
-    }
-  }
+      const page = document.createElement("div");
+      page.id = butt.id + "-page";
+      page.className = "page";
+      page.style.setProperty("--origin-x", buttonX + "px");
+      page.style.setProperty("--origin-y", buttonY + "px");
 
-  function saveLeaderboard(list) {
-    const trimmed = list
-      .slice()
-      .sort((a, b) => b.clicks - a.clicks || a.name.localeCompare(b.name))
-      .slice(0, MAX_SAVED);
-    const json = JSON.stringify(trimmed);
-    setCookie(COOKIE_NAME, encodeURIComponent(json), COOKIE_DAYS);
-  }
+      const buttonColor = window.getComputedStyle(butt).backgroundColor;
+      page.style.setProperty("--expand-color", buttonColor);
 
-  function addOrUpdatePlayer(name, clicks) {
-    if (!name) return;
-    name = String(name).trim();
-    if (!name) return;
-    clicks = Number(clicks) || 0;
+      const content = document.createElement("div");
+      content.id = page.id + "-content";
+      content.className = "page-content";
+      page.appendChild(content);
 
-    const list = loadLeaderboard();
-    const idx = list.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-    if (idx === -1) {
-      list.push({ name, clicks });
-    } else {
+      const closer = document.createElement("div");
+      closer.id = page.id + "-closer";
+      closer.className = "page-closer";
+      closer.innerHTML = `<i class="fa-solid fa-x icon" style="color: #f38ba8;"></i>`
+      closer.style.position = "absolute";
+      closer.style.cursor = "pointer";
+      closer.style.top = "3%";
+      closer.style.right = "3%";
+      page.appendChild(closer)
 
-      if (clicks > list[idx].clicks) list[idx].clicks = clicks;
-    }
-    saveLeaderboard(list);
-  }
+      document.body.appendChild(page);
 
-  function getTop(n = SHOW_TOP) {
-    const list = loadLeaderboard();
-    return list.sort((a, b) => b.clicks - a.clicks || a.name.localeCompare(b.name)).slice(0, n);
-  }
+      setTimeout(() => {
+        page.classList.add("expand");
+      }, 10);
 
-  function clearLeaderboard() {
-    deleteCookie(COOKIE_NAME);
-  }
+      const closePageFunc = () => {
+        page.classList.remove("expand");
+        setTimeout(() => page.remove(), 400);
+      };
 
-  function createEl(tag, attrs = {}, children = []) {
-    const el = document.createElement(tag);
-    for (const k in attrs) {
-      if (k === "class") el.className = attrs[k];
-      else if (k === "html") el.innerHTML = attrs[k];
-      else el.setAttribute(k, attrs[k]);
-    }
-    (Array.isArray(children) ? children : [children]).forEach(c => {
-      if (!c) return;
-      if (typeof c === "string") el.appendChild(document.createTextNode(c));
-      else el.appendChild(c);
-    });
-    return el;
-  }
-
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  // ---------- Centered overlay for username ----------
-  function showUsernameOverlay(onSubmitCallback) {
-    // If already present, do nothing
-    if (document.getElementById("ec-username-overlay")) return;
-
-
-    const overlay = createEl("div", { id: "ec-username-overlay" });
-    Object.assign(overlay.style, {
-      position: "fixed",
-      inset: "0",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "rgba(0,0,0,0.55)",
-      zIndex: 99999,
-    });
-
-    // centered box
-    const box = createEl("div", { id: "ec-username-box" });
-    Object.assign(box.style, {
-      background: "#fff",
-      padding: "24px",
-      borderRadius: "10px",
-      minWidth: "320px",
-      maxWidth: "90%",
-      boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif"
-    });
-
-    const title = createEl("h2", { html: "Fill your username" });
-    title.style.marginTop = "0";
-    title.style.marginBottom = "12px";
-    const subtitle = createEl("p", { html: "Please enter a display name to use on the leaderboard." });
-    subtitle.style.marginTop = "0";
-    subtitle.style.marginBottom = "18px";
-    subtitle.style.color = "#444";
-    subtitle.style.fontSize = "0.95rem";
-
-    const nameInput = createEl("input", { type: "text", placeholder: "Your username", id: "ec-overlay-username" });
-    Object.assign(nameInput.style, {
-      width: "100%",
-      padding: "10px 12px",
-      borderRadius: "6px",
-      border: "1px solid #ccc",
-      boxSizing: "border-box",
-      fontSize: "1rem",
-      marginBottom: "12px"
-    });
-
-    const btnRow = createEl("div");
-    btnRow.style.display = "flex";
-    btnRow.style.justifyContent = "center";
-    btnRow.style.gap = "8px";
-
-    const submitBtn = createEl("button", { type: "button", html: "Start" });
-    Object.assign(submitBtn.style, {
-      padding: "10px 16px",
-      borderRadius: "6px",
-      border: "none",
-      background: "#2b8aef",
-      color: "#fff",
-      cursor: "pointer"
-    });
-
-    const skipBtn = createEl("button", { type: "button", html: "Use anonymous" });
-    Object.assign(skipBtn.style, {
-      padding: "10px 12px",
-      borderRadius: "6px",
-      border: "1px solid #ccc",
-      background: "#fff",
-      cursor: "pointer"
-    });
-
-    btnRow.appendChild(submitBtn);
-    btnRow.appendChild(skipBtn);
-
-    // allow pressing Enter
-    nameInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") submitBtn.click();
-    });
-
-    submitBtn.addEventListener("click", () => {
-      const val = (nameInput.value || "").trim();
-      const username = val.length ? val : "anonymous";
-      setCookie(USERNAME_COOKIE, encodeURIComponent(username), COOKIE_DAYS);
-      if (typeof onSubmitCallback === "function") onSubmitCallback(username);
-      overlay.remove();
-    });
-
-    skipBtn.addEventListener("click", () => {
-      const username = "anonymous";
-      setCookie(USERNAME_COOKIE, encodeURIComponent(username), COOKIE_DAYS);
-      if (typeof onSubmitCallback === "function") onSubmitCallback(username);
-      overlay.remove();
-    });
-
-    box.appendChild(title);
-    box.appendChild(subtitle);
-    box.appendChild(nameInput);
-    box.appendChild(btnRow);
-
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-
-    // Focus input
-    setTimeout(() => nameInput.focus(), 50);
-  }
-
-  // ---------- Widget rendering ----------
-  function renderWidget(container, initialUsername) {
-    container.innerHTML = ""; // clear
-
-    const title = createEl("h3", { html: "Leaderboard (cookie)" });
-    container.appendChild(title);
-
-    // Controls
-    const controls = createEl("div", { class: "ec-controls" });
-    const nameInput = createEl("input", { type: "text", placeholder: "Your name", id: "ec-name-input" });
-    nameInput.style.marginRight = "8px";
-    if (initialUsername) nameInput.value = initialUsername;
-
-    let runtimeClicks = 0;
-    const clicksLabel = createEl("span", { id: "ec-clicks-label", html: "0" });
-    clicksLabel.style.margin = "0 8px";
-
-    const incBtn = createEl("button", { type: "button", html: "+1 click" });
-    incBtn.addEventListener("click", () => {
-      runtimeClicks++;
-      clicksLabel.innerHTML = String(runtimeClicks);
-    });
-
-    const saveBtn = createEl("button", { type: "button", html: "Save score" });
-    saveBtn.style.marginLeft = "8px";
-    saveBtn.addEventListener("click", () => {
-      const name = nameInput.value || initialUsername || "anonymous";
-      addOrUpdatePlayer(name, runtimeClicks);
-      renderLeaderboardTable(container);
-      showTemporaryMessage(container, `Saved ${runtimeClicks} clicks for "${name}"`);
-    });
-
-    const clearBtn = createEl("button", { type: "button", html: "Clear leaderboard" });
-    clearBtn.style.marginLeft = "8px";
-    clearBtn.addEventListener("click", () => {
-      if (!confirm("Clear local leaderboard cookie?")) return;
-      clearLeaderboard();
-      runtimeClicks = 0;
-      clicksLabel.innerHTML = "0";
-      renderLeaderboardTable(container);
-      showTemporaryMessage(container, "Leaderboard cleared");
-    });
-
-    const controlsRow = createEl("div", { class: "ec-controls-row" }, [
-      nameInput, incBtn, clicksLabel, saveBtn, clearBtn
-    ]);
-    controlsRow.style.marginBottom = "10px";
-    container.appendChild(controlsRow);
-
-    // Leaderboard container
-    const lbContainer = createEl("div", { id: "ec-leaderboard-table" });
-    container.appendChild(lbContainer);
-
-    // Initial table render
-    renderLeaderboardTable(container);
-  }
-
-  function renderLeaderboardTable(container) {
-    const lbContainer = container.querySelector("#ec-leaderboard-table");
-    if (!lbContainer) return;
-
-    const top = getTop(SHOW_TOP);
-    if (top.length === 0) {
-      lbContainer.innerHTML = "<p>No entries yet.</p>";
-      return;
-    }
-
-    // Build table
-    const table = createEl("table");
-    table.style.borderCollapse = "collapse";
-    table.style.width = "100%";
-    table.style.maxWidth = "360px";
-    table.style.marginTop = "6px";
-
-    const thead = createEl("thead");
-    const headerRow = createEl("tr");
-    ["#", "Player", "Clicks"].forEach(h => {
-      const th = createEl("th", { html: h });
-      th.style.border = "1px solid #ddd";
-      th.style.padding = "6px 8px";
-      th.style.background = "#f5f5f5";
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    const tbody = createEl("tbody");
-    top.forEach((p, i) => {
-      const row = createEl("tr");
-      const idxTd = createEl("td", { html: String(i + 1) });
-      const nameTd = createEl("td", { html: escapeHtml(p.name) });
-      const clicksTd = createEl("td", { html: String(p.clicks) });
-      [idxTd, nameTd, clicksTd].forEach(td => {
-        td.style.border = "1px solid #ddd";
-        td.style.padding = "6px 8px";
+      page.addEventListener("click", (clickEvent) => {
+        if (clickEvent.target === page || clickEvent.target.closest(".page-closer")) {
+          closePageFunc();
+        }
       });
-      row.appendChild(idxTd);
-      row.appendChild(nameTd);
-      row.appendChild(clicksTd);
-      tbody.appendChild(row);
     });
-    table.appendChild(tbody);
+  });
 
-    lbContainer.innerHTML = "";
-    lbContainer.appendChild(table);
+  const creditsLanguager = document.getElementById("credits-language");
+  const languageToggle = creditsLanguager.querySelector(".language-toggle");
+  const toggleSlider = creditsLanguager.querySelector(".toggle-slider");
+
+  toggleSlider.addEventListener("click", () => {
+    const isID = languageToggle.dataset.language === "ID";
+    languageToggle.dataset.language = isID ? "EN" : "ID";
+    toggleSlider.classList.toggle("active");
+  });
+
+  document.querySelectorAll(".nameBtn").forEach((butt) => {
+    const ID_messages = [
+      //Jeffris
+      "Pengguna Arch-Hyprland OS yang code website ini dari nol (sampai beberapa kali) menggunakan HTML, CSS, dan JS (tentunya). Sambil belajar cara menggunakan Git dan Github, orang ini speedrun nge-coding sampai hasilnya jadi sebagus ini. Iya, iya, website ini masih memiliki beberapa bug dan fitur-fitur yang kurang, karena deadlinenya hanya dua minggu... Apapun itu, enjoy websitenya!",
+      //Ryan
+      "Seorang pengangguran yang tidak bisa melakukan apa-apa ini entah bagaimana mendapatkan pekerjaan untuk membantu dalam membuat website ini. Tanpa Beliau, akan ada beberpa fitur yang tidak bisa diakses sampai sekarang, dan Shwcehneiger™ mungkin tidak sempat membuat page yang dibuat khusus untuk credit anggota (iya, saya yang buat page ini)",
+      //Steven
+      "Resep-resep di website ini dicari & diketik oleh saya. Saya juga merupakan salah satu anggota yang membantu memasak cookie.",
+      //Simon
+      "Juara 3 di lomba CALC Design 2025 😎. Video diedit oleh saya, asisten virtual dibuat oleh saya, cookienya pun dibuat saya. Kayaknya yang kerja cuma saya ya 😡",
+      //Marvel
+      "Meskipun rapornya menunjukkan nilai yang tidak selalu mencolok—namun bahkan yang terendah pun tetap berada di atas KKM—ia adalah sosok yang tidak layak dianggap sepele. Angka-angka itu gagal menjangkau wilayah tempat ia benar-benar berkuasa: seni rupa, fotografi, dan ranah kreatif serupa, di mana kreativitasnya bergerak tenang namun mendalam, melampaui batas penilaian formal. Dalam keheningan yang ia pelihara, tersimpan delusi keagungan yang anggun—keyakinan bahwa dunia berjalan dengan hukum yang hanya dipahami oleh mereka yang cukup sabar mengamatinya. Ia menyerap realitas melalui cerita dan simbol, menonton lebih dari lima puluh anime setiap musim seolah sedang mempelajari arsip tak tertulis tentang manusia dan takdir. Maka berterima kasihlah kepadanya, karena dari balik bayangan itulah lahir desain karakter virtual perempuan di website ini, sebuah jejak halus dari pengaruh yang jarang disadari, namun nyata. (designer dan cameramen)",
+      //Angeline
+      "Berterima kasihlah kepada saya, karena foto-foto kalian akan jelek kalau tanpa HP saya hehehe. Oh ya, saya juga berperan sebagai cameramen yang merekam dan memfoto hampir semua scene-scene penting dalam progres grup ini. Saya juga membantu dalam masak cookienya, jadi jangan bilang gak enak >:(",
+      //Beverlyn
+      "Aku bukan orang yang melakukan semuanya—dan justru karena itu, sekitar delapan puluh persen proses pembuatan cookies berjalan di tanganku. Angka yang terdengar sederhana, hampir tidak pantas dibanggakan, namun cukup untuk memastikan sisanya tidak salah arah. Aku menakar bahan di atas timbangan dengan patuh pada angka di buku resep, setia pada hal-hal kecil yang sering dianggap berlebihan oleh mereka yang suka “kira-kira”. Tanpa banyak bicara dan tanpa perlu tampil, aku membiarkan adonan membuktikan kemampuannya sendiri. Pada akhirnya, cookies jadi, dapur tetap rapi, dan semua orang kenyang—sebuah keberhasilan bersama yang kebetulan sangat bergantung pada ketelitian yang katanya biasa saja.",
+      //Pangestu
+      "Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ke…Ia pendek, sebuah kelebihan fungsional yang membuat keberadaannya selalu efisien. Gerak-geraknya biasa saja dan tidak mencolok, mutu langka yang menyelamatkannya dari kerepotan tampil. Pada foto kali ini ia tampak sangat tinggi—sebuah prestasi visual yang sepenuhnya lahir dari keputusan orang lain yang mengambil gambar dari bawah. Tentang dirinya, banyak hal tidak diketahui, dan itu justru bukti keberhasilan menjaga privasi secara konsisten. Ketika yang lain duduk, ia berdiri di sudut, memberi kontribusi nyata dengan sekadar tetap berada di posisi yang tepat. Ia sangat membantu dalam menakar bahan di atas timbangan sesuai angka di buku resep, mencuci piring tanpa meninggalkan jejak, dan yang paling konsisten dari semuanya: ia tidak pernah terlambat—karena ketepatan waktu, seperti kebersihan dan takaran, adalah bentuk disiplin yang tidak perlu diumumkan."
+    ];
+    const EN_messages = [
+      //Jeffris
+      "An Arch-Hyprland OS User who coded the website from zero (many times) using HTML, CSS, and JS (ofcourse). While also learning how to use Git and Github, this person speedran the coding till the result became as good as this. Yes, yes, this website still has some bugs and missing features, because the deadline is only two weeks... Despite that, enjoy the website!",
+      //Ryan
+      "This unemployed, helpless man somehow found work helping build this website. Without him, some features would be inaccessible, and Shwcehneiger™ might not have had the chance to create a dedicated member credits page (yes, I created this page).",
+      //Steven
+      "I found the recipies and I am one of the members who contributed in cooking cookies.",
+      //Simon
+      "3rd place in the CALC Design 2025 competition 😎. The video was edited by me, the virtual assistant was created by me, and the cookies were made by me. I think I was the only one doing the work, huh 😡",
+      //Marvel
+      "Although his report card shows grades that aren't always impressive—even the lowest are still above the Minimum Completion Minimum (KKM)—he is a figure not to be underestimated. Those numbers fail to capture the realm where he truly excels: fine art, photography, and similar creative fields, where his creativity moves quietly yet profoundly, transcending the boundaries of formal assessment. Within the silence he maintains lies a graceful delusion of grandeur—a belief that the world operates by laws understood only by those patient enough to observe it. He absorbs reality through stories and symbols, watching over fifty anime each season as if studying an unwritten archive of humanity and destiny. Thank him, then, for it was from behind his shadow that the design of the virtual female character on this website was born, a subtle trace of an influence rarely noticed, yet real. (designer and cameraman)",
+      //Angeline
+      "Thank me, because your photos would be terrible without my phone, hehehe. Oh yeah, I also acted as a cameraman, recording and photographing almost all the important scenes in this group's progress. I also helped bake the cookies, so don't say they weren't delicious >:(",
+      //Beverlyn
+      "I'm not the one who does everything—and that's precisely why I handle about eighty percent of the cookie-making process. It's a simple-sounding number, hardly worth bragging about, but it's enough to ensure the rest doesn't go astray. I measure the ingredients on the scale faithfully following the recipe book's numbers, faithful to the little things that those who like to 'guess' often overlook. Without saying much and without showing off, I let the dough prove itself. In the end, the cookies are done, the kitchen is tidy, and everyone is well fed—a shared success that, incidentally, relies heavily on that same meticulousness that I call common sense.",
+      //Pangestu
+      "He is short, a functional advantage that makes his presence always efficient. His movements are casual and unobtrusive, a rare quality that saves him from the hassle of being visible. In this photo, he appears very tall—a visual feat that stems entirely from the decision of someone else to shoot from below. Much about him remains unknown, and that is precisely the proof of his success in consistently maintaining privacy. While others sit, he stands in the corner, giving a real contribution by simply remaining in the correct position. He is a great help in measuring ingredients on the scale according to the recipe book, and, just as importantly, in washing the dishes—a silent heroic act that ensures the world can be used again without drama."
+    ];
+    butt.addEventListener("click", (e) => {
+      const index = parseInt(butt.dataset.index);
+      const isID = languageToggle.dataset.language === "ID";
+      const message = isID ? ID_messages[index] : EN_messages[index];
+      setTimeout(() => {
+        const panelId = butt.id ? `${butt.id}-panel` : `nameBtn-${index}-panel`;
+        const panelContent = document.getElementById(`${panelId}-content`);
+        if (panelContent) {
+          panelContent.innerHTML = `<p style="white-space: pre-wrap;">${message}</p>`;
+        }
+      }, 0);
+    })
+  })
+
+  // Virtual Assistant Logic
+  let currentAssistant = 'female'; // Default assistant
+  const femaleAssistant = document.getElementById('female-virtassistant');
+  const maleAssistant = document.getElementById('male-virtassistant');
+
+  function switchAssistant(type) {
+    if (type === 'female') {
+      femaleAssistant.style.display = 'block';
+      maleAssistant.style.display = 'none';
+      currentAssistant = 'female';
+    } else if (type === 'male') {
+      femaleAssistant.style.display = 'none';
+      maleAssistant.style.display = 'block';
+      currentAssistant = 'male';
+    }
   }
 
-  function showTemporaryMessage(container, text, ms = 1800) {
-    let msg = container.querySelector(".ec-temp-msg");
-    if (!msg) {
-      msg = createEl("div", { class: "ec-temp-msg" });
-      msg.style.marginTop = "8px";
-      msg.style.color = "#2a6f2a";
-      container.appendChild(msg);
-    }
-    msg.textContent = text;
-    setTimeout(() => {
-      if (msg && msg.parentNode) msg.parentNode.removeChild(msg);
-    }, ms);
+  if (femaleAssistant) {
+    animateAssistant(femaleAssistant);
   }
 
-  // ---------- Public initializer ----------
-  function init(options = {}) {
-    const parent = options.parent || document.body;
-    let container = document.getElementById(WIDGET_ID);
-    if (!container) {
-      container = createEl("div", { id: WIDGET_ID });
-      // basic inline styling so widget looks reasonable without CSS file
-      container.style.border = "1px solid #ccc";
-      container.style.padding = "12px";
-      container.style.borderRadius = "8px";
-      container.style.maxWidth = "420px";
-      container.style.fontFamily = "Arial, sans-serif";
-      container.style.background = "#fff";
-      container.style.position = "relative";
-      container.style.margin = "18px";
-      parent.appendChild(container);
-    }
-
-    const storedUsername = getCookie(USERNAME_COOKIE);
-    const username = storedUsername ? decodeURIComponent(storedUsername) : null;
-
-    if (username) {
-      // If username exists, render widget immediately with prefilled name
-      renderWidget(container, username);
-    } else {
-      // Show overlay that centers the "Fill your username" prompt
-      showUsernameOverlay(function (submittedName) {
-        renderWidget(container, submittedName);
-      });
-    }
+  if (maleAssistant && maleAssistant.style.display !== 'none') {
+    animateAssistant(maleAssistant);
   }
 
-  // Auto-init: create widget in document.body after DOMContentLoaded
-  function autoInit() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => init());
-    } else {
-      init();
+  function animateAssistant(assistantElement) {
+    const imgElement = assistantElement.querySelector('img');
+    let x = getRandomFloat(0, window.innerWidth - 100);
+    let y = getRandomFloat(0, window.innerHeight * 0.2);
+    let vx = getRandomFloat(-0.7, 0.7);
+    let vy = getRandomFloat(-0.7, 0.7);
+
+    function updatePosition() {
+      x += vx;
+      y += vy;
+
+      if (x + imgElement.offsetWidth > window.innerWidth || x < 0) {
+        vx *= -1;
+      }
+      if (y + imgElement.offsetHeight > window.innerHeight * 0.2 || y < 0) {
+        vy *= -1;
+      }
+
+      assistantElement.style.left = x + 'px';
+      assistantElement.style.top = y + 'px';
+
+      requestAnimationFrame(updatePosition);
     }
+    updatePosition();
   }
 
-  // Expose API
-  window.ECLeaderboard = {
-    init,
-    addOrUpdatePlayer,
-    loadLeaderboard,
-    clearLeaderboard,
-    getTop
-  };
 
-  // Kick off automatically
-  autoInit();
-})(); */
+
+});

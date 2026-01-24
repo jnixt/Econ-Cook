@@ -11,7 +11,7 @@ E.Cookie is a web application designed for an economics project, but with a fun,
 Our cookie jar is already full of some tasty features:
 
 *   **🍪 The Giant Cookie:** The star of the show! Click the giant cookie to bake more cookies and increase your score.
-*   ** 배경 (Background):** Immerse yourself in a relaxing, animated background of floating cookies.
+*   **🧱 (Background):** Immerse yourself in a relaxing, animated background of floating cookies.
 *   **🏆 Milestone Messages:** Click enough cookies, and you'll get a special message. Can you reach the first milestone?
 *   **🍳 Recipe Finder:** *[Coming Soon]* Find delicious cookie recipes to try at home.
 *   **🤖 Personal Assistant:** *[Coming Soon]* Choose a boy or girl assistant to guide you through the site.

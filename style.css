@@ -21,24 +21,11 @@
 
 body {
   background-color: var(--bg-color);
-  min-height: 150vh;
+  min-height: 100vh;
+  height: calc(100% + 50vh);
   position: relative;
 }
 
-#login {
-  visibility: visible;
-  display: block;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
-  z-index: 4;
-  min-width: 400px;
-}
-
-#login button {
-  background-color: var(--liquid-glass-bg);
-}
 
 #bottom {
   width: 100%;
@@ -133,8 +120,16 @@ a {
   display: none;
   position: absolute;
   visibility: hidden;
-  max-width: 220px;
+  max-width: 400px;
   pointer-events: auto;
+}
+
+.panel-content {
+  padding: 10px;
+  text-align: left;
+  font-size: 0.9em;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .panel-pointer {
@@ -224,6 +219,10 @@ h3 span {
   outline: none;
 }
 
+#pointsDisplay:hover {
+  transform: none;
+}
+
 #giantCookie {
   opacity: 1;
   position: relative;
@@ -234,7 +233,7 @@ h3 span {
   box-shadow:
     0px -1px 20px rgba(255, 255, 97, 0.6),
     0px 0px 18px rgba(241, 100, 20, 0.6);
-  margin: 100px 40px 40px 40px;
+  margin: 100px 40px;
   cursor: pointer;
   transition: transform 0.12s ease;
   user-select: none;
@@ -289,6 +288,11 @@ h3 span {
   pointer-events: none;
 }
 
+#giantCookie:active #giantCookieHands,
+#giantCookie:active #giantCookieFeet {
+  transform: scale(1.0526) rotate(-360deg);
+}
+
 .giantCookieHands > div,
 .giantCookieFeet > div {
   position: absolute;
@@ -329,7 +333,7 @@ h3 span {
 #giantCookieHair {
   position: absolute;
   top: -30%;
-  left: 92px
+  left: 92px;
 }
 
 .cookie-chip {
@@ -411,8 +415,9 @@ h3 span {
   position: fixed;
   top: 30% !important;
   left: 50% !important;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-50%);
   max-width: 350px;
+  z-index: 9999;
 }
 
 #adminBtn-panel-pointer {
@@ -446,17 +451,21 @@ h3 span {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: -2;
+  z-index: 9998;
   visibility: hidden;
   backdrop-filter: blur(8px);
 }
 
 #adminPwdPanel {
-  position: relative;
+  position: fixed;
   visibility: hidden;
   display: block;
   text-align: center;
   min-width: 250px;
+  z-index: 9999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #passwdInput {
