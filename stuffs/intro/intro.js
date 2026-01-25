@@ -1,5 +1,10 @@
+/* Updated intro.js
+   - Prevents looping past the last image.
+   - Adds a "jump to start" button (top-right) that brings user back to the first image and re-applies blur.
+   - Keeps existing behavior for visible (TypeIt-configured) messages.
+*/
+
 document.addEventListener("DOMContentLoaded", function () {
-    const SOUND_FILE = 'sfx-blipmale.wav';
 
     (function () {
         const STORAGE_KEY = 'cookie_consent_v1';
@@ -277,6 +282,42 @@ function showSlides(n) {
     btn.innerHTML = playSVG;
     slideContainer.appendChild(btn);
 
+    // --- New: Jump-to-start button (top-right) ---
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'jump-to-start';
+    resetBtn.title = 'Back to beginning';
+    // Simple icon (you can replace with SVG if desired)
+    resetBtn.innerHTML = '⤒';
+    slideContainer.appendChild(resetBtn);
+
+    resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Animate swap to first image
+        const firstSrc = slideSrcs[0];
+        if (firstSrc) {
+            fadeSwapImage(firstImg, firstSrc, 400);
+        }
+        // Reset state
+        currentSrcIndex = 0;
+        visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+        visibleIndex = -1;
+
+        // Re-apply blur and reset play button UI
+        firstImg.classList.add('blurred');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = playSVG;
+        btn.classList.remove('hidden');
+
+        // hide any banner
+        const banner = slideContainer.querySelector('.play-bottom-banner');
+        if (banner) {
+            banner.classList.remove('visible');
+            const textEl = banner.querySelector('.banner-text');
+            if (textEl) textEl.textContent = '';
+        }
+    });
+
     // Fade-swap helper for image swapping (keeps transition smooth)
     async function fadeSwapImage(imgEl, targetSrc, duration) {
         if (imgEl.dataset.animating === '1') return;
@@ -313,33 +354,63 @@ function showSlides(n) {
     // Collect all slide image sources (document order)
     const slideImgs = Array.from(document.querySelectorAll('.mySlides img'));
     const slideSrcs = slideImgs.map(img => img.src);
+    const sound_file = new Audio('sfx-blipmale.wav');
 
-    //tiap array didalam messagesByImage artinya array itu simpan semua teks untuk gambar itu saja
-    //ingat bahwa text yang gak di config dengan typeIt gak akan muncul hehehehe...
+    // messagesByImage: each inner array stores messages for that image.
+    // Only entries that are objects with non-empty options will be shown (per earlier requirement).
     const messagesByImage = [
-        //kota_awal
         [
-            { text: 'Sudah terpinggir kita terdesak', options: { speed: 40 } },
-            { text: 'Sampailah akhirnya', options: { speed: 40 } },
-            { text: 'Di kota retak ini', options: { speed: 67 } }
+            { text: '. . .', options: { speed: 167, afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
         ],
-        //kota_retak
         [
-            { text: 'Ini caption pertama untuk gambar kedua', options: { speed: 50 } },
-            { text: 'Lanjutkan klik untuk pesan kedua', options: { speed: 50 } },
-            { text: 'Pesan ketiga untuk gambar kedua', options: { speed: 45 } }
+            { text: 'Lihatlah baik-baik', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
         ],
-
+        [
+            { text: 'Ini dunia yang rapuh', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Dibangun dari manis… dan runtuh oleh waktu', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Kau tidak berada di sini', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Tapi kau melihat semuanya', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Artinya. . .', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Kau mendengarku', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Aku bukan bagian dari dunia ini', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Aku tidak dipanggang. Tidak dibentuk', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Aku hanya… terjaga', options: { speed: 140, afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Namun untuk menceritakan segalanya padamu. . .', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Anda perlu memilih wujudku', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Bukan karena tubuh', options: { speed: 140, afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Bukan karena suara', options: { speed: 140, afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Namun karena cara dunia cookies akan mengingatku', options: { speed: 140, afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Setelah kamu memilih. . .', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Saya akan menjelaskan tentang dunia ini', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Kenapa cookie diciptakan', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Kenapa mereka bisa hancur', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Dan kenapa aku masih ada', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ],
+        [
+            { text: 'Pilihlah', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Setelah itu. . .', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } },
+            { text: 'Cerita sebenarnya baru akan dimulai', options: { afterStep: function (step, instance) { sound_file.currentTime = 0; sound_file.play() } } }
+        ]
     ];
 
-    // fallback/default messages if a particular image has no messages array
-    const defaultMessages = []; // keep empty since only configured messages should appear
+    const defaultMessages = [];
 
-    // state: which slide src index is currently shown in firstImg
     let currentSrcIndex = slideSrcs.indexOf(firstImg.src);
     if (currentSrcIndex === -1) currentSrcIndex = 0;
 
-    // get messages for the current image (or fallback)
+    let visibleMessages = [];
+    let visibleIndex = -1;
+
     function getMessagesForIndex(idx) {
         if (Array.isArray(messagesByImage[idx]) && messagesByImage[idx].length > 0) {
             return messagesByImage[idx];
@@ -347,66 +418,251 @@ function showSlides(n) {
         return defaultMessages;
     }
 
-    let currentMessages = getMessagesForIndex(currentSrcIndex);
-    let clickWithinImage = 0; // counts clicks while on the current image
+    function buildVisibleMessagesFor(index) {
+        const all = getMessagesForIndex(index);
+        const visible = [];
+        for (const entry of all) {
+            const normalized = normalizeMessageEntry(entry);
+            if (normalized.options && Object.keys(normalized.options).length > 0) {
+                visible.push(normalized);
+            }
+        }
+        return visible;
+    }
 
-    // If the user clicks the image itself we also trigger the same behaviour as the button
+    visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+    visibleIndex = -1;
+
     firstImg.addEventListener('click', (e) => {
         btn.click();
     });
+    function showVisibleMessageAtIndex(idx) {
+        if (!Array.isArray(visibleMessages) || visibleMessages.length === 0) return;
+        if (idx < 0) idx = 0;
+        if (idx >= visibleMessages.length) idx = visibleMessages.length - 1;
 
-    // Ensure the play button toggles blur removal and cycles text + image based on clicks.
+        const entry = visibleMessages[idx];
+        const banner = slideContainer.querySelector('.play-bottom-banner');
+        const textEl = banner && banner.querySelector('.banner-text');
+        if (!textEl) return;
+
+        startTypeItOnElement(textEl, entry.text, entry.options).catch(() => { });
+        banner.classList.add('visible');
+        visibleIndex = idx;
+    }
+
+    function showAssistantChoices(onChoose) {
+        if (document.querySelector('.assistant-overlay')) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'assistant-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.style.cssText = [
+            'position:fixed',
+            'inset:0',
+            'display:flex',
+            'align-items:center',
+            'justify-content:center',
+            'background:rgba(0,0,0,0.6)',
+            'z-index:20000',
+            'padding:20px',
+            'box-sizing:border-box'
+        ].join(';');
+
+        const panel = document.createElement('div');
+        panel.className = 'assistant-panel';
+        panel.style.cssText = [
+            'max-width:920px',
+            'width:100%',
+            'display:grid',
+            'grid-template-columns:1fr 1fr',
+            'gap:18px',
+            'align-items:start'
+        ].join(';');
+
+        function createCard(id, imgSrc, title) {
+            const card = document.createElement('button');
+            card.className = 'assistant-card';
+            card.type = 'button';
+            card.dataset.choice = id;
+            card.style.cssText = [
+                'background:#111',
+                'color:#fff',
+                'border-radius:12px',
+                'padding:14px',
+                'text-align:center',
+                'border:0',
+                'cursor:pointer',
+                'display:flex',
+                'flex-direction:column',
+                'align-items:center',
+                'gap:12px',
+                'min-height:240px'
+            ].join(';');
+
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = title;
+            img.style.cssText = [
+                'width:120px',
+                'height:120px',
+                'object-fit:cover',
+                'border-radius:8px',
+                'box-shadow:0 8px 28px rgba(0,0,0,0.4)'
+            ].join(';');
+
+            const h = document.createElement('div');
+            h.textContent = title;
+            h.style.cssText = [
+                'font-size:18px',
+                'font-weight:700'
+            ].join(';');
+
+            const subtitle = document.createElement('div');
+            subtitle.textContent = 'Click to select';
+            subtitle.style.cssText = 'font-size:13px; opacity:0.85;';
+
+            card.appendChild(img);
+            card.appendChild(h);
+            card.appendChild(subtitle);
+
+            card.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    card.click();
+                }
+            });
+
+            return card;
+        }
+
+        const femaleImg = 'cewek_normal.png';
+        const maleImg = 'cowok_normal.png';
+
+        const femaleCard = createCard('female', femaleImg, 'Female Assistant');
+        const maleCard = createCard('male', maleImg, 'Male Assistant');
+
+        panel.appendChild(femaleCard);
+        panel.appendChild(maleCard);
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+
+        function cleanup() {
+            try {
+                overlay.remove();
+            } catch (e) { }
+        }
+
+        // handle selection
+        femaleCard.addEventListener('click', () => {
+            cleanup();
+            if (typeof onChoose === 'function') onChoose('female');
+        });
+        maleCard.addEventListener('click', () => {
+            cleanup();
+            if (typeof onChoose === 'function') onChoose('male');
+        });
+
+        // Close on Escape or backdrop click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) cleanup();
+        });
+        window.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape') {
+                cleanup();
+                window.removeEventListener('keydown', escHandler);
+            }
+        });
+
+        // focus first card
+        femaleCard.focus();
+    }
+
+    // Replace the click handler: unblur click shows first visible message without counting;
+    // subsequent clicks advance through visibleMessages only. When visibleMessages exhausted, advance image.
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
 
-        // Remove blur if present (first interaction)
+        // If the image is still blurred -> treat this click as "unblur" only:
         if (firstImg.classList.contains('blurred')) {
+            // Unblur and show the FIRST visible entry (index 0) without incrementing any counters.
             firstImg.classList.remove('blurred');
             btn.setAttribute('aria-pressed', 'true');
             btn.innerHTML = pauseSVG;
-            // keep the button visible so user can continue clicking
-        }
 
-        // ensure banner exists
-        if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
+            // prepare banner and show the first visible message (index 0), if any
+            if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
+            // rebuild visibleMessages in case they changed
+            visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+            visibleIndex = -1;
 
-        const banner = slideContainer.querySelector('.play-bottom-banner');
-        const textEl = banner && banner.querySelector('.banner-text');
-        if (!textEl) {
+            if (visibleMessages.length > 0) {
+                showVisibleMessageAtIndex(0);
+            }
+            // important: do NOT advance image or increment any counter here
             return;
         }
 
-        // increment click count for this image
-        clickWithinImage++;
+        // Normal click behavior when already un-blurred:
+        // Move to the next visible message (if any)
+        if (!Array.isArray(visibleMessages)) visibleMessages = [];
+        const nextIndex = visibleIndex + 1;
 
-        // message index cycles through currentMessages
-        const messageIndex = (clickWithinImage - 1) % currentMessages.length;
-        const message = currentMessages[messageIndex];
-
-        // normalize and decide whether this entry has TypeIt configuration
-        const normalized = normalizeMessageEntry(message);
-        const hasTypeItConfig = normalized.options && Object.keys(normalized.options).length > 0;
-
-        if (hasTypeItConfig) {
-            // show with TypeIt using per-message options
-            startTypeItOnElement(textEl, normalized.text, normalized.options).catch(() => {});
-            banner.classList.add('visible');
+        if (nextIndex < visibleMessages.length) {
+            // show next visible message
+            showVisibleMessageAtIndex(nextIndex);
         } else {
-            // NO TypeIt config -> do NOT show plain text in the banner.
-            // Ensure any running TypeIt instance is destroyed and hide the banner.
-            try {
-                if (currentTypeIt && typeof currentTypeIt.destroy === 'function') currentTypeIt.destroy();
-            } catch (err) { }
-            currentTypeIt = null;
-            textEl.textContent = '';
-            banner.classList.remove('visible');
-        }
+            // we've reached the end of visible messages for this image -> advance to next image
+            const nextSrcIndex = (currentSrcIndex + 1);
+            // If nextSrcIndex is beyond the last index, DO NOT loop: stop advancing.
+            if (nextSrcIndex >= slideSrcs.length) {
+                // At last image already and its messages are exhausted — show assistant choice overlay
+                const banner = slideContainer.querySelector('.play-bottom-banner');
+                if (banner) banner.classList.remove('visible');
 
-        // when clickWithinImage reaches the length of the currentMessages array,
-        // we advance to the next image and switch to that image's messages.
-        if (clickWithinImage >= currentMessages.length) {
-            // advance image index
-            const nextSrcIndex = (currentSrcIndex + 1) % slideSrcs.length;
+                // showAssistantChoices should be defined (see helper added earlier)
+                showAssistantChoices(function (choice) {
+                    // Save the user's choice
+                    try { localStorage.setItem('assistant_choice', choice); } catch (e) { }
+
+                    // Optional: show confirmation text in the banner
+                    if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
+                    const b = slideContainer.querySelector('.play-bottom-banner');
+                    if (b) {
+                        const t = b.querySelector('.banner-text');
+                        if (t) t.textContent = (choice === 'female')
+                            ? 'You picked the female assistant'
+                            : 'You picked the male assistant';
+                        b.classList.add('visible');
+                    }
+
+                    // OPTIONAL: return the user to the first slide and re-apply blur.
+                    // Remove or comment this block if you want to keep the user on the last slide.
+                    const firstSrc = slideSrcs[0];
+                    if (firstSrc) {
+                        fadeSwapImage(firstImg, firstSrc, 400);
+                    }
+                    currentSrcIndex = 0;
+                    visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+                    visibleIndex = -1;
+
+                    // re-apply blur and reset play button state
+                    firstImg.classList.add('blurred');
+                    btn.setAttribute('aria-pressed', 'false');
+                    btn.innerHTML = playSVG;
+                    btn.classList.remove('hidden');
+
+                    // hide confirmation after a short delay
+                    setTimeout(() => {
+                        const bb = slideContainer.querySelector('.play-bottom-banner');
+                        if (bb) bb.classList.remove('visible');
+                    }, 2000);
+                });
+
+                return;
+            }
+
             const targetSrc = slideSrcs[nextSrcIndex];
 
             // swap image visually
@@ -414,10 +670,10 @@ function showSlides(n) {
 
             // update state for new image
             currentSrcIndex = nextSrcIndex;
-            currentMessages = getMessagesForIndex(currentSrcIndex);
+            visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+            visibleIndex = -1;
 
-            // reset click counter for the new image
-            clickWithinImage = 0;
+            // Do NOT auto-show the first message for the new image (user must click).
         }
     });
 
@@ -427,30 +683,75 @@ function showSlides(n) {
    (registerPlayButtonForFirstSlide). Place it near the play button handlers. */
 
 function showBottomBanner(container, text) {
-    // container should be the .mySlides element (positioned)
-    if (!container) return;
-    let banner = container.querySelector('.play-bottom-banner');
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.className = 'play-bottom-banner';
-        banner.innerHTML = `
-      <div class="banner-text"></div>
-      <button class="banner-close" aria-label="Close banner">&times;</button>
+  // container should be the .mySlides element (positioned)
+  if (!container || !(container instanceof Element)) {
+    container = document.body;
+  }
+
+  // Try to find banner inside the container (keeps compatibility with slideContainer.querySelector)
+  let banner = container.querySelector('.play-bottom-banner');
+
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'play-bottom-banner';
+    banner.setAttribute('role', 'region');
+    banner.setAttribute('aria-live', 'polite');
+    banner.style.cssText = [
+      'position:fixed',            // fixed to viewport so won't be clipped
+      'left:0',
+      'right:0',
+      'bottom:0',
+      'margin:0 auto',
+      'box-sizing:border-box',
+      'width:100%',
+      'max-width:100vw',
+      'background:rgba(0,0,0,0.6)',
+      'color:#fff',
+      'padding:10px 16px',
+      'text-align:center',
+      'opacity:0',
+      'transform:translateY(8px)',
+      'transition:opacity 220ms ease, transform 220ms ease',
+      'z-index:99999',
+      'display:flex',
+      'flex-direction:column',
+      'align-items:center',
+      'justify-content:flex-start',
+      'min-height:48px',
+      'max-height:40vh',
+      'overflow:auto',
+      '-webkit-overflow-scrolling:touch'
+    ].join(';');
+
+    banner.innerHTML = `
+      <div class="banner-text" aria-atomic="true" style="margin:0; width:100%;"></div>
+      <button class="banner-close" aria-label="Close banner" style="
+        position:absolute; right:8px; top:8px; background:transparent; border:0; color:#fff; font-size:18px; cursor:pointer;">&times;</button>
     `;
-        container.appendChild(banner);
 
-        const closeBtn = banner.querySelector('.banner-close');
-        closeBtn.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            banner.classList.remove('visible');
-            setTimeout(() => { if (banner && banner.parentElement) banner.parentElement.removeChild(banner); }, 260);
-        });
-    }
+    // Append banner as child of the container so slideContainer.querySelector finds it,
+    // but since it is position:fixed it will be anchored to the viewport.
+    container.appendChild(banner);
 
-    const textEl = banner.querySelector('.banner-text');
-    textEl.textContent = text || '';
-
-    requestAnimationFrame(() => {
-        banner.classList.add('visible');
+    const closeBtn = banner.querySelector('.banner-close');
+    closeBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      banner.classList.remove('visible');
+      // remove after transition to keep DOM clean
+      setTimeout(() => { try { banner.remove(); } catch (e) { } }, 260);
     });
+  }
+
+  const textEl = banner.querySelector('.banner-text');
+  // Set immediate fallback text (TypeIt will overwrite when typing starts)
+  textEl.textContent = text || '';
+
+  // Make visible (use RAF to trigger transition)
+  requestAnimationFrame(() => {
+    banner.classList.add('visible');
+    banner.style.opacity = '1';
+    banner.style.transform = 'translateY(0)';
+  });
+
+  return banner;
 }
