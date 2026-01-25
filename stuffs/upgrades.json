@@ -37,10 +37,62 @@
         "Does": "Clicks at a rate of 4clicks/second",
         "Speed": 4
       },
-      "3333 Fingers": {
+      "666 Fingers": {
         "Price": 10000,
         "Does": "Clicks 15 times a second",
         "Speed": 15
+      },
+      "Avalokiteshvara": {
+        "Price": 213852,
+        "Does": "Clicks 67 times a second",
+        "Speed": 67
+      },
+      "Quadrillion Fingies": {
+        "Price": 6666666,
+        "Does": "Clicks 1000 times a second (Would cause lag so just make the interval 1ms but keep the effect)",
+        "Speed": 1000
+      },
+      "Decillion Fingies": {
+        "Price": 87923409,
+        "Does": "Simulates 99999 clicks a second",
+        "Speed": 99999
+      }
+    }
+  },
+
+  "Strength": {
+    "Description": "More cookies per click.",
+    "Icon": "./stuffs/svgs/strength.svg",
+    "Levels": {
+      "Twig": {
+        "Price": 100,
+        "Does": "+2 Points / click",
+        "Points": 2
+      },
+      "Gym Bro": {
+        "Price": 500,
+        "Does": "+5 Points / click",
+        "Points": 5
+      },
+      "Rhino": {
+        "Price": 2000,
+        "Does": "+12 Points / click",
+        "Points": 12
+      },
+      "Megaladon": {
+        "Price": 15000,
+        "Does": "+28 Points / click",
+        "Points": 28
+      },
+      "Nuke": {
+        "Price": 67000,
+        "Does": "+67 Points / click",
+        "Points": 67
+      },
+      "Mars": {
+        "Price": 400000,
+        "Does": "+160 Points / click",
+        "Points": 160
       }
     }
   }

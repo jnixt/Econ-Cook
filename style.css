@@ -561,7 +561,6 @@ input[type="number"] {
   height: 325px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
 }
 
@@ -579,6 +578,7 @@ input[type="number"] {
 }
 
 .resep-container .ingredients li {
+  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
