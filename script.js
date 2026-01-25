@@ -112,19 +112,19 @@ document.addEventListener("DOMContentLoaded", function () {
   function applyUpgrade(category, level, levelData) {
     const giantCookie = document.getElementById("giantCookie");
     if (category === "Features") {
-        if (level === "Base") {
-            if (!document.querySelector(".giantCookieEyes")) {
-                const eyes = document.createElement("div");
-                eyes.className = "giantCookieEyes";
-                eyes.innerHTML = `<div id="left-eye"></div><div id="right-eye"></div>`;
-                giantCookie.appendChild(eyes);
-            }
-            if (!document.getElementById("giantCookieMouth")) {
-                const mouth = document.createElement("div");
-                mouth.id = "giantCookieMouth";
-                giantCookie.appendChild(mouth);
-            }
-        } else if (level === "Extra") {
+        if (!document.querySelector(".giantCookieEyes")) {
+            const eyes = document.createElement("div");
+            eyes.className = "giantCookieEyes";
+            eyes.innerHTML = `<div id="left-eye"></div><div id="right-eye"></div>`;
+            giantCookie.appendChild(eyes);
+        }
+        if (!document.getElementById("giantCookieMouth")) {
+            const mouth = document.createElement("div");
+            mouth.id = "giantCookieMouth";
+            giantCookie.appendChild(mouth);
+        }
+
+        if (level === "Extra") {
             document.querySelectorAll('.cookie-chip-upgrade').forEach(e => e.remove());
             const chipsAmount = getRandomInt(10, 20);
             for (let j = 0; j < chipsAmount; j++) {
@@ -145,12 +145,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 giantCookie.appendChild(chip);
             }
         } else if (level === "God") {
-            const hair = document.getElementById("giantCookieHair");
-            hair.innerHTML = `<svg width="75" height="100">
-              <path d="M 50 90 C 45 70, 40 50, 45 35 C 50 20, 75 25, 70 45 C 65 60, 45 55, 52 40"
-                  stroke="rgba(0, 0, 0, 0.8)" stroke-width="6" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`;
+            if (!document.getElementById("giantCookieHair")){
+              const hair = document.createElement("div");
+              hair.id = "giantCookieHair"
+              hair.innerHTML = `<svg width="75" height="100">
+                <path d="M 50 90 C 45 70, 40 50, 45 35 C 50 20, 75 25, 70 45 C 65 60, 45 55, 52 40"
+                    stroke="rgba(0, 0, 0, 0.8)" stroke-width="6" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`;
+              giantCookie.appendChild(hair);
+            }
         }
     } else if (category === "Autoclicker") {
         if (window.autoclickerUpgradeInterval) {
@@ -247,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="upgrade-details">
                             <p>Max level reached!</p>
                         </div>
-                        <div class="upgrade-level-indicator">${totalLevels}/${totalLevels}</div>
+                        <div class="upgrade-level-indicator" style="transform: scaleY(1.2); font-size: 2rem;">${nextLevelIndex}</div>
                     </div>
                 `;
             }
@@ -642,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(panel);
 
       content.innerHTML = `
-  <h3 style = "text-align:center; margin-bottom: 6px;" > Admino Panelo.</h3>
+  <h3 style = "text-align:center; margin-bottom: 6px; letter-spacing: 1px;" ><i class="fa-tools fa-solid icon"></i> Admino Panelo.</h3>
         <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid icon"></i></button>
         <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid icon"></i></button>
         <button id="pointser" class="gC-btn">
