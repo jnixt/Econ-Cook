@@ -707,30 +707,75 @@ function showSlides(n) {
    (registerPlayButtonForFirstSlide). Place it near the play button handlers. */
 
 function showBottomBanner(container, text) {
-    // container should be the .mySlides element (positioned)
-    if (!container) return;
-    let banner = container.querySelector('.play-bottom-banner');
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.className = 'play-bottom-banner';
-        banner.innerHTML = `
-      <div class="banner-text"></div>
-      <button class="banner-close" aria-label="Close banner">&times;</button>
+  // container should be the .mySlides element (positioned)
+  if (!container || !(container instanceof Element)) {
+    container = document.body;
+  }
+
+  // Try to find banner inside the container (keeps compatibility with slideContainer.querySelector)
+  let banner = container.querySelector('.play-bottom-banner');
+
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'play-bottom-banner';
+    banner.setAttribute('role', 'region');
+    banner.setAttribute('aria-live', 'polite');
+    banner.style.cssText = [
+      'position:fixed',            // fixed to viewport so won't be clipped
+      'left:0',
+      'right:0',
+      'bottom:0',
+      'margin:0 auto',
+      'box-sizing:border-box',
+      'width:100%',
+      'max-width:100vw',
+      'background:rgba(0,0,0,0.6)',
+      'color:#fff',
+      'padding:10px 16px',
+      'text-align:center',
+      'opacity:0',
+      'transform:translateY(8px)',
+      'transition:opacity 220ms ease, transform 220ms ease',
+      'z-index:99999',
+      'display:flex',
+      'flex-direction:column',
+      'align-items:center',
+      'justify-content:flex-start',
+      'min-height:48px',
+      'max-height:40vh',
+      'overflow:auto',
+      '-webkit-overflow-scrolling:touch'
+    ].join(';');
+
+    banner.innerHTML = `
+      <div class="banner-text" aria-atomic="true" style="margin:0; width:100%;"></div>
+      <button class="banner-close" aria-label="Close banner" style="
+        position:absolute; right:8px; top:8px; background:transparent; border:0; color:#fff; font-size:18px; cursor:pointer;">&times;</button>
     `;
-        container.appendChild(banner);
 
-        const closeBtn = banner.querySelector('.banner-close');
-        closeBtn.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            banner.classList.remove('visible');
-            setTimeout(() => { if (banner && banner.parentElement) banner.parentElement.removeChild(banner); }, 260);
-        });
-    }
+    // Append banner as child of the container so slideContainer.querySelector finds it,
+    // but since it is position:fixed it will be anchored to the viewport.
+    container.appendChild(banner);
 
-    const textEl = banner.querySelector('.banner-text');
-    textEl.textContent = text || '';
-
-    requestAnimationFrame(() => {
-        banner.classList.add('visible');
+    const closeBtn = banner.querySelector('.banner-close');
+    closeBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      banner.classList.remove('visible');
+      // remove after transition to keep DOM clean
+      setTimeout(() => { try { banner.remove(); } catch (e) { } }, 260);
     });
+  }
+
+  const textEl = banner.querySelector('.banner-text');
+  // Set immediate fallback text (TypeIt will overwrite when typing starts)
+  textEl.textContent = text || '';
+
+  // Make visible (use RAF to trigger transition)
+  requestAnimationFrame(() => {
+    banner.classList.add('visible');
+    banner.style.opacity = '1';
+    banner.style.transform = 'translateY(0)';
+  });
+
+  return banner;
 }
