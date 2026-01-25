@@ -1,13 +1,27 @@
 :root {
   --geist-mono: "Geist Mono", monospace;
   --font-awesome: "Font Awesome 5 Free", var(--geist-mono);
-  --text-color: #cad3f5;
-  --bg-color: #24273a;
-  --accent-color: #ab6c1f;
+  --accent-color: #8caaee;
   --liquid-glass-bg: rgba(255, 255, 255, 0.05);
   --liquid-glass-bd: 1px solid rgba(255, 255, 255, 0.08);
-  --liquid-glass-bs: 0 2px 10px rgba(0, 0, 0, 0.5);
   --liquid-glass-bf: blur(12px) saturate(160%);
+  --liquid-glass-bs: 0 2px 10px rgba(0, 0, 0, 0.5);
+  --rosewater: rgb(244, 219, 214); /* #f4dbd6 */
+  --flamingo: rgb(240, 198, 198); /* #f0c6c6 */
+  --pink: rgb(245, 189, 230); /* #f5bde6 */
+  --mauve: rgb(198, 160, 246); /* #c6a0f6 */
+  --red: rgb(243, 139, 168); /* #f38ba8 */
+  --maroon: rgb(238, 153, 160); /* #ee99a0 */
+  --peach: rgb(245, 169, 127); /* #f5a97f */
+  --yellow: rgb(238, 212, 159); /* #eed49f */
+  --green: rgb(166, 227, 161);  /* #a6da95 */
+  --teal: rgb(139, 213, 202); /* #8bd5ca */
+  --sky: rgb(145, 215, 227); /* #91d7e3 */
+  --sapphire: rgb(125, 196, 228); /* #7dc4e4 */
+  --blue: rgb(138, 173, 244); /* #8aadf4 */
+  --lavender: rgb(183, 189, 248); /* #b7bdf8 */
+  --text: rgb(202, 211, 245); /* #cad3f5 */
+  --base: rgb(36, 39, 58) /* #24273a */;
 }
 
 * {
@@ -15,12 +29,12 @@
   padding: 0;
   font-family: var(--geist-mono);
   font-weight: 400;
-  color: var(--text-color);
+  color: var(--text);
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--bg-color);
+  background-color: var(--base);
   min-height: 100vh;
   position: relative;
 }
@@ -70,6 +84,7 @@ input:focus {
   box-shadow: var(--liquid-glass-bs);
   backdrop-filter: var(--liquid-glass-bf);
   border-radius: 12px;
+  z-index: 2;
 }
 
 .top-bar .nav-center a {
@@ -146,12 +161,17 @@ a {
   box-shadow: var(--liquid-glass-bs);
   backdrop-filter: var(--liquid-glass-bf);
   border-radius: 12px;
-  padding: 12px;
+  padding: 8px;
   display: none;
   position: absolute;
   visibility: hidden;
   max-width: 400px;
   pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+
+.panel h3 {
+  font-family: var(--font-awesome);
 }
 
 .panel-content {
@@ -206,13 +226,6 @@ h3 {
   font-family: var(--geist-mono);
 }
 
-h3 span {
-  font-family: var(--geist-mono);
-  color: var(--accent-color);
-  font-style: italic;
-  font-size: 1.05em;
-  font-weight: 700;
-}
 
 .fa-cookie-bite {
   text-shadow:
@@ -237,7 +250,7 @@ h3 span {
 
 .cookie {
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: #ab6c1f;
   box-shadow:
     0px -1px 20px rgba(0, 0, 0, 0.8),
     0px 0px 12px rgba(244, 140, 0, 0.6);
@@ -306,30 +319,6 @@ h3 span {
   top: 64%;
   left: 50%;
   transform: translateX(-50%);
-}
-
-#giantCookieHands,
-#giantCookieFeet {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-#giantCookie:active #giantCookieHands,
-#giantCookie:active #giantCookieFeet {
-  transform: scale(1.0526) rotate(-360deg);
-}
-
-.giantCookieHands > div,
-.giantCookieFeet > div {
-  position: absolute;
-  width: 12px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 #left-hand {
@@ -407,12 +396,21 @@ h3 span {
   letter-spacing: 2px;
   width: fit-content;
   font-family: var(--font-awesome);
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: transform 0.3s ease;
+}
+
+.gc-btn .icon {
+  transition: transform 0.4 ease, color 0.3 ease;
 }
 
 .gC-btn:hover {
   outline: none;
   transform: scale(1.15);
+}
+
+.gc-btn .icon:hover {
+  transform: translateY(-2px) scale(1.05);
+  color: var(--accent-color);
 }
 
 .plused-points {
@@ -447,7 +445,7 @@ h3 span {
   left: 50% !important;
   transform: translateX(-50%) translateY(-50%);
   max-width: 350px;
-  z-index: 9999;
+  z-index: 3;
 }
 
 #adminBtn-panel-pointer {
@@ -481,7 +479,7 @@ h3 span {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9998;
+  z-index: 3;
   visibility: hidden;
   backdrop-filter: blur(8px);
 }
@@ -492,7 +490,7 @@ h3 span {
   display: block;
   text-align: center;
   min-width: 250px;
-  z-index: 9999;
+  z-index: 4;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -568,7 +566,7 @@ input[type=number] {
   border: var(--liquid-glass-bd);
   box-shadow: var(--liquid-glass-bs);
   cursor: pointer;
-  transition: transform 0.3s ease, opacity 0.5s ease-out, transform 0.4s ease-out;
+  transition: opacity 0.4s ease-out, transform 0.3s ease;
   text-align: left;
   max-width: 250px;
   font-weight: 700;
@@ -602,6 +600,10 @@ input[type=number] {
   text-align: center;
   font-size: 1.1rem;
   margin-bottom: 8px;
+}
+
+.resep-container img {
+  border: none;
 }
 
 .resep-container:hover {
@@ -680,7 +682,7 @@ li {
   backdrop-filter: blur(16px);
   border: var(--liquid-glass-bd);
   box-shadow: var(--liquid-glass-bs);
-  z-index: 9000;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -805,7 +807,7 @@ li {
   text-align: left;
   font-weight: 600;
   font-size: 1.2em;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 
@@ -888,7 +890,58 @@ li {
   left: calc(100% - 70px);
 }
 
-.panel p {
-  line-height: 1.02rem;
-  font-size: 1rem;
+.upgrade-item {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  border: var(--liquid-glass-bd);
+  backdrop-filter: var(--liquid-glass-bf);
+  box-shadow: var(--liquid-glass-bs);
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 10px;
+  margin-bottom: 8px;
+  width: 350px;
+  cursor: pointer;
+}
+
+.upgrade-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 4px;
+}
+
+.upgrade-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.upgrade-details {
+  flex-grow: 1;
+}
+
+.upgrade-level-indicator {
+  font-size: 0.9em;
+  color: #8caaee;
+}
+
+.price-container {
+  margin-top: 4px;
+}
+
+.cookie-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.price-value.affordable {
+    color: var(--green);
+}
+
+.price-value.unaffordable {
+    color: var(--red);
+}
+
+.upgrade-item.insufficient {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

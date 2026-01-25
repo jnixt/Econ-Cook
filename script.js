@@ -26,20 +26,20 @@ document.addEventListener("DOMContentLoaded", function () {
     let finalPoints = points;
     if (points >= 1000 && points < 1000000) {
       finalPoints = (points / 1000).toFixed(1) + "K"
-    } else if (points >= 1000000 && points < 1000000000) {
-      finalPoints = (points / 1000000).toFixed(1) + "M"
-    } else if (points >= 1000000000 && points < 1000000000000) {
-      finalPoints = (points / 1000000000).toFixed(1) + "B"
-    } else if (points >= 1000000000000 && points < 1000000000000000) {
-      finalPoints = (points / 1000000000000000).toFixed(1) + "T"
-    } else if (points >= 1000000000000000 && points < 1000000000000000000) {
-      finalPoints = (points / 1000000000000000000).toFixed(1) + "Qa"
-    } else if (points >= 1000000000000000000 && points < 1000000000000000000000) {
-      finalPoints = (points / 1000000000000000000).toFixed(1) + "Qi"
-    } else if (points >= 1000000000000000000000 && points < 1000000000000000000000000) {
-      finalPoints = (points / 1000000000000000000000000).toFixed(1) + "Sx"
-    } else if (points >= 1000000000000000000000000 && points < 1e27) {
-      finalPoints = (points / 1000000000000000000000000).toFixed(1) + "Sp"
+    } else if (points >= 1e3 && points < 1e6) {
+      finalPoints = (points / 1e3).toFixed(1) + "M"
+    } else if (points >= 1e6 && points < 1e9) {
+      finalPoints = (points / 1e6).toFixed(1) + "B"
+    } else if (points >= 1e9 && points < 1e12) {
+      finalPoints = (points / 1e9).toFixed(1) + "T"
+    } else if (points >= 1e12 && points < 1e15) {
+      finalPoints = (points / 1e12).toFixed(1) + "Qa"
+    } else if (points >= 1e15 && points < 1e18) {
+      finalPoints = (points / 1e18).toFixed(1) + "Qi"
+    } else if (points >= 1e21 && points < 1e24) {
+      finalPoints = (points / 1e21).toFixed(1) + "Sx"
+    } else if (points >= 1e24 && points < 1e27) {
+      finalPoints = (points / 1e24).toFixed(1) + "Sp"
     } else if (points >= 1e27 && points < 1e30) {
       finalPoints = (points / 1e27).toFixed(1) + "Oc"
     } else if (points >= 1e30 && points < 1e33) {
@@ -94,6 +94,190 @@ document.addEventListener("DOMContentLoaded", function () {
     return finalPoints;
   }
 
+  async function getUpgrades() {
+    try {
+      const response = await fetch("./stuffs/upgrades.json");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching upgrades:", error);
+      return null;
+    }
+  }
+
+  let purchasedUpgrades = JSON.parse(localStorage.getItem('purchasedUpgrades')) || {};
+
+  function applyUpgrade(category, level, levelData) {
+    const giantCookie = document.getElementById("giantCookie");
+    if (category === "Features") {
+        if (level === "Base") {
+            if (!document.querySelector(".giantCookieEyes")) {
+                const eyes = document.createElement("div");
+                eyes.className = "giantCookieEyes";
+                eyes.innerHTML = `<div id="left-eye"></div><div id="right-eye"></div>`;
+                giantCookie.appendChild(eyes);
+            }
+            if (!document.getElementById("giantCookieMouth")) {
+                const mouth = document.createElement("div");
+                mouth.id = "giantCookieMouth";
+                giantCookie.appendChild(mouth);
+            }
+        } else if (level === "Extra") {
+            document.querySelectorAll('.cookie-chip-upgrade').forEach(e => e.remove());
+            const chipsAmount = getRandomInt(10, 20);
+            for (let j = 0; j < chipsAmount; j++) {
+                const chip = document.createElement("div");
+                chip.className = "cookie-chip cookie-chip-upgrade";
+                const chipsWidth = getRandomInt(9, 31);
+                chip.style.width = chipsWidth + "px";
+                chip.style.height = chipsWidth + "px";
+                const cookieRadius = giantCookie.offsetWidth / 2;
+                const chipRadius = chipsWidth / 2;
+                const maxDistance = cookieRadius - chipRadius;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.sqrt(Math.random()) * maxDistance;
+                const x = cookieRadius + distance * Math.cos(angle) - chipRadius;
+                const y = cookieRadius + distance * Math.sin(angle) - chipRadius;
+                chip.style.left = x + "px";
+                chip.style.top = y + "px";
+                giantCookie.appendChild(chip);
+            }
+        } else if (level === "God") {
+            const hair = document.getElementById("giantCookieHair");
+            hair.innerHTML = `<svg width="75" height="100">
+              <path d="M 50 90 C 45 70, 40 50, 45 35 C 50 20, 75 25, 70 45 C 65 60, 45 55, 52 40"
+                  stroke="rgba(0, 0, 0, 0.8)" stroke-width="6" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>`;
+        }
+    } else if (category === "Autoclicker") {
+        if (window.autoclickerUpgradeInterval) {
+            clearInterval(window.autoclickerUpgradeInterval);
+        }
+
+        if (levelData.Speed > 0) {
+            window.autoclickerUpgradeInterval = setInterval(() => {
+                const rect = giantCookie.getBoundingClientRect();
+                const x = rect.left + Math.random() * rect.width;
+                const y = rect.top + Math.random() * rect.height;
+                const clickEvent = new MouseEvent("click", {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: x,
+                    clientY: y,
+                });
+                giantCookie.dispatchEvent(clickEvent);
+            }, 1000 / levelData.Speed);
+        }
+    }
+  }
+
+  async function purchaseUpgrade(category, level, price) {
+    price = Number(price);
+    if (cookiePoints >= price) {
+        cookiePoints -= price;
+        localStorage.setItem("cookiePoints", cookiePoints);
+        pointsCounter.innerHTML =
+            '<i class="fa-solid fa-hand-pointer icon"></i> ' + formatPoints(cookiePoints);
+
+        const upgrades = await getUpgrades();
+        const categoryLevels = Object.keys(upgrades[category].Levels);
+        const levelIndex = categoryLevels.indexOf(level);
+
+        purchasedUpgrades[category] = levelIndex;
+        localStorage.setItem('purchasedUpgrades', JSON.stringify(purchasedUpgrades));
+
+        const storePanelContent = document.getElementById('storeBtn-panel-content');
+        if (storePanelContent) {
+            populateStorePanel(storePanelContent);
+        }
+
+        applyUpgrade(category, level, upgrades[category].Levels[level]);
+    } else {
+        alert("Not enough points!");
+    }
+  }
+
+  async function populateStorePanel(panelContent) {
+    const upgrades = await getUpgrades();
+    if (upgrades) {
+        let content = '<h3 style="text-align:center; margin-bottom: 6px; letter-spacing:1px;"><i class="fa-store fa-solid icon" style="margin-right: 4px;"></i>Store</h3>';
+        const cookieIcon = await fetch('./stuffs/svgs/realistic-cookie.svg').then(res => res.text());
+
+        for (const category in upgrades) {
+            const categoryUpgrades = upgrades[category];
+            const categoryLevels = Object.keys(categoryUpgrades.Levels);
+            const totalLevels = categoryLevels.length;
+
+            if (purchasedUpgrades[category] === undefined) {
+                purchasedUpgrades[category] = -1;
+            }
+
+            const currentLevelIndex = purchasedUpgrades[category];
+            const nextLevelIndex = currentLevelIndex + 1;
+
+            const iconSvg = await fetch(categoryUpgrades.Icon).then(res => res.text());
+
+            if (nextLevelIndex < totalLevels) {
+                const nextLevelName = categoryLevels[nextLevelIndex];
+                const nextLevelData = categoryUpgrades.Levels[nextLevelName];
+                const canAfford = cookiePoints >= nextLevelData.Price;
+                const priceColorClass = canAfford ? 'affordable' : 'unaffordable';
+                const itemClass = canAfford ? '' : 'insufficient';
+
+                content += `
+                    <button class="upgrade-item ${itemClass}" data-category="${category}" data-level="${nextLevelName}" data-price="${nextLevelData.Price}" title="${categoryUpgrades.Description}">
+                        <div class="upgrade-icon">${iconSvg}</div>
+                        <div class="upgrade-details">
+                            <div class="price-container">
+                              <p>${nextLevelName}</p>
+                              <div class="cookie-icon" style="display:inline-block; vertical-align: -4px;">${cookieIcon}</div>
+                              <span class="price-value ${priceColorClass}">${formatPoints(nextLevelData.Price)}</span>
+                            </div>
+                        </div>
+                        <div class="upgrade-level-indicator" style="transform: scaleY(1.2); font-size: 2rem;">${nextLevelIndex}</div>
+                    </button>
+                `;
+            } else {
+                 content += `
+                    <div class="upgrade-item" title="${categoryUpgrades.Description}">
+                        <div class="upgrade-icon">${iconSvg}</div>
+                        <div class="upgrade-details">
+                            <p>Max level reached!</p>
+                        </div>
+                        <div class="upgrade-level-indicator">${totalLevels}/${totalLevels}</div>
+                    </div>
+                `;
+            }
+        }
+        panelContent.innerHTML = content;
+
+        panelContent.querySelectorAll('.upgrade-item[data-price]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const ds = e.currentTarget.dataset;
+                purchaseUpgrade(ds.category, ds.level, ds.price)
+            });
+        });
+    }
+}
+
+  async function applyInitialUpgrades() {
+    const upgrades = await getUpgrades();
+    if (!upgrades) return;
+    for (const category in purchasedUpgrades) {
+        const levelIndex = purchasedUpgrades[category];
+        if (levelIndex > -1) {
+            const categoryLevels = Object.keys(upgrades[category].Levels);
+            const levelName = categoryLevels[levelIndex];
+            applyUpgrade(category, levelName, upgrades[category].Levels[levelName]);
+        }
+    }
+  }
+
+  applyInitialUpgrades();
+
 /*   function updateRecipeUnlockStates() {
     let unlockedCount = 0;
     recipeContainers.forEach((container, index) => {
@@ -126,7 +310,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  const cookieBackground = document.getElementById("cookie-bg");
+  const searchInput = document.getElementById("searchInput");
+  const resepContainers = document.querySelectorAll(".resep-container");
+
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase().replace(/ /g, "-");;
+
+    resepContainers.forEach((container) => {
+      const resepId = container.id.toLowerCase();
+      if (resepId.includes(searchTerm)) {
+        container.style.display = "block";
+      } else {
+        container.style.display = "none";
+      }
+    });
+  });
+
+  const cookieBackground = document.getElementById("cookie-bg")
   if (cookieBackground) {
     const cookies = [];
     const cookieAmount = getRandomInt(35, 67);
@@ -270,9 +470,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const plusedPoints = document.createElement("div");
       plusedPoints.className = "plused-points";
       plusedPoints.innerText = "+" + pointsPerClick;
-      plusedPoints.style.color = `${color[getRandomInt(0, 16)]} `
-      plusedPoints.style.left = `${e.clientX + window.scrollX} px`;
-      plusedPoints.style.top = `${e.clientY + window.scrollY} px`;
+      plusedPoints.style.color = `${color[getRandomInt(0, 15)]} `
+      plusedPoints.style.left = `${e.clientX + window.scrollX}px`;
+      plusedPoints.style.top = `${e.clientY + window.scrollY}px`;
       document.body.appendChild(plusedPoints);
       setTimeout(() => plusedPoints.remove(), 1000);
       setTimeout(() => giantCookie.classList.remove("rainbow-effect"), 8000);
@@ -344,28 +544,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       document.body.appendChild(panel);
 
+      if (butt.id === "storeBtn") {
+        populateStorePanel(content);
+      }
+
       setTimeout(() => {
         const panelRect = panel.getBoundingClientRect();
         const margin = 17;
 
         const hasSpaceAbove = buttonRect.top - panelRect.height - margin > 0;
         if (hasSpaceAbove) {
-          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin} px`;
+          panel.style.top = `${window.scrollY + buttonRect.top - panelRect.height - margin}px`;
           panel.classList.remove("pointer-bottom");
           panel.classList.add("pointer-top");
         } else {
-          panel.style.top = `${window.scrollY + buttonRect.bottom + margin} px`;
+          panel.style.top = `${window.scrollY + buttonRect.bottom + margin}px`;
           panel.classList.remove("pointer-top");
           panel.classList.add("pointer-bottom");
         }
 
         const centerX = window.scrollX + buttonRect.left + buttonRect.width / 2 - panelRect.width / 2;
-        panel.style.left = `${centerX} px`;
+        panel.style.left = `${centerX}px`;
 
         const buttonCenterX = window.scrollX + buttonRect.left + buttonRect.width / 2;
         const panelCenterX = centerX + panelRect.width / 2;
         const pointerOffsetX = buttonCenterX - panelCenterX;
-        panel.style.setProperty("--pointer-offset", `${pointerOffsetX} px`);
+        panel.style.setProperty("--pointer-offset", `${pointerOffsetX}px`);
 
         panel.style.visibility = "visible";
       }, 0);
@@ -438,11 +642,11 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(panel);
 
       content.innerHTML = `
-  < h3 style = "text-align:center; margin-bottom: 6px;" > Admino Panelo.</h3 >
+  <h3 style = "text-align:center; margin-bottom: 6px;" > Admino Panelo.</h3>
         <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid icon"></i></button>
         <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid icon"></i></button>
         <button id="pointser" class="gC-btn">
-          <i class="fa-solid fa-dollar-sign icon"></i><input id="typerist" type="number" placeholder="How many u want brah?">
+          <i class="fa-solid fa-dollar-sign icon"></i><input id="typerist" type="number" placeholder="How many u want brah?" style="border: none; padding: 2px;">
         </button>
 `;
 
@@ -463,7 +667,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ev.key === "Enter") {
           cookiePoints = parseInt(input.value) || 0;
           localStorage.setItem("cookiePoints", cookiePoints);
-          pointsCounter.innerHTML = `< i class="fa-solid fa-hand-pointer icon" ></i > ${formatPoints(cookiePoints)} `;
+          pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon" ></i> ${formatPoints(cookiePoints)} `;
           input.value = "";
           /* updateRecipeUnlockStates() */
         }
@@ -515,7 +719,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const closer = document.createElement("div");
       closer.id = page.id + "-closer";
       closer.className = "page-closer";
-      closer.innerHTML = `< i class="fa-solid fa-x icon" style = "color: #f38ba8;" ></i > `
+      closer.innerHTML = `<i class="fa-solid fa-x icon" style = "color: #f38ba8;"></i> `
       closer.style.position = "absolute";
       closer.style.cursor = "pointer";
       closer.style.top = "3%";
@@ -594,10 +798,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const message = isID ? ID_messages[index] : EN_messages[index];
 
       setTimeout(() => {
-        const panelId = butt.id ? `${butt.id} -panel` : `nameBtn - ${index} -panel`;
-        const panelContent = document.getElementById(`${panelId} -content`);
+        const panelId = `nameBtn - ${index} -panel`;
+        const panelContent = document.getElementById(`${panelId}-content`);
         if (panelContent) {
-          panelContent.innerHTML = `< p style = "white-space: pre-wrap;" > ${message}</p > `;
+          panelContent.innerHTML = `<p style = "white-space: pre-wrap;"> ${message}</p> `;
         }
       }, 0);
     })

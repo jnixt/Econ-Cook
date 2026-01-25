@@ -1,0 +1,47 @@
+{
+  "Features": {
+    "Description": "Adds features to the cookie.",
+    "Icon": "./stuffs/svgs/features.svg",
+    "Levels": {
+      "Base": {
+        "Price": 67,
+        "Does": "Adds eyes & mouth to the cookie."
+      },
+      "Extra": {
+        "Price": 250,
+        "Does": "Adds chocolate chips to the cookie."
+      },
+      "God": {
+        "Price": 1e99,
+        "Does": "Adds the singular strand of hair to the cookie."
+      }
+    }
+  },
+
+  "Autoclicker": {
+    "Description": "Autoclicks cookie.",
+    "Icon": "./stuffs/svgs/autoclicker.svg",
+    "Levels": {
+      "Index Finger": {
+        "Price": 150,
+        "Does": "Clicks the cookie at a rate of 0.5clicks/second",
+        "Speed": 0.5
+      },
+      "Typist": {
+        "Price": 600,
+        "Does": "Clicks at a rate of 2clicks/second",
+        "Speed": 2
+      },
+      "Quadrumanous": {
+        "Price": 2400,
+        "Does": "Clicks at a rate of 4clicks/second",
+        "Speed": 4
+      },
+      "3333 Fingers": {
+        "Price": 10000,
+        "Does": "Clicks 15 times a second",
+        "Speed": 15
+      }
+    }
+  }
+}
