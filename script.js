@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const color = ["#f4dbd6", "#f0c6c6", "#f5bde6", "#c6a0f6", "#ed8796", "#ee99a0", "#f5a97f", "#eed49f", "#a6da95", "#8bd5ca", "#91d7e3", "#7dc4e4", "#8aadf4", "#b7bdf8", "#cad3f5", "#b8c0e0"]
 
       const existingPlusedPoints = document.querySelectorAll('.plused-points');
-      if (existingPlusedPoints.length < 100) {
+      if (existingPlusedPoints.length < 67) {
         const plusedPoints = document.createElement("div");
         plusedPoints.className = "plused-points";
         plusedPoints.innerText = "+" + pointsPerClick;
@@ -725,6 +725,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const content = document.createElement("div");
       content.id = page.id + "-content";
       content.className = "page-content";
+      const img = butt.querySelector("img");
+      const title = butt.querySelector("h3");
+      const ingredients = butt.querySelector(".ingredients");
+
+      if (img) {
+        content.appendChild(img.cloneNode(true));
+      }
+      if (title) {
+        content.appendChild(title.cloneNode(true));
+      }
+      if (ingredients) {
+        content.appendChild(ingredients.cloneNode(true));
+      }
       page.appendChild(content);
 
       const closer = document.createElement("div");
@@ -734,7 +747,7 @@ document.addEventListener("DOMContentLoaded", function () {
       closer.style.position = "absolute";
       closer.style.cursor = "pointer";
       closer.style.top = "3%";
-      closer.style.right = "3%";
+      closer.style.right = "6%";
       page.appendChild(closer)
 
       document.body.appendChild(page);
@@ -840,8 +853,8 @@ window.addEventListener('assistantChoiceChanged', (ev) => {
   if (!giantCookie) return;
 
   const AVATAR_ID = 'assistant-avatar';
-  const FEMALE_SRC = 'cewek_normal.png';
-  const MALE_SRC = 'cowok_normal.png';
+  const FEMALE_SRC = 'stuffs/intro/cewek_normal.png';
+  const MALE_SRC = 'stuffs/intro/cowok_normal.png';
   const AVATAR_W = 100; // px
   const AVATAR_H = 100; // px
   let avatarEl = document.getElementById(AVATAR_ID);

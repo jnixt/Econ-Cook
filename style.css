@@ -94,7 +94,7 @@ input:focus {
 
 @media (max-width: 1080px) {
   .top-bar .nav-center a {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   #watermark {
     font-size: 0.8rem;
@@ -667,13 +667,14 @@ li {
   width: 100%;
   height: 100%;
   background: var(--liquid-glass-bg);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(28px);
   border: var(--liquid-glass-bd);
   box-shadow: var(--liquid-glass-bs);
   z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
   overflow: hidden;
   clip-path: circle(0px at var(--origin-x, 50%) var(--origin-y, 50%));
   animation: pageCollapse 0.5s ease-out forwards;
@@ -701,25 +702,7 @@ li {
   }
 }
 
-.page-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: contentFadeIn 0.6s ease-out 0.2s both;
-}
 
-@keyframes contentFadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.2);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
 #credits-language {
   display: flex;
@@ -941,4 +924,36 @@ li {
 .upgrade-item.insufficient {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.page-content {
+  width: 100%;
+  height: 100%;
+  animation: contentFadeIn 0.6s ease-out 0.2s both;
+}
+
+.page-content img {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+}
+
+.page-content h3 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+@keyframes contentFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#assistant-avatar {
+  display: none;
 }
