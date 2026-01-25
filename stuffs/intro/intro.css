@@ -290,3 +290,45 @@ html, body {
 .play-bottom-banner {
   z-index: 9999; /* keep banner above content; this value is fine compared to .jump-to-start */
 }
+
+/* Add these rules to intro.css (append) to style the Skip and Jump buttons so Skip sits left of Jump */
+
+.skip-to-assistant {
+  position: absolute;
+  top: 12px;
+  right: 68px; /* sits left of the jump-to-start which is at right:12px */
+  z-index: 200;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+}
+
+.skip-to-assistant:hover {
+  transform: translateY(-1px);
+  background: rgba(0,0,0,0.6);
+}
+
+/* keep the existing jump-to-start at right:12px */
+.jump-to-start {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+}

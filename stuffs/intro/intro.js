@@ -1,7 +1,8 @@
 /* Updated intro.js
-   - Prevents looping past the last image.
-   - Adds a "jump to start" button (top-right) that brings user back to the first image and re-applies blur.
-   - Keeps existing behavior for visible (TypeIt-configured) messages.
+   - Adds a "Skip to assistant choices" button left of the Jump-to-start button.
+   - Extracts assistant-choice handling into applyAssistantChoice() to reuse from both end-of-slides and the Skip button.
+   - The Skip button opens the assistant selection overlay immediately.
+   - No other behavior changes.
 */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -282,15 +283,77 @@ function showSlides(n) {
     btn.innerHTML = playSVG;
     slideContainer.appendChild(btn);
 
-    // --- New: Jump-to-start button (top-right) ---
+    // --- New: Jump-to-start button (top-right) and Skip-to-assistant (left of it) ---
+    // Create reset (jump-to-start) and skip buttons, append both.
     const resetBtn = document.createElement('button');
     resetBtn.type = 'button';
     resetBtn.className = 'jump-to-start';
     resetBtn.title = 'Back to beginning';
-    // Simple icon (you can replace with SVG if desired)
     resetBtn.innerHTML = '⤒';
+
+    const skipBtn = document.createElement('button');
+    skipBtn.type = 'button';
+    skipBtn.className = 'skip-to-assistant';
+    skipBtn.title = 'Skip to assistant choices';
+    skipBtn.innerHTML = 'Skip';
+
+    // Append skip then reset so skip appears left of reset when styled
+    slideContainer.appendChild(skipBtn);
     slideContainer.appendChild(resetBtn);
 
+    // Helper to apply an assistant choice (extracted to reuse)
+    function applyAssistantChoice(choice) {
+        // Save the user's choice
+        try { localStorage.setItem('assistant_choice', choice); } catch (e) { }
+
+        // Optional: show confirmation text in the banner
+        if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
+        const b = slideContainer.querySelector('.play-bottom-banner');
+        if (b) {
+            const t = b.querySelector('.banner-text');
+            if (t) t.textContent = (choice === 'female')
+                ? 'You picked the female assistant'
+                : 'You picked the male assistant';
+            b.classList.add('visible');
+        }
+
+        // OPTIONAL: return the user to the first slide and re-apply blur.
+        // Remove or comment this block if you want to keep the user on the last slide.
+        const firstSrc = slideSrcs[0];
+        if (firstSrc) {
+            fadeSwapImage(firstImg, firstSrc, 400);
+        }
+        currentSrcIndex = 0;
+        visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+        visibleIndex = -1;
+
+        // re-apply blur and reset play button state
+        firstImg.classList.add('blurred');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = playSVG;
+        btn.classList.remove('hidden');
+        btn.removeAttribute('aria-hidden');
+
+        // hide confirmation after a short delay
+        setTimeout(() => {
+            const bb = slideContainer.querySelector('.play-bottom-banner');
+            if (bb) bb.classList.remove('visible');
+        }, 2000);
+    }
+
+    // Skip button: open assistant choices immediately
+    skipBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Hide any banner while overlay appears
+        const banner = slideContainer.querySelector('.play-bottom-banner');
+        if (banner) banner.classList.remove('visible');
+
+        showAssistantChoices(function (choice) {
+            applyAssistantChoice(choice);
+        });
+    });
+
+    // Reset (jump-to-start) button handler
     resetBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         // Animate swap to first image
@@ -308,6 +371,7 @@ function showSlides(n) {
         btn.setAttribute('aria-pressed', 'false');
         btn.innerHTML = playSVG;
         btn.classList.remove('hidden');
+        btn.removeAttribute('aria-hidden');
 
         // hide any banner
         const banner = slideContainer.querySelector('.play-bottom-banner');
@@ -436,6 +500,7 @@ function showSlides(n) {
     firstImg.addEventListener('click', (e) => {
         btn.click();
     });
+
     function showVisibleMessageAtIndex(idx) {
         if (!Array.isArray(visibleMessages) || visibleMessages.length === 0) return;
         if (idx < 0) idx = 0;
@@ -578,7 +643,70 @@ function showSlides(n) {
         // focus first card
         femaleCard.focus();
     }
+    function applyAssistantChoice(choice) {
+        // Save the user's choice to localStorage (persist)
+        try { localStorage.setItem('assistant_choice', choice); } catch (e) { /* ignore */ }
 
+        // Store on window so other scripts can access immediately
+        window.assistantChoice = choice;
+
+        // dispatch an event so other scripts (script.js) can react if already loaded
+        try {
+            window.dispatchEvent(new CustomEvent('assistantChoiceChanged', { detail: choice }));
+        } catch (e) { /* ignore older browsers */ }
+
+        // Optional: show confirmation text in the banner
+        if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
+        const b = slideContainer.querySelector('.play-bottom-banner');
+        if (b) {
+            const t = b.querySelector('.banner-text');
+            if (t) t.textContent = (choice === 'female') ? 'You picked the female assistant' : 'You picked the male assistant';
+            b.classList.add('visible');
+        }
+
+        // OPTIONAL: return the user to the first slide and re-apply blur.
+        const firstSrc = slideSrcs[0];
+        if (firstSrc) {
+            fadeSwapImage(firstImg, firstSrc, 400);
+        }
+        currentSrcIndex = 0;
+        visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
+        visibleIndex = -1;
+
+        // re-apply blur and reset play button state
+        firstImg.classList.add('blurred');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = playSVG;
+        btn.classList.remove('hidden');
+        btn.removeAttribute('aria-hidden');
+
+        // hide confirmation after a short delay
+        setTimeout(() => {
+            const bb = slideContainer.querySelector('.play-bottom-banner');
+            if (bb) bb.classList.remove('visible');
+        }, 2000);
+    }
+
+    // --- inside showAssistantChoices: when user clicks a card, persist and set window variable too ---
+    // Replace the femaleCard/maleCard click handlers with the below (so the choice is stored immediately)
+
+    femaleCard.addEventListener('click', () => {
+        // Persist & expose on window immediately
+        try { localStorage.setItem('assistant_choice', 'female'); } catch (e) { }
+        window.assistantChoice = 'female';
+        try { window.dispatchEvent(new CustomEvent('assistantChoiceChanged', { detail: 'female' })); } catch (e) { }
+
+        cleanup();
+        if (typeof onChoose === 'function') onChoose('female');
+    });
+    maleCard.addEventListener('click', () => {
+        try { localStorage.setItem('assistant_choice', 'male'); } catch (e) { }
+        window.assistantChoice = 'male';
+        try { window.dispatchEvent(new CustomEvent('assistantChoiceChanged', { detail: 'male' })); } catch (e) { }
+
+        cleanup();
+        if (typeof onChoose === 'function') onChoose('male');
+    });
     // Replace the click handler: unblur click shows first visible message without counting;
     // subsequent clicks advance through visibleMessages only. When visibleMessages exhausted, advance image.
     btn.addEventListener('click', (e) => {
@@ -623,41 +751,7 @@ function showSlides(n) {
 
                 // showAssistantChoices should be defined (see helper added earlier)
                 showAssistantChoices(function (choice) {
-                    // Save the user's choice
-                    try { localStorage.setItem('assistant_choice', choice); } catch (e) { }
-
-                    // Optional: show confirmation text in the banner
-                    if (typeof showBottomBanner === 'function') showBottomBanner(slideContainer, '');
-                    const b = slideContainer.querySelector('.play-bottom-banner');
-                    if (b) {
-                        const t = b.querySelector('.banner-text');
-                        if (t) t.textContent = (choice === 'female')
-                            ? 'You picked the female assistant'
-                            : 'You picked the male assistant';
-                        b.classList.add('visible');
-                    }
-
-                    // OPTIONAL: return the user to the first slide and re-apply blur.
-                    // Remove or comment this block if you want to keep the user on the last slide.
-                    const firstSrc = slideSrcs[0];
-                    if (firstSrc) {
-                        fadeSwapImage(firstImg, firstSrc, 400);
-                    }
-                    currentSrcIndex = 0;
-                    visibleMessages = buildVisibleMessagesFor(currentSrcIndex);
-                    visibleIndex = -1;
-
-                    // re-apply blur and reset play button state
-                    firstImg.classList.add('blurred');
-                    btn.setAttribute('aria-pressed', 'false');
-                    btn.innerHTML = playSVG;
-                    btn.classList.remove('hidden');
-
-                    // hide confirmation after a short delay
-                    setTimeout(() => {
-                        const bb = slideContainer.querySelector('.play-bottom-banner');
-                        if (bb) bb.classList.remove('visible');
-                    }, 2000);
+                    applyAssistantChoice(choice);
                 });
 
                 return;
@@ -683,75 +777,75 @@ function showSlides(n) {
    (registerPlayButtonForFirstSlide). Place it near the play button handlers. */
 
 function showBottomBanner(container, text) {
-  // container should be the .mySlides element (positioned)
-  if (!container || !(container instanceof Element)) {
-    container = document.body;
-  }
+    // container should be the .mySlides element (positioned)
+    if (!container || !(container instanceof Element)) {
+        container = document.body;
+    }
 
-  // Try to find banner inside the container (keeps compatibility with slideContainer.querySelector)
-  let banner = container.querySelector('.play-bottom-banner');
+    // Try to find banner inside the container (keeps compatibility with slideContainer.querySelector)
+    let banner = container.querySelector('.play-bottom-banner');
 
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.className = 'play-bottom-banner';
-    banner.setAttribute('role', 'region');
-    banner.setAttribute('aria-live', 'polite');
-    banner.style.cssText = [
-      'position:fixed',            // fixed to viewport so won't be clipped
-      'left:0',
-      'right:0',
-      'bottom:0',
-      'margin:0 auto',
-      'box-sizing:border-box',
-      'width:100%',
-      'max-width:100vw',
-      'background:rgba(0,0,0,0.6)',
-      'color:#fff',
-      'padding:10px 16px',
-      'text-align:center',
-      'opacity:0',
-      'transform:translateY(8px)',
-      'transition:opacity 220ms ease, transform 220ms ease',
-      'z-index:99999',
-      'display:flex',
-      'flex-direction:column',
-      'align-items:center',
-      'justify-content:flex-start',
-      'min-height:48px',
-      'max-height:40vh',
-      'overflow:auto',
-      '-webkit-overflow-scrolling:touch'
-    ].join(';');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.className = 'play-bottom-banner';
+        banner.setAttribute('role', 'region');
+        banner.setAttribute('aria-live', 'polite');
+        banner.style.cssText = [
+            'position:fixed',            // fixed to viewport so won't be clipped
+            'left:0',
+            'right:0',
+            'bottom:0',
+            'margin:0 auto',
+            'box-sizing:border-box',
+            'width:100%',
+            'max-width:100vw',
+            'background:rgba(0,0,0,0.6)',
+            'color:#fff',
+            'padding:10px 16px',
+            'text-align:center',
+            'opacity:0',
+            'transform:translateY(8px)',
+            'transition:opacity 220ms ease, transform 220ms ease',
+            'z-index:99999',
+            'display:flex',
+            'flex-direction:column',
+            'align-items:center',
+            'justify-content:flex-start',
+            'min-height:48px',
+            'max-height:40vh',
+            'overflow:auto',
+            '-webkit-overflow-scrolling:touch'
+        ].join(';');
 
-    banner.innerHTML = `
+        banner.innerHTML = `
       <div class="banner-text" aria-atomic="true" style="margin:0; width:100%;"></div>
       <button class="banner-close" aria-label="Close banner" style="
         position:absolute; right:8px; top:8px; background:transparent; border:0; color:#fff; font-size:18px; cursor:pointer;">&times;</button>
     `;
 
-    // Append banner as child of the container so slideContainer.querySelector finds it,
-    // but since it is position:fixed it will be anchored to the viewport.
-    container.appendChild(banner);
+        // Append banner as child of the container so slideContainer.querySelector finds it,
+        // but since it is position:fixed it will be anchored to the viewport.
+        container.appendChild(banner);
 
-    const closeBtn = banner.querySelector('.banner-close');
-    closeBtn.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      banner.classList.remove('visible');
-      // remove after transition to keep DOM clean
-      setTimeout(() => { try { banner.remove(); } catch (e) { } }, 260);
+        const closeBtn = banner.querySelector('.banner-close');
+        closeBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            banner.classList.remove('visible');
+            // remove after transition to keep DOM clean
+            setTimeout(() => { try { banner.remove(); } catch (e) { } }, 260);
+        });
+    }
+
+    const textEl = banner.querySelector('.banner-text');
+    // Set immediate fallback text (TypeIt will overwrite when typing starts)
+    textEl.textContent = text || '';
+
+    // Make visible (use RAF to trigger transition)
+    requestAnimationFrame(() => {
+        banner.classList.add('visible');
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateY(0)';
     });
-  }
 
-  const textEl = banner.querySelector('.banner-text');
-  // Set immediate fallback text (TypeIt will overwrite when typing starts)
-  textEl.textContent = text || '';
-
-  // Make visible (use RAF to trigger transition)
-  requestAnimationFrame(() => {
-    banner.classList.add('visible');
-    banner.style.opacity = '1';
-    banner.style.transform = 'translateY(0)';
-  });
-
-  return banner;
+    return banner;
 }

@@ -811,3 +811,122 @@ document.addEventListener("DOMContentLoaded", function () {
     })
   })
 });
+
+
+//asisten di samping kiri giant cookie
+let assistantChoice = null;
+try {
+  assistantChoice = localStorage.getItem('assistant_choice') || null;
+} catch (e) {
+  assistantChoice = null;
+}
+// expose globally for quick access from devtools or other scripts
+window.assistantChoice = assistantChoice;
+
+// keep the variable up to date if user changes choice later
+window.addEventListener('assistantChoiceChanged', (ev) => {
+  assistantChoice = ev && ev.detail ? ev.detail : localStorage.getItem('assistant_choice') || null;
+  window.assistantChoice = assistantChoice;
+});
+// Assistant avatar: show chosen assistant picture to the left of the giant cookie
+(function initAssistantAvatar() {
+  if (!giantCookie) return;
+
+  const AVATAR_ID = 'assistant-avatar';
+  const FEMALE_SRC = 'cewek_normal.png';
+  const MALE_SRC = 'cowok_normal.png';
+  const AVATAR_W = 100; // px
+  const AVATAR_H = 100; // px
+  let avatarEl = document.getElementById(AVATAR_ID);
+
+  function createAvatarIfNeeded() {
+    if (avatarEl) return avatarEl;
+    avatarEl = document.createElement('img');
+    avatarEl.id = AVATAR_ID;
+    avatarEl.alt = 'Assistant';
+    avatarEl.style.cssText = [
+      `position:fixed`,                      // fixed to viewport so it follows the cookie
+      `width:${AVATAR_W}px`,
+      `height:${AVATAR_H}px`,
+      `object-fit:cover`,
+      `border-radius:12px`,
+      `box-shadow:0 10px 30px rgba(0,0,0,0.45)`,
+      `transition:opacity 220ms ease, transform 220ms ease`,
+      `opacity:0`,
+      `pointer-events:auto`,
+      `z-index:99998`
+    ].join(';');
+    document.body.appendChild(avatarEl);
+    return avatarEl;
+  }
+
+  function getChoice() {
+    // prefer runtime variable, fallback to localStorage
+    return (window.assistantChoice || localStorage.getItem('assistant_choice') || null);
+  }
+
+  function updateAvatarSrcAndVisibility() {
+    const choice = getChoice();
+    if (!choice) {
+      if (avatarEl) {
+        avatarEl.style.opacity = '0';
+        // keep in DOM but invisible
+      }
+      return;
+    }
+    createAvatarIfNeeded();
+    avatarEl.src = (choice === 'male') ? MALE_SRC : FEMALE_SRC;
+    avatarEl.style.opacity = '1';
+  }
+
+  function positionAvatar() {
+    if (!avatarEl || avatarEl.style.opacity === '0') return;
+    const rect = giantCookie.getBoundingClientRect();
+    // position to the left of the giant cookie, centered vertically
+    const left = Math.round(rect.left - AVATAR_W - 12); // 12px gap
+    const top = Math.round(rect.top + rect.height / 2 - AVATAR_H / 2);
+    // clamp inside viewport
+    const clampedLeft = Math.max(8, left);
+    const clampedTop = Math.max(8, Math.min(window.innerHeight - AVATAR_H - 8, top));
+    avatarEl.style.left = clampedLeft + 'px';
+    avatarEl.style.top = clampedTop + 'px';
+  }
+
+  // Create avatar only if there is already a choice
+  if (getChoice()) {
+    createAvatarIfNeeded();
+  }
+
+  // Initial render & position
+  updateAvatarSrcAndVisibility();
+  positionAvatar();
+
+  // Keep avatar positioned on resize/scroll (debounce lightweight)
+  let rAF = null;
+  function schedulePosition() {
+    if (rAF) cancelAnimationFrame(rAF);
+    rAF = requestAnimationFrame(() => {
+      positionAvatar();
+      rAF = null;
+    });
+  }
+  window.addEventListener('resize', schedulePosition);
+  window.addEventListener('scroll', schedulePosition);
+
+  // Update when assistant choice changes at runtime
+  window.addEventListener('assistantChoiceChanged', (ev) => {
+    updateAvatarSrcAndVisibility();
+    // small timeout so image can load and size settle before positioning
+    setTimeout(positionAvatar, 50);
+  });
+
+  // If other code may set window.assistantChoice after load without dispatching event,
+  // you can poll once (optional). Here we add a short listener on storage changes so
+  // if another tab changes localStorage we react too:
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'assistant_choice') {
+      updateAvatarSrcAndVisibility();
+      positionAvatar();
+    }
+  });
+})();
