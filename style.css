@@ -957,3 +957,23 @@ li {
 #assistant-avatar {
   display: none;
 }
+
+.achivement {
+  border-radius: 12px;
+  padding: 8px;
+  background-color: var(--liquid-glass-bg);
+  border: var(--liquid-glass-bd);
+  box-shadow: var(--liquid-glass-bs);
+  backdrop-filter: var(--liquid-glass-bf);
+}
+
+#ingreds-language {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.resep-container img {
+  outline: none;
+}

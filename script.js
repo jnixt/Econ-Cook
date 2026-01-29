@@ -10,16 +10,39 @@ document.addEventListener("DOMContentLoaded", function () {
     return Math.random() * (max - min) + min;
   }
 
-  function typingAnim(text, speed, elementId) {
-    let i = 0;
-    function typeWriter() {
-      if (i < text.length) {
-        document.getElementById(elementId).innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, speed);
+  function typingAnim(element, newText, duration) {
+    const oldText = element.textContent;
+    const backspaceCount = oldText.length;
+    const typeCount = newText.length;
+    const totalSteps = backspaceCount + typeCount;
+
+    if (totalSteps === 0) return;
+
+    const stepDuration = duration / totalSteps;
+
+    let i = backspaceCount;
+
+    function backspace() {
+      if (i > 0) {
+        element.textContent = oldText.substring(0, i - 1);
+        i--;
+        setTimeout(backspace, stepDuration);
+      } else {
+        element.textContent = "";
+        i = 0;
+        setTimeout(type, stepDuration);
       }
     }
-    typeWriter();
+
+    function type() {
+      if (i < typeCount) {
+        element.textContent = newText.substring(0, i + 1);
+        i++;
+        setTimeout(type, stepDuration);
+      }
+    }
+
+    backspace();
   }
 
   function formatPoints(points) {
@@ -654,16 +677,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       content.innerHTML = `
   <h3 style = "text-align:center; margin-bottom: 6px;" > Admino Panelo.</h3>
-        <button id="autoclicker" class="gC-btn"><i class="fa-hand-pointer fa-solid icon"></i></button>
         <button id="resetter" class="gC-btn"><i class="fa-recycle fa-solid icon"></i></button>
         <button id="pointser" class="gC-btn">
           <i class="fa-solid fa-dollar-sign icon"></i><input id="typerist" type="number" placeholder="How many u want brah?" style="border: none; padding: 2px;">
         </button>
 `;
 
-      const autoBtn = panel.querySelector("#autoclicker");
-      if (autoClickerInterval) autoBtn.classList.add("active");
-      autoBtn.addEventListener("click", () => toggleAutoClicker(autoBtn));
 
       const resetBtn = panel.querySelector("#resetter")
       resetBtn.addEventListener("click", () => {
@@ -747,7 +766,7 @@ document.addEventListener("DOMContentLoaded", function () {
       closer.style.position = "absolute";
       closer.style.cursor = "pointer";
       closer.style.top = "3%";
-      closer.style.right = "6%";
+      closer.style.right = "8%";
       page.appendChild(closer)
 
       document.body.appendChild(page);
@@ -830,6 +849,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 0);
     })
   })
+  const ingredsLanguager = document.getElementById("ingreds-language");
+  const ingredsLanguageToggle = ingredsLanguager.querySelector(".language-toggle");
+  const ingredsToggleSlider = ingredsLanguager.querySelector(".toggle-slider");
+
+  ingredsToggleSlider.addEventListener("click", () => {
+    const isID = ingredsLanguageToggle.dataset.language === "ID";
+    ingredsLanguageToggle.dataset.language = isID ? "EN" : "ID";
+    ingredsToggleSlider.classList.toggle("active");
+
+    const ingredients = document.querySelectorAll(".ingredients li");
+    ingredients.forEach(ingredient => {
+      const newText = isID ? ingredient.dataset.en : ingredient.dataset.id;
+      if (newText && ingredient.textContent !== newText) {
+        typingAnim(ingredient, newText, 670);
+      }
+    });
+  });
 });
 
 
