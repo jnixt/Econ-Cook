@@ -573,6 +573,13 @@ input[type="number"] {
   margin-bottom: 4px;
 }
 
+.resep-container .ingredients h4,
+.resep-container .steps h4 {
+  display: none;
+}
+
+
+
 .resep-container .ingredients {
   max-width: calc(100% - 1ch);
 }
@@ -599,6 +606,11 @@ input[type="number"] {
 }
 
 .resep-container .ingredients li:nth-child(n + 6) {
+  display: none;
+  text-decoration: none;
+}
+
+.resep-container .steps {
   display: none;
   text-decoration: none;
 }
@@ -974,6 +986,11 @@ li {
   align-items: center;
 }
 
-.resep-container img {
+.resep-imgs {
+  border: none;
   outline: none;
+}
+
+.page-content h4 {
+  margin-top: 20px;
 }

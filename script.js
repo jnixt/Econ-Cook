@@ -687,7 +687,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const resetBtn = panel.querySelector("#resetter")
       resetBtn.addEventListener("click", () => {
         cookiePoints = 0;
-        localStorage.setItem("cookiePoints", 0);
+        localStorage.clear();
         pointsCounter.innerHTML = `<i class="fa-solid fa-hand-pointer icon"></i> 0`;
         /* updateRecipeUnlockStates() */
       });
@@ -747,6 +747,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const img = butt.querySelector("img");
       const title = butt.querySelector("h3");
       const ingredients = butt.querySelector(".ingredients");
+      const steps = butt.querySelector(".steps")
 
       if (img) {
         content.appendChild(img.cloneNode(true));
@@ -756,6 +757,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (ingredients) {
         content.appendChild(ingredients.cloneNode(true));
+      }
+      if (steps) {
+        content.appendChild(steps.cloneNode(true));
       }
       page.appendChild(content);
 
@@ -859,10 +863,17 @@ document.addEventListener("DOMContentLoaded", function () {
     ingredsToggleSlider.classList.toggle("active");
 
     const ingredients = document.querySelectorAll(".ingredients li");
+    const steps = document.querySelectorAll(".steps li");
     ingredients.forEach(ingredient => {
       const newText = isID ? ingredient.dataset.en : ingredient.dataset.id;
       if (newText && ingredient.textContent !== newText) {
         typingAnim(ingredient, newText, 670);
+      }
+    });
+    steps.forEach(steps => {
+      const newText = isID ? steps.dataset.en : steps.dataset.id;
+      if (newText && steps.textContent !== newText) {
+        typingAnim(steps, newText, 670);
       }
     });
   });
